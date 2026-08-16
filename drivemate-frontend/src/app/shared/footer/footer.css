@@ -1,0 +1,38 @@
+.footer {
+  min-height: 90px;
+  padding: 0 5%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: #07080b;
+  border-top: 1px solid #1b1d23;
+}
+
+.footer-brand {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.footer-brand span {
+  color: #ef3038;
+}
+
+.footer p,
+.footer small {
+  margin: 0;
+  color: #5f636d;
+  font-size: 11px;
+}
+
+@media (max-width: 650px) {
+  .footer {
+    padding: 25px 20px;
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+  }
+}

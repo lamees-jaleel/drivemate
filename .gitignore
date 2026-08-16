@@ -1,0 +1,79 @@
+# ==========================================================
+# DriveMate - Root Git Ignore
+# ==========================================================
+
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+**/.env
+**/.env.*
+!**/.env.example
+
+
+# Node dependencies
+node_modules/
+**/node_modules/
+
+
+# Angular generated/cache
+.angular/
+**/.angular/
+
+dist/
+**/dist/
+
+
+# Prisma generated client
+generated/
+**/generated/
+
+
+# Runtime uploads
+uploads/
+**/uploads/
+
+
+# Coverage
+coverage/
+**/coverage/
+
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# Local editor / AI folders
+.agents/
+**/.agents/
+
+.claude/
+**/.claude/
+
+.windsurf/
+**/.windsurf/
+
+.vscode/
+**/.vscode/
+
+.idea/
+**/.idea/
+
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo

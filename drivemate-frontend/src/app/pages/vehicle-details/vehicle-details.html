@@ -1,0 +1,664 @@
+<div class="details-page">
+
+  <header class="topbar">
+
+    <a
+      class="brand"
+      routerLink="/owner-dashboard">
+
+      <span>Drive</span>
+      <strong>Mate</strong>
+
+    </a>
+
+
+    <a
+      class="back-link"
+      routerLink="/owner-dashboard/vehicles">
+
+      ← My Vehicles
+
+    </a>
+
+  </header>
+
+
+  <main class="page-content">
+
+
+    @if (loading) {
+
+      <section class="state-card">
+
+        <span class="state-label">
+          LOADING
+        </span>
+
+        <h1>
+          Loading vehicle details...
+        </h1>
+
+      </section>
+
+    }
+
+
+    @if (
+      !loading &&
+      errorMessage
+    ) {
+
+      <section class="state-card error-state">
+
+        <span class="state-label">
+          VEHICLE UNAVAILABLE
+        </span>
+
+        <h1>
+          {{ errorMessage }}
+        </h1>
+
+        <button
+          class="primary-button"
+          type="button"
+          (click)="backToVehicles()">
+
+          ← Back to My Vehicles
+
+        </button>
+
+      </section>
+
+    }
+
+
+    @if (
+      !loading &&
+      !errorMessage &&
+      vehicle
+    ) {
+
+
+      <!-- VEHICLE HERO -->
+
+      <section class="vehicle-hero">
+
+        <div class="vehicle-visual">
+
+          <div class="car-illustration">
+
+            <div class="car-roof"></div>
+
+            <div class="car-body"></div>
+
+            <div
+              class="wheel wheel-left">
+            </div>
+
+            <div
+              class="wheel wheel-right">
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="hero-content">
+
+          <div class="hero-meta">
+
+            <span class="registration">
+              {{ vehicle.registrationNumber }}
+            </span>
+
+
+            <span class="status">
+              {{ vehicle.status }}
+            </span>
+
+          </div>
+
+
+          <p class="eyebrow">
+            VEHICLE PROFILE
+          </p>
+
+
+          <h1>
+
+            {{ vehicle.make }}
+
+            <span>
+              {{ vehicle.model }}
+            </span>
+
+          </h1>
+
+
+          @if (vehicle.variant) {
+
+            <p class="variant">
+              {{ vehicle.variant }}
+            </p>
+
+          }
+
+
+          <p class="hero-description">
+
+            Your complete DriveMate vehicle
+            identity and ownership record.
+
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- OVERVIEW -->
+
+      <section class="overview-grid">
+
+        <article class="overview-card">
+
+          <span>YEAR</span>
+
+          <strong>
+            {{ vehicle.manufacturingYear }}
+          </strong>
+
+        </article>
+
+
+        <article class="overview-card">
+
+          <span>FUEL</span>
+
+          <strong>
+            {{ vehicle.fuelType }}
+          </strong>
+
+        </article>
+
+
+        <article class="overview-card">
+
+          <span>TRANSMISSION</span>
+
+          <strong>
+
+            {{
+              vehicle.transmission ||
+              'Not specified'
+            }}
+
+          </strong>
+
+        </article>
+
+
+        <article class="overview-card">
+
+          <span>ODOMETER</span>
+
+          <strong>
+            {{ vehicle.odometerKm }} km
+          </strong>
+
+        </article>
+
+      </section>
+
+
+      <!-- BASIC INFORMATION -->
+
+      <section class="details-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            01
+          </span>
+
+
+          <div>
+
+            <p>
+              VEHICLE IDENTITY
+            </p>
+
+            <h2>
+              Basic Information
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="information-grid">
+
+          <div class="information-item">
+
+            <span>
+              Registration Number
+            </span>
+
+            <strong>
+              {{ vehicle.registrationNumber }}
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>Make</span>
+
+            <strong>
+              {{ vehicle.make }}
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>Model</span>
+
+            <strong>
+              {{ vehicle.model }}
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>Variant</span>
+
+            <strong>
+
+              {{
+                vehicle.variant ||
+                'Not specified'
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>
+              Manufacturing Year
+            </span>
+
+            <strong>
+              {{ vehicle.manufacturingYear }}
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>Color</span>
+
+            <strong>
+
+              {{
+                vehicle.color ||
+                'Not specified'
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>Fuel Type</span>
+
+            <strong>
+              {{ vehicle.fuelType }}
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>Transmission</span>
+
+            <strong>
+
+              {{
+                vehicle.transmission ||
+                'Not specified'
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- TECHNICAL IDENTITY -->
+
+      <section class="details-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            02
+          </span>
+
+
+          <div>
+
+            <p>
+              TECHNICAL IDENTITY
+            </p>
+
+            <h2>
+              Vehicle Identification
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="information-grid">
+
+          <div class="information-item">
+
+            <span>
+              VIN / Chassis Number
+            </span>
+
+            <strong>
+
+              {{
+                vehicle.vin ||
+                'Not specified'
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>
+              Engine Number
+            </span>
+
+            <strong>
+
+              {{
+                vehicle.engineNumber ||
+                'Not specified'
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- OWNERSHIP -->
+
+      <section class="details-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            03
+          </span>
+
+
+          <div>
+
+            <p>
+              OWNERSHIP
+            </p>
+
+            <h2>
+              Ownership Information
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="information-grid">
+
+          <div class="information-item">
+
+            <span>
+              Odometer Reading
+            </span>
+
+            <strong>
+              {{ vehicle.odometerKm }} km
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>
+              Purchase Date
+            </span>
+
+            <strong>
+
+              {{
+                formatDate(
+                  vehicle.purchaseDate
+                )
+              }}
+
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>
+              Ownership Type
+            </span>
+
+            <strong>
+              {{ vehicle.ownershipType }}
+            </strong>
+
+          </div>
+
+
+          <div class="information-item">
+
+            <span>
+              Vehicle Status
+            </span>
+
+            <strong class="active-text">
+              {{ vehicle.status }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- VEHICLE LIFECYCLE -->
+
+      <section class="lifecycle-section">
+
+        <div class="lifecycle-heading">
+
+          <p class="eyebrow">
+            VEHICLE LIFECYCLE
+          </p>
+
+
+          <h2>
+            Everything connected to this vehicle
+          </h2>
+
+
+          <p>
+
+            Maintenance, expenses,
+            documents and compliance
+            are managed against this
+            specific vehicle.
+
+          </p>
+
+        </div>
+
+
+        <div class="lifecycle-grid">
+
+
+          <button
+            class="lifecycle-card lifecycle-button"
+            type="button"
+            (click)="openMaintenance()">
+
+            <span class="lifecycle-icon">
+              ⚙
+            </span>
+
+            <h3>
+              Maintenance
+            </h3>
+
+            <p>
+              Services, repairs and
+              maintenance history.
+            </p>
+
+            <small>
+              OPEN MAINTENANCE →
+            </small>
+
+          </button>
+
+
+          <button
+            class="lifecycle-card lifecycle-button"
+            type="button"
+            (click)="openExpenses()">
+
+            <span class="lifecycle-icon">
+              ₹
+            </span>
+
+            <h3>
+              Expenses
+            </h3>
+
+            <p>
+              Fuel, insurance, parking,
+              tolls and ownership costs.
+            </p>
+
+            <small>
+              OPEN EXPENSES →
+            </small>
+
+          </button>
+
+
+          <button
+            class="lifecycle-card lifecycle-button"
+            type="button"
+            (click)="openDocuments()">
+
+            <span class="lifecycle-icon">
+              ▤
+            </span>
+
+            <h3>
+              Documents
+            </h3>
+
+            <p>
+              Insurance, registration,
+              certificates and records.
+            </p>
+
+            <small>
+              OPEN DOCUMENTS →
+            </small>
+
+          </button>
+
+
+          <button
+            class="lifecycle-card lifecycle-button"
+            type="button"
+            (click)="openDocuments()">
+
+            <span class="lifecycle-icon">
+              ◈
+            </span>
+
+            <h3>
+              Compliance
+            </h3>
+
+            <p>
+              Expiry tracking and
+              compliance alerts.
+            </p>
+
+            <small>
+              CHECK COMPLIANCE →
+            </small>
+
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <div class="bottom-actions">
+
+        <button
+          class="secondary-button"
+          type="button"
+          (click)="backToVehicles()">
+
+          ← Back to My Vehicles
+
+        </button>
+
+      </div>
+
+    }
+
+  </main>
+
+</div>

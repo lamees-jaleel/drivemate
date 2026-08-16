@@ -1,0 +1,948 @@
+<div class="dashboard-shell">
+
+  <!-- =====================================================
+       MOBILE HEADER
+  ====================================================== -->
+
+  <header class="mobile-header">
+
+    <button
+      class="menu-button"
+      type="button"
+      aria-label="Open navigation"
+      (click)="toggleSidebar()">
+
+      ☰
+
+    </button>
+
+
+    <a
+      class="mobile-brand"
+      routerLink="/">
+
+      <span>Drive</span>
+      <strong>Mate</strong>
+
+    </a>
+
+  </header>
+
+
+  @if (mobileSidebarOpen) {
+
+    <button
+      class="sidebar-overlay"
+      type="button"
+      aria-label="Close navigation"
+      (click)="closeSidebar()">
+    </button>
+
+  }
+
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+
+  <aside
+    class="sidebar"
+    [class.sidebar-open]="mobileSidebarOpen">
+
+
+    <div class="sidebar-top">
+
+      <a
+        class="brand"
+        routerLink="/compliance-dashboard"
+        (click)="closeSidebar()">
+
+        <span>Drive</span>
+        <strong>Mate</strong>
+
+      </a>
+
+
+      <div class="role-badge">
+
+        <span class="role-dot"></span>
+
+        COMPLIANCE ADVISOR
+
+      </div>
+
+    </div>
+
+
+    <nav class="navigation">
+
+      <button
+        class="nav-item active"
+        type="button">
+
+        <span class="nav-icon">
+          ◫
+        </span>
+
+        <span>
+          Dashboard
+        </span>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button">
+
+        <span class="nav-icon">
+          ◈
+        </span>
+
+        <span>
+          Compliance Reviews
+        </span>
+
+        <small>
+          SOON
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button">
+
+        <span class="nav-icon">
+          ⚠
+        </span>
+
+        <span>
+          Expiry Monitoring
+        </span>
+
+        <small>
+          SOON
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button">
+
+        <span class="nav-icon">
+          ▤
+        </span>
+
+        <span>
+          Vehicle Documents
+        </span>
+
+        <small>
+          SOON
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button">
+
+        <span class="nav-icon">
+          ✓
+        </span>
+
+        <span>
+          Advisory Reports
+        </span>
+
+        <small>
+          SOON
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button">
+
+        <span class="nav-icon">
+          ◉
+        </span>
+
+        <span>
+          Profile & Verification
+        </span>
+
+        <small>
+          SOON
+        </small>
+
+      </button>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <div class="sidebar-user">
+
+        <div class="avatar">
+
+          {{
+            firstName
+              .charAt(0)
+              .toUpperCase()
+          }}
+
+        </div>
+
+
+        <div class="user-details">
+
+          <strong>
+
+            {{
+              currentUser?.fullName ||
+              'Compliance Advisor'
+            }}
+
+          </strong>
+
+          <span>
+            Insurance & Compliance Advisor
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="logout-button"
+        type="button"
+        (click)="logout()">
+
+        <span>
+          ↪
+        </span>
+
+        Logout
+
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="dashboard-main">
+
+
+    <!-- ===================================================
+         TOPBAR
+    ==================================================== -->
+
+    <section class="topbar">
+
+      <div>
+
+        <p class="topbar-label">
+          COMPLIANCE WORKSPACE
+        </p>
+
+        <h2>
+          Advisor Dashboard
+        </h2>
+
+      </div>
+
+
+      <div class="topbar-status">
+
+        <span class="status-dot"></span>
+
+        Advisor Portal
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         HERO
+    ==================================================== -->
+
+    <section class="hero">
+
+      <div class="hero-copy">
+
+        <p class="eyebrow">
+          INSURANCE & COMPLIANCE
+        </p>
+
+
+        <h1>
+
+          Welcome back,
+
+          <span>
+            {{ firstName }}.
+          </span>
+
+        </h1>
+
+
+        <p class="hero-description">
+
+          Review vehicle compliance records,
+          monitor document validity and provide
+          guidance to vehicle owners regarding
+          insurance and regulatory requirements.
+
+        </p>
+
+
+        <div class="hero-tags">
+
+          <span>
+            Document Review
+          </span>
+
+          <span>
+            Expiry Monitoring
+          </span>
+
+          <span>
+            Compliance Guidance
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="compliance-visual">
+
+        <div class="visual-ring ring-large">
+        </div>
+
+
+        <div class="visual-ring ring-small">
+        </div>
+
+
+        <div class="shield-card">
+
+          <span class="shield-icon">
+            ◈
+          </span>
+
+
+          <span class="shield-label">
+            COMPLIANCE SYSTEM
+          </span>
+
+
+          <strong>
+            READY
+          </strong>
+
+
+          <div class="scanner-line">
+          </div>
+
+
+          <small>
+            Advisor workspace initialized
+          </small>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         STATS
+    ==================================================== -->
+
+    <section class="stats-grid">
+
+      <article class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-icon">
+            ◈
+          </span>
+
+          <small>
+            REVIEWS
+          </small>
+
+        </div>
+
+
+        <strong>
+          {{ pendingReviews }}
+        </strong>
+
+
+        <span class="stat-label">
+          Pending Reviews
+        </span>
+
+
+        <p>
+
+          Compliance cases waiting for
+          professional review.
+
+        </p>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-icon">
+            ⚠
+          </span>
+
+          <small>
+            EXPIRY
+          </small>
+
+        </div>
+
+
+        <strong>
+          {{ expiringDocuments }}
+        </strong>
+
+
+        <span class="stat-label">
+          Expiring Documents
+        </span>
+
+
+        <p>
+
+          Insurance and regulatory records
+          approaching their expiry dates.
+
+        </p>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-icon">
+            ◉
+          </span>
+
+          <small>
+            ACTIVE
+          </small>
+
+        </div>
+
+
+        <strong>
+          {{ activeCases }}
+        </strong>
+
+
+        <span class="stat-label">
+          Active Cases
+        </span>
+
+
+        <p>
+
+          Vehicle compliance assessments
+          currently under review.
+
+        </p>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-icon">
+            ✓
+          </span>
+
+          <small>
+            REPORTS
+          </small>
+
+        </div>
+
+
+        <strong>
+          {{ completedAdvisories }}
+        </strong>
+
+
+        <span class="stat-label">
+          Completed Advisories
+        </span>
+
+
+        <p>
+
+          Compliance recommendations already
+          delivered to vehicle owners.
+
+        </p>
+
+      </article>
+
+    </section>
+
+
+    <!-- ===================================================
+         WORKSPACE
+    ==================================================== -->
+
+    <section class="workspace-grid">
+
+
+      <article class="workspace-card">
+
+        <div class="section-title">
+
+          <span class="section-number">
+            01
+          </span>
+
+
+          <div>
+
+            <p>
+              ADVISOR WORKFLOW
+            </p>
+
+            <h3>
+              Compliance Review Process
+            </h3>
+
+          </div>
+
+        </div>
+
+
+        <div class="workflow">
+
+          <div class="workflow-item">
+
+            <div class="workflow-marker">
+              01
+            </div>
+
+
+            <div>
+
+              <strong>
+                Review Vehicle Records
+              </strong>
+
+              <p>
+
+                Examine the owner's vehicle
+                identity and submitted
+                compliance documents.
+
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line">
+          </div>
+
+
+          <div class="workflow-item">
+
+            <div class="workflow-marker">
+              02
+            </div>
+
+
+            <div>
+
+              <strong>
+                Verify Validity
+              </strong>
+
+              <p>
+
+                Review insurance, pollution,
+                registration and other
+                applicable records.
+
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line">
+          </div>
+
+
+          <div class="workflow-item">
+
+            <div class="workflow-marker">
+              03
+            </div>
+
+
+            <div>
+
+              <strong>
+                Identify Compliance Issues
+              </strong>
+
+              <p>
+
+                Identify expired, expiring
+                or incomplete vehicle
+                documentation.
+
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line">
+          </div>
+
+
+          <div class="workflow-item">
+
+            <div class="workflow-marker">
+              04
+            </div>
+
+
+            <div>
+
+              <strong>
+                Provide Guidance
+              </strong>
+
+              <p>
+
+                Deliver professional advice
+                and recommended next actions
+                to the vehicle owner.
+
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="coming-soon-banner">
+
+          <span>
+            COMPLIANCE ADVISORY SYSTEM
+          </span>
+
+          <strong>
+            Functional workflow will be connected later.
+          </strong>
+
+        </div>
+
+      </article>
+
+
+      <!-- =================================================
+           PROFILE
+      ================================================== -->
+
+      <article class="workspace-card profile-card">
+
+        <div class="section-title">
+
+          <span class="section-number">
+            02
+          </span>
+
+
+          <div>
+
+            <p>
+              PROFESSIONAL ACCOUNT
+            </p>
+
+            <h3>
+              Advisor Profile
+            </h3>
+
+          </div>
+
+        </div>
+
+
+        <div class="profile-avatar">
+
+          {{
+            firstName
+              .charAt(0)
+              .toUpperCase()
+          }}
+
+        </div>
+
+
+        <h4>
+
+          {{
+            currentUser?.fullName ||
+            'Compliance Advisor'
+          }}
+
+        </h4>
+
+
+        <p class="profile-role">
+          Insurance & Compliance Advisor
+        </p>
+
+
+        <div class="profile-info">
+
+          <div>
+
+            <span>
+              ACCOUNT ROLE
+            </span>
+
+            <strong>
+              Compliance Advisor
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              EMAIL
+            </span>
+
+            <strong>
+
+              {{
+                currentUser?.email ||
+                'Not available'
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="verification-note">
+
+          <span>
+            ◈
+          </span>
+
+
+          <div>
+
+            <strong>
+              Professional Verification
+            </strong>
+
+            <p>
+
+              Qualification, certificate
+              and advisor verification will
+              be managed through the
+              Administrator module.
+
+            </p>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- ===================================================
+         CAPABILITIES
+    ==================================================== -->
+
+    <section class="capabilities-section">
+
+      <div class="capabilities-heading">
+
+        <div>
+
+          <p class="eyebrow">
+            ADVISOR CAPABILITIES
+          </p>
+
+          <h2>
+            Compliance intelligence workspace
+          </h2>
+
+        </div>
+
+
+        <span class="development-badge">
+          UNDER DEVELOPMENT
+        </span>
+
+      </div>
+
+
+      <div class="capabilities-grid">
+
+        <article>
+
+          <span class="capability-icon">
+            ▤
+          </span>
+
+
+          <h3>
+            Document Review
+          </h3>
+
+
+          <p>
+
+            Review vehicle registration,
+            insurance and other uploaded
+            compliance documents.
+
+          </p>
+
+        </article>
+
+
+        <article>
+
+          <span class="capability-icon">
+            ⚠
+          </span>
+
+
+          <h3>
+            Expiry Monitoring
+          </h3>
+
+
+          <p>
+
+            Identify expired and
+            soon-to-expire vehicle
+            documents.
+
+          </p>
+
+        </article>
+
+
+        <article>
+
+          <span class="capability-icon">
+            ◈
+          </span>
+
+
+          <h3>
+            Compliance Assessment
+          </h3>
+
+
+          <p>
+
+            Assess vehicle documentation
+            and identify areas requiring
+            owner attention.
+
+          </p>
+
+        </article>
+
+
+        <article>
+
+          <span class="capability-icon">
+            ✓
+          </span>
+
+
+          <h3>
+            Advisory Reports
+          </h3>
+
+
+          <p>
+
+            Provide professional compliance
+            guidance and recommended
+            next actions.
+
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <footer class="dashboard-footer">
+
+      <span>
+        DRIVEMATE
+      </span>
+
+      Insurance & Compliance Advisor Portal
+
+    </footer>
+
+  </main>
+
+</div>

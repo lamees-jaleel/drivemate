@@ -1,0 +1,630 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+/**
+ * =========================================================
+ * USER ROLES
+ * =========================================================
+ */
+
+enum Role {
+  VEHICLE_OWNER
+  DIAGNOSTIC_EXPERT
+  COMPLIANCE_ADVISOR
+  ROADSIDE_RESPONDER
+  ADMIN
+}
+
+/**
+ * =========================================================
+ * ACCOUNT STATUS
+ * =========================================================
+ */
+
+enum AccountStatus {
+  ACTIVE
+  PENDING_VERIFICATION
+  SUSPENDED
+  REJECTED
+}
+
+/**
+ * =========================================================
+ * PROFESSIONAL VERIFICATION
+ * =========================================================
+ */
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+/**
+ * =========================================================
+ * VEHICLE FUEL TYPE
+ * =========================================================
+ */
+
+enum FuelType {
+  PETROL
+  DIESEL
+  CNG
+  LPG
+  ELECTRIC
+  HYBRID
+  OTHER
+}
+
+/**
+ * =========================================================
+ * VEHICLE TRANSMISSION
+ * =========================================================
+ */
+
+enum TransmissionType {
+  MANUAL
+  AUTOMATIC
+  AMT
+  CVT
+  DCT
+  OTHER
+}
+
+/**
+ * =========================================================
+ * OWNERSHIP TYPE
+ * =========================================================
+ */
+
+enum OwnershipType {
+  OWNED
+  FINANCED
+  LEASED
+}
+
+/**
+ * =========================================================
+ * VEHICLE STATUS
+ * =========================================================
+ */
+
+enum VehicleStatus {
+  ACTIVE
+  SOLD
+  INACTIVE
+}
+
+/**
+ * =========================================================
+ * MAINTENANCE TYPE
+ * =========================================================
+ */
+
+enum MaintenanceType {
+  ROUTINE_SERVICE
+  OIL_CHANGE
+  REPAIR
+  TYRE_SERVICE
+  BATTERY_SERVICE
+  INSPECTION
+  OTHER
+}
+
+/**
+ * =========================================================
+ * EXPENSE CATEGORY
+ * =========================================================
+ */
+
+enum ExpenseCategory {
+  FUEL
+  INSURANCE
+  PARKING
+  TOLL
+  ROAD_TAX
+  EMISSION_TEST
+  ACCESSORIES
+  WASH_CLEANING
+  OTHER
+}
+
+/**
+ * =========================================================
+ * VEHICLE DOCUMENT TYPE
+ * =========================================================
+ */
+
+enum DocumentType {
+  REGISTRATION_CERTIFICATE
+  INSURANCE
+  POLLUTION_CERTIFICATE
+  ROAD_TAX
+  FITNESS_CERTIFICATE
+  WARRANTY
+  SERVICE_DOCUMENT
+  PURCHASE_INVOICE
+  OTHER
+}
+
+/**
+ * =========================================================
+ * DIAGNOSTIC REQUEST STATUS
+ * =========================================================
+ */
+
+enum DiagnosticRequestStatus {
+  PENDING
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+/**
+ * =========================================================
+ * DIAGNOSTIC CONCERN
+ * =========================================================
+ */
+
+enum DiagnosticConcernType {
+  ENGINE
+  TRANSMISSION
+  BRAKES
+  ELECTRICAL
+  BATTERY
+  TYRES_SUSPENSION
+  OVERHEATING
+  WARNING_LIGHT
+  NOISE_VIBRATION
+  FUEL_EFFICIENCY
+  OTHER
+}
+
+/**
+ * =========================================================
+ * DIAGNOSTIC URGENCY
+ * =========================================================
+ */
+
+enum DiagnosticUrgency {
+  LOW
+  NORMAL
+  HIGH
+}
+
+/**
+ * =========================================================
+ * DIAGNOSTIC SEVERITY
+ * =========================================================
+ */
+
+enum DiagnosticSeverity {
+  MINOR
+  MODERATE
+  MAJOR
+  CRITICAL
+}
+
+/**
+ * =========================================================
+ * USER
+ * =========================================================
+ */
+
+model User {
+  id Int @id @default(autoincrement())
+
+  fullName String @db.VarChar(80)
+
+  phone String @unique @db.VarChar(20)
+
+  email String @unique @db.VarChar(150)
+
+  address String @db.VarChar(255)
+
+  passwordHash String @db.VarChar(255)
+
+  role Role @default(VEHICLE_OWNER)
+
+  accountStatus AccountStatus @default(ACTIVE)
+
+  termsAccepted Boolean @default(false)
+
+  termsAcceptedAt DateTime?
+
+  lastLoginAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  professionalProfile ProfessionalProfile? @relation("ProfessionalProfileOwner")
+
+  professionalReviews ProfessionalProfile[] @relation("ProfessionalProfileReviewer")
+
+  vehicles Vehicle[]
+
+  diagnosticAssignments DiagnosticRequest[] @relation("DiagnosticExpertRequests")
+
+  @@map("users")
+}
+
+/**
+ * =========================================================
+ * PROFESSIONAL PROFILE
+ * =========================================================
+ */
+
+model ProfessionalProfile {
+  id Int @id @default(autoincrement())
+
+  userId Int @unique
+
+  user User @relation("ProfessionalProfileOwner", fields: [userId], references: [id], onDelete: Cascade)
+
+  qualification String @db.VarChar(100)
+
+  specialization String @db.VarChar(120)
+
+  yearsOfExperience Int
+
+  organizationName String @db.VarChar(150)
+
+  certificateNumber String @db.VarChar(100)
+
+  serviceLocation String @db.VarChar(150)
+
+  verificationDocumentPath String @db.VarChar(500)
+
+  verificationStatus VerificationStatus @default(PENDING)
+
+  verificationNote String? @db.VarChar(500)
+
+  reviewedById Int?
+
+  reviewedBy User? @relation("ProfessionalProfileReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  reviewedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([verificationStatus])
+  @@index([certificateNumber])
+  @@map("professional_profiles")
+}
+
+/**
+ * =========================================================
+ * VEHICLE
+ * =========================================================
+ */
+
+model Vehicle {
+  id Int @id @default(autoincrement())
+
+  ownerId Int
+
+  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  registrationNumber String @unique @db.VarChar(20)
+
+  make String @db.VarChar(80)
+
+  model String @db.VarChar(80)
+
+  variant String? @db.VarChar(80)
+
+  manufacturingYear Int
+
+  fuelType FuelType
+
+  transmission TransmissionType?
+
+  color String? @db.VarChar(50)
+
+  vehicleImagePath String? @db.VarChar(500)
+
+  vin String? @unique @db.VarChar(50)
+
+  engineNumber String? @unique @db.VarChar(50)
+
+  odometerKm Int @default(0)
+
+  purchaseDate DateTime? @db.Date
+
+  ownershipType OwnershipType @default(OWNED)
+
+  status VehicleStatus @default(ACTIVE)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  maintenanceRecords MaintenanceRecord[]
+
+  expenses Expense[]
+
+  documents VehicleDocument[]
+
+  diagnosticRequests DiagnosticRequest[]
+
+  @@index([ownerId])
+  @@index([make, model])
+  @@map("vehicles")
+}
+
+/**
+ * =========================================================
+ * MAINTENANCE RECORD
+ * =========================================================
+ */
+
+model MaintenanceRecord {
+  id Int @id @default(autoincrement())
+
+  vehicleId Int
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  maintenanceType MaintenanceType
+
+  title String @db.VarChar(120)
+
+  serviceDate DateTime @db.Date
+
+  odometerKm Int
+
+  serviceCenter String? @db.VarChar(150)
+
+  description String? @db.VarChar(1000)
+
+  cost Decimal @default(0) @db.Decimal(10, 2)
+
+  nextServiceDate DateTime? @db.Date
+
+  nextServiceOdometerKm Int?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([vehicleId])
+  @@index([serviceDate])
+  @@index([nextServiceDate])
+  @@map("maintenance_records")
+}
+
+/**
+ * =========================================================
+ * VEHICLE EXPENSE
+ * =========================================================
+ */
+
+model Expense {
+  id Int @id @default(autoincrement())
+
+  vehicleId Int
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  category ExpenseCategory
+
+  title String @db.VarChar(120)
+
+  amount Decimal @db.Decimal(10, 2)
+
+  expenseDate DateTime @db.Date
+
+  odometerKm Int?
+
+  merchant String? @db.VarChar(150)
+
+  notes String? @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([vehicleId])
+  @@index([expenseDate])
+  @@index([category])
+  @@index([vehicleId, expenseDate])
+  @@map("expenses")
+}
+
+/**
+ * =========================================================
+ * VEHICLE DOCUMENT
+ * =========================================================
+ */
+
+model VehicleDocument {
+  id Int @id @default(autoincrement())
+
+  vehicleId Int
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  documentType DocumentType
+
+  title String @db.VarChar(150)
+
+  documentNumber String? @db.VarChar(120)
+
+  provider String? @db.VarChar(150)
+
+  issueDate DateTime? @db.Date
+
+  expiryDate DateTime? @db.Date
+
+  filePath String? @db.VarChar(500)
+
+  originalFileName String? @db.VarChar(255)
+
+  mimeType String? @db.VarChar(100)
+
+  fileSize Int?
+
+  notes String? @db.VarChar(1000)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([vehicleId])
+  @@index([documentType])
+  @@index([expiryDate])
+  @@index([vehicleId, expiryDate])
+  @@map("vehicle_documents")
+}
+
+/**
+ * =========================================================
+ * DIAGNOSTIC REQUEST
+ * =========================================================
+ */
+
+model DiagnosticRequest {
+  id Int @id @default(autoincrement())
+
+  /**
+   * -------------------------------------------------------
+   * VEHICLE
+   * -------------------------------------------------------
+   */
+
+  vehicleId Int
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  /**
+   * -------------------------------------------------------
+   * ASSIGNED EXPERT
+   * Null while the request is waiting
+   * for an expert to accept it.
+   * -------------------------------------------------------
+   */
+
+  expertId Int?
+
+  expert User? @relation("DiagnosticExpertRequests", fields: [expertId], references: [id], onDelete: SetNull)
+
+  /**
+   * -------------------------------------------------------
+   * OWNER'S CONCERN
+   * -------------------------------------------------------
+   */
+
+  concernType DiagnosticConcernType
+
+  urgency DiagnosticUrgency @default(NORMAL)
+
+  title String @db.VarChar(120)
+
+  symptoms String @db.VarChar(1500)
+
+  odometerKm Int?
+
+  status DiagnosticRequestStatus @default(PENDING)
+
+  /**
+   * -------------------------------------------------------
+   * WORKFLOW TIMES
+   * -------------------------------------------------------
+   */
+
+  acceptedAt DateTime?
+
+  startedAt DateTime?
+
+  completedAt DateTime?
+
+  /**
+   * -------------------------------------------------------
+   * REPORT
+   * -------------------------------------------------------
+   */
+
+  report DiagnosticReport?
+
+  /**
+   * -------------------------------------------------------
+   * TIMESTAMPS
+   * -------------------------------------------------------
+   */
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([vehicleId])
+  @@index([expertId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([concernType])
+  @@map("diagnostic_requests")
+}
+
+/**
+ * =========================================================
+ * DIAGNOSTIC REPORT
+ * =========================================================
+ */
+
+model DiagnosticReport {
+  id Int @id @default(autoincrement())
+
+  /**
+   * -------------------------------------------------------
+   * REQUEST
+   * -------------------------------------------------------
+   */
+
+  requestId Int @unique
+
+  request DiagnosticRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  /**
+   * -------------------------------------------------------
+   * EXPERT ASSESSMENT
+   * -------------------------------------------------------
+   */
+
+  findings String @db.VarChar(2000)
+
+  suspectedCause String? @db.VarChar(1500)
+
+  severity DiagnosticSeverity
+
+  safeToDrive Boolean
+
+  recommendedAction String @db.VarChar(2000)
+
+  estimatedRepairCost Decimal? @db.Decimal(10, 2)
+
+  followUpRequired Boolean @default(false)
+
+  followUpNotes String? @db.VarChar(1000)
+
+  /**
+   * -------------------------------------------------------
+   * TIMESTAMPS
+   * -------------------------------------------------------
+   */
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([severity])
+  @@map("diagnostic_reports")
+}

@@ -1,0 +1,97 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  height: 72px;
+  padding: 0 5%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: rgba(8, 9, 13, 0.94);
+  border-bottom: 1px solid #1c1e25;
+
+  backdrop-filter: blur(12px);
+}
+
+.brand {
+  color: #ffffff;
+  font-size: 21px;
+  font-weight: 800;
+  text-decoration: none;
+  letter-spacing: -0.6px;
+}
+
+.brand span {
+  color: #ff3038;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-links a {
+  color: #9da1aa;
+  font-size: 13px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.nav-links a:hover {
+  color: #ffffff;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.login-link {
+  color: #ffffff;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.create-button {
+  padding: 11px 18px;
+
+  color: #ffffff;
+  background: #ef3038;
+
+  border-radius: 4px;
+
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+
+  transition: 0.2s;
+}
+
+.create-button:hover {
+  background: #ff4149;
+}
+
+@media (max-width: 850px) {
+  .nav-links {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .login-link {
+    display: none;
+  }
+
+  .create-button {
+    padding: 9px 13px;
+  }
+}

@@ -1,0 +1,859 @@
+<div class="dashboard-shell">
+
+  <!-- MOBILE HEADER -->
+
+  <header class="mobile-header">
+
+    <button
+      class="menu-button"
+      type="button"
+      (click)="toggleSidebar()">
+
+      ☰
+
+    </button>
+
+
+    <a
+      class="mobile-brand"
+      routerLink="/responder-dashboard">
+
+      Drive<strong>Mate</strong>
+
+    </a>
+
+  </header>
+
+
+  @if (mobileSidebarOpen) {
+
+    <button
+      class="sidebar-overlay"
+      type="button"
+      (click)="closeSidebar()">
+    </button>
+
+  }
+
+
+  <!-- SIDEBAR -->
+
+  <aside
+    class="sidebar"
+    [class.sidebar-open]="mobileSidebarOpen">
+
+    <div class="sidebar-top">
+
+      <a
+        class="brand"
+        routerLink="/responder-dashboard">
+
+        Drive<strong>Mate</strong>
+
+      </a>
+
+
+      <div class="role-badge">
+
+        <span></span>
+
+        ROADSIDE RESPONDER
+
+      </div>
+
+    </div>
+
+
+    <nav class="navigation">
+
+      <button
+        class="nav-item active"
+        type="button">
+
+        <span class="nav-icon">
+          ◫
+        </span>
+
+        Dashboard
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button">
+
+        <span class="nav-icon">
+          ⚠
+        </span>
+
+        Assistance Requests
+
+        <small>
+          LATER
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button">
+
+        <span class="nav-icon">
+          ◎
+        </span>
+
+        Live Navigation
+
+        <small>
+          GPS
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button">
+
+        <span class="nav-icon">
+          ◉
+        </span>
+
+        Active Assistance
+
+        <small>
+          LATER
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button">
+
+        <span class="nav-icon">
+          ✓
+        </span>
+
+        Completed Requests
+
+        <small>
+          LATER
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button">
+
+        <span class="nav-icon">
+          ◈
+        </span>
+
+        Responder Profile
+
+        <small>
+          LATER
+        </small>
+
+      </button>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <div class="sidebar-user">
+
+        <div class="avatar">
+
+          {{
+            firstName
+              .charAt(0)
+              .toUpperCase()
+          }}
+
+        </div>
+
+
+        <div>
+
+          <strong>
+
+            {{
+              currentUser?.fullName ||
+              'Roadside Responder'
+            }}
+
+          </strong>
+
+          <span>
+            Emergency Assistance Responder
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="logout-button"
+        type="button"
+        (click)="logout()">
+
+        ↪ Sign Out
+
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main-content">
+
+    <header class="topbar">
+
+      <div>
+
+        <p>
+          ROADSIDE OPERATIONS
+        </p>
+
+        <h2>
+          Responder Dashboard
+        </h2>
+
+      </div>
+
+
+      <div class="portal-status">
+
+        <span></span>
+
+        Responder Portal
+
+      </div>
+
+    </header>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <div class="hero-copy">
+
+        <p class="eyebrow">
+          EMERGENCY VEHICLE ASSISTANCE
+        </p>
+
+
+        <h1>
+
+          Welcome back,
+
+          <span>
+            {{ firstName }}.
+          </span>
+
+        </h1>
+
+
+        <p class="hero-description">
+
+          Your Roadside Assistance workspace
+          will manage emergency requests,
+          responder availability, navigation
+          and assistance progress.
+
+        </p>
+
+
+        <div class="hero-tags">
+
+          <span>
+            Emergency Requests
+          </span>
+
+          <span>
+            Location Assistance
+          </span>
+
+          <span>
+            Response Tracking
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <div class="responder-visual">
+
+        <div class="pulse-ring ring-one">
+        </div>
+
+        <div class="pulse-ring ring-two">
+        </div>
+
+
+        <div class="emergency-card">
+
+          <span class="emergency-symbol">
+            ⚠
+          </span>
+
+          <small>
+            ROADSIDE SYSTEM
+          </small>
+
+          <strong>
+            STANDBY
+          </strong>
+
+          <div class="signal-line">
+          </div>
+
+          <p>
+            Emergency workflow deferred
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- STATS -->
+
+    <section class="stats-grid">
+
+      <article class="stat-card">
+
+        <div class="stat-header">
+
+          <span>
+            ⚠
+          </span>
+
+          <small>
+            REQUESTS
+          </small>
+
+        </div>
+
+
+        <strong>
+          {{ availableRequests }}
+        </strong>
+
+        <h3>
+          Available Requests
+        </h3>
+
+        <p>
+          Emergency requests available
+          for responder assignment.
+        </p>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-header">
+
+          <span>
+            ◉
+          </span>
+
+          <small>
+            ACTIVE
+          </small>
+
+        </div>
+
+
+        <strong>
+          {{ activeAssistance }}
+        </strong>
+
+        <h3>
+          Active Assistance
+        </h3>
+
+        <p>
+          Assistance cases currently
+          being handled by you.
+        </p>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-header">
+
+          <span>
+            ✓
+          </span>
+
+          <small>
+            COMPLETED
+          </small>
+
+        </div>
+
+
+        <strong>
+          {{ completedRequests }}
+        </strong>
+
+        <h3>
+          Completed Requests
+        </h3>
+
+        <p>
+          Successfully completed roadside
+          assistance operations.
+        </p>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-header">
+
+          <span>
+            ◎
+          </span>
+
+          <small>
+            LOCATION
+          </small>
+
+        </div>
+
+
+        <strong class="not-connected">
+          —
+        </strong>
+
+        <h3>
+          GPS Status
+        </h3>
+
+        <p>
+          Location services will be
+          integrated during the roadside module.
+        </p>
+
+      </article>
+
+    </section>
+
+
+    <!-- WORKSPACE -->
+
+    <section class="workspace-grid">
+
+      <article class="workspace-card">
+
+        <div class="section-heading">
+
+          <span>
+            01
+          </span>
+
+
+          <div>
+
+            <p>
+              FUTURE WORKFLOW
+            </p>
+
+            <h2>
+              Emergency Response Process
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="workflow">
+
+          <div class="workflow-row">
+
+            <div class="workflow-number">
+              01
+            </div>
+
+            <div>
+
+              <strong>
+                Receive Assistance Request
+              </strong>
+
+              <p>
+                Receive an emergency request
+                from a vehicle owner with
+                problem and location details.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line">
+          </div>
+
+
+          <div class="workflow-row">
+
+            <div class="workflow-number">
+              02
+            </div>
+
+            <div>
+
+              <strong>
+                Accept Request
+              </strong>
+
+              <p>
+                Review the request and accept
+                the roadside assistance task.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line">
+          </div>
+
+
+          <div class="workflow-row">
+
+            <div class="workflow-number">
+              03
+            </div>
+
+            <div>
+
+              <strong>
+                Navigate to Vehicle
+              </strong>
+
+              <p>
+                GPS and map integration will
+                guide the responder to the
+                stranded vehicle.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="workflow-line">
+          </div>
+
+
+          <div class="workflow-row">
+
+            <div class="workflow-number">
+              04
+            </div>
+
+            <div>
+
+              <strong>
+                Complete Assistance
+              </strong>
+
+              <p>
+                Record the assistance provided
+                and complete the emergency
+                service request.
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="development-note">
+
+          <span>
+            ⚠
+          </span>
+
+
+          <div>
+
+            <strong>
+              Roadside module intentionally deferred
+            </strong>
+
+            <p>
+
+              Maps, GPS, live location,
+              responder assignment and emergency
+              handling will be implemented after
+              the core DriveMate modules.
+
+            </p>
+
+          </div>
+
+        </div>
+
+      </article>
+
+
+      <!-- PROFILE -->
+
+      <article class="workspace-card profile-card">
+
+        <div class="section-heading">
+
+          <span>
+            02
+          </span>
+
+
+          <div>
+
+            <p>
+              RESPONDER ACCOUNT
+            </p>
+
+            <h2>
+              Profile
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        <div class="profile-avatar">
+
+          {{
+            firstName
+              .charAt(0)
+              .toUpperCase()
+          }}
+
+        </div>
+
+
+        <h3>
+
+          {{
+            currentUser?.fullName ||
+            'Roadside Responder'
+          }}
+
+        </h3>
+
+
+        <p class="profile-role">
+          Emergency Assistance Responder
+        </p>
+
+
+        <div class="profile-info">
+
+          <div>
+
+            <span>
+              ROLE
+            </span>
+
+            <strong>
+              Roadside Responder
+            </strong>
+
+          </div>
+
+
+          <div>
+
+            <span>
+              EMAIL
+            </span>
+
+            <strong>
+
+              {{
+                currentUser?.email ||
+                'Not available'
+              }}
+
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <div class="availability-card">
+
+          <span class="availability-dot">
+          </span>
+
+
+          <div>
+
+            <strong>
+              Availability System
+            </strong>
+
+            <p>
+              Online/offline responder
+              availability will be added later.
+            </p>
+
+          </div>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- FUTURE MODULES -->
+
+    <section class="future-section">
+
+      <div class="future-heading">
+
+        <div>
+
+          <p class="eyebrow">
+            ROADSIDE CAPABILITIES
+          </p>
+
+          <h2>
+            Planned emergency workspace
+          </h2>
+
+        </div>
+
+
+        <span>
+          PHASE LATER
+        </span>
+
+      </div>
+
+
+      <div class="future-grid">
+
+        <article>
+
+          <div>
+            ⚠
+          </div>
+
+          <h3>
+            Emergency Requests
+          </h3>
+
+          <p>
+            Receive roadside assistance
+            requests from stranded owners.
+          </p>
+
+        </article>
+
+
+        <article>
+
+          <div>
+            ◎
+          </div>
+
+          <h3>
+            Maps & GPS
+          </h3>
+
+          <p>
+            Use location information and
+            navigation to reach the vehicle.
+          </p>
+
+        </article>
+
+
+        <article>
+
+          <div>
+            ◉
+          </div>
+
+          <h3>
+            Live Status
+          </h3>
+
+          <p>
+            Update owners when assistance
+            is accepted and on the way.
+          </p>
+
+        </article>
+
+
+        <article>
+
+          <div>
+            ✓
+          </div>
+
+          <h3>
+            Completion Records
+          </h3>
+
+          <p>
+            Record assistance details and
+            close emergency requests.
+          </p>
+
+        </article>
+
+      </div>
+
+    </section>
+
+
+    <footer class="footer">
+
+      <strong>
+        DRIVEMATE
+      </strong>
+
+      Roadside Assistance Responder Portal
+
+    </footer>
+
+  </main>
+
+</div>

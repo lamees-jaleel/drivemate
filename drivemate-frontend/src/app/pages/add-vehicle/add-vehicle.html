@@ -1,0 +1,714 @@
+<div class="add-vehicle-page">
+
+  <header class="topbar">
+
+    <a
+      class="brand"
+      routerLink="/owner-dashboard">
+
+      <span>
+        Drive
+      </span>
+
+      <strong>
+        Mate
+      </strong>
+
+    </a>
+
+
+    <a
+      class="back-link"
+      routerLink="/owner-dashboard">
+
+      ← Back to Dashboard
+
+    </a>
+
+  </header>
+
+
+  <main class="page-content">
+
+    <section class="page-heading">
+
+      <p class="eyebrow">
+        MY VEHICLES
+      </p>
+
+
+      <h1>
+        Add a
+        <span>
+          Vehicle.
+        </span>
+      </h1>
+
+
+      <p>
+
+        Add your vehicle identity and
+        ownership information to begin
+        managing its complete lifecycle
+        with DriveMate.
+
+      </p>
+
+    </section>
+
+
+    <form
+      class="vehicle-form"
+      [formGroup]="vehicleForm"
+      (ngSubmit)="submit()"
+      novalidate>
+
+
+      <!-- ===============================================
+           VEHICLE IDENTITY
+      ================================================ -->
+
+      <section class="form-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            01
+          </span>
+
+          <div>
+
+            <h2>
+              Vehicle Identity
+            </h2>
+
+            <p>
+              Basic information used to
+              identify your vehicle.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+          <!-- REGISTRATION NUMBER -->
+
+          <div class="form-field">
+
+            <label
+              for="registrationNumber">
+
+              Registration Number
+              <span>*</span>
+
+            </label>
+
+
+            <input
+              id="registrationNumber"
+              type="text"
+              maxlength="20"
+              formControlName="registrationNumber"
+              placeholder="KL05AB1234"
+              autocomplete="off"
+              (input)="onRegistrationInput($event)">
+
+
+            @if (
+              showError(
+                f.registrationNumber
+              )
+            ) {
+
+              <small class="error">
+
+                Registration number
+                is required.
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- MAKE -->
+
+          <div class="form-field">
+
+            <label
+              for="make">
+
+              Make
+              <span>*</span>
+
+            </label>
+
+
+            <input
+              id="make"
+              type="text"
+              maxlength="80"
+              formControlName="make"
+              placeholder="Honda"
+              autocomplete="off">
+
+
+            @if (
+              showError(
+                f.make
+              )
+            ) {
+
+              <small class="error">
+
+                Vehicle make
+                is required.
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- MODEL -->
+
+          <div class="form-field">
+
+            <label
+              for="model">
+
+              Model
+              <span>*</span>
+
+            </label>
+
+
+            <input
+              id="model"
+              type="text"
+              maxlength="80"
+              formControlName="model"
+              placeholder="City"
+              autocomplete="off">
+
+
+            @if (
+              showError(
+                f.model
+              )
+            ) {
+
+              <small class="error">
+
+                Vehicle model
+                is required.
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- VARIANT -->
+
+          <div class="form-field">
+
+            <label
+              for="variant">
+
+              Variant
+
+            </label>
+
+
+            <input
+              id="variant"
+              type="text"
+              maxlength="80"
+              formControlName="variant"
+              placeholder="VX"
+              autocomplete="off">
+
+          </div>
+
+
+          <!-- YEAR -->
+
+          <div class="form-field">
+
+            <label
+              for="manufacturingYear">
+
+              Manufacturing Year
+              <span>*</span>
+
+            </label>
+
+
+            <input
+              id="manufacturingYear"
+              type="number"
+              min="1900"
+              [max]="maximumVehicleYear"
+              formControlName="manufacturingYear"
+              placeholder="2022">
+
+
+            @if (
+              showError(
+                f.manufacturingYear
+              )
+            ) {
+
+              <small class="error">
+
+                Enter a year between
+                1900 and
+                {{ maximumVehicleYear }}.
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- FUEL -->
+
+          <div class="form-field">
+
+            <label
+              for="fuelType">
+
+              Fuel Type
+              <span>*</span>
+
+            </label>
+
+
+            <select
+              id="fuelType"
+              formControlName="fuelType">
+
+              <option value="">
+                Select fuel type
+              </option>
+
+
+              @for (
+                fuel of fuelTypes;
+                track fuel.value
+              ) {
+
+                <option
+                  [value]="fuel.value">
+
+                  {{ fuel.label }}
+
+                </option>
+
+              }
+
+            </select>
+
+
+            @if (
+              showError(
+                f.fuelType
+              )
+            ) {
+
+              <small class="error">
+
+                Select a fuel type.
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- TRANSMISSION -->
+
+          <div class="form-field">
+
+            <label
+              for="transmission">
+
+              Transmission
+
+            </label>
+
+
+            <select
+              id="transmission"
+              formControlName="transmission">
+
+              <option value="">
+                Select transmission
+              </option>
+
+
+              @for (
+                transmission
+                of transmissionTypes;
+                track transmission.value
+              ) {
+
+                <option
+                  [value]="transmission.value">
+
+                  {{ transmission.label }}
+
+                </option>
+
+              }
+
+            </select>
+
+          </div>
+
+
+          <!-- COLOR -->
+
+          <div class="form-field">
+
+            <label
+              for="color">
+
+              Color
+
+            </label>
+
+
+            <input
+              id="color"
+              type="text"
+              maxlength="50"
+              formControlName="color"
+              placeholder="White"
+              autocomplete="off">
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===============================================
+           TECHNICAL IDENTITY
+      ================================================ -->
+
+      <section class="form-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            02
+          </span>
+
+          <div>
+
+            <h2>
+              Technical Identity
+            </h2>
+
+            <p>
+              Optional identifiers from
+              your vehicle documents.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+          <div class="form-field">
+
+            <label
+              for="vin">
+
+              VIN / Chassis Number
+
+            </label>
+
+
+            <input
+              id="vin"
+              type="text"
+              maxlength="50"
+              formControlName="vin"
+              placeholder="MA3XXXXXXXXXXXXXX"
+              autocomplete="off"
+              (input)="onVinInput($event)">
+
+
+            @if (
+              showError(
+                f.vin
+              )
+            ) {
+
+              <small class="error">
+
+                VIN must contain only
+                letters and numbers.
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <div class="form-field">
+
+            <label
+              for="engineNumber">
+
+              Engine Number
+
+            </label>
+
+
+            <input
+              id="engineNumber"
+              type="text"
+              maxlength="50"
+              formControlName="engineNumber"
+              placeholder="ENG123456"
+              autocomplete="off"
+              (input)="onEngineNumberInput($event)">
+
+
+            @if (
+              showError(
+                f.engineNumber
+              )
+            ) {
+
+              <small class="error">
+
+                Use letters, numbers
+                or hyphens only.
+
+              </small>
+
+            }
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===============================================
+           OWNERSHIP
+      ================================================ -->
+
+      <section class="form-section">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            03
+          </span>
+
+          <div>
+
+            <h2>
+              Ownership Information
+            </h2>
+
+            <p>
+              Current mileage and
+              ownership details.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+
+          <!-- ODOMETER -->
+
+          <div class="form-field">
+
+            <label
+              for="odometerKm">
+
+              Odometer Reading
+              <span>*</span>
+
+            </label>
+
+
+            <div class="input-suffix">
+
+              <input
+                id="odometerKm"
+                type="number"
+                min="0"
+                max="5000000"
+                formControlName="odometerKm"
+                placeholder="0">
+
+              <span>
+                KM
+              </span>
+
+            </div>
+
+
+            @if (
+              showError(
+                f.odometerKm
+              )
+            ) {
+
+              <small class="error">
+
+                Enter a valid odometer
+                reading.
+
+              </small>
+
+            }
+
+          </div>
+
+
+          <!-- PURCHASE DATE -->
+
+          <div class="form-field">
+
+            <label
+              for="purchaseDate">
+
+              Purchase Date
+
+            </label>
+
+
+            <input
+              id="purchaseDate"
+              type="date"
+              formControlName="purchaseDate">
+
+          </div>
+
+
+          <!-- OWNERSHIP -->
+
+          <div class="form-field full-width">
+
+            <label>
+
+              Ownership Type
+              <span>*</span>
+
+            </label>
+
+
+            <div class="ownership-grid">
+
+              @for (
+                ownership
+                of ownershipTypes;
+                track ownership.value
+              ) {
+
+                <label
+                  class="ownership-option"
+                  [class.selected]="
+                    f.ownershipType.value ===
+                    ownership.value
+                  ">
+
+                  <input
+                    type="radio"
+                    formControlName="ownershipType"
+                    [value]="ownership.value">
+
+                  <span
+                    class="radio-circle">
+                  </span>
+
+                  <strong>
+
+                    {{ ownership.label }}
+
+                  </strong>
+
+                </label>
+
+              }
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===============================================
+           ACTIONS
+      ================================================ -->
+
+      <div class="form-actions">
+
+        <button
+          class="cancel-button"
+          type="button"
+          [disabled]="isSubmitting"
+          (click)="cancel()">
+
+          Cancel
+
+        </button>
+
+
+        <button
+          class="save-button"
+          type="submit"
+          [disabled]="isSubmitting">
+
+          @if (isSubmitting) {
+
+            Saving Vehicle...
+
+          }
+
+          @else {
+
+            + Add Vehicle
+
+          }
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </main>
+
+</div>

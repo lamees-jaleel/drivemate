@@ -1,0 +1,865 @@
+* {
+  box-sizing: border-box;
+}
+
+
+:host {
+  display: block;
+
+  min-height: 100vh;
+
+  color: #ffffff;
+
+  background: #08090d;
+
+  font-family:
+    Inter,
+    Arial,
+    sans-serif;
+}
+
+
+/* =========================
+   MAIN LAYOUT
+========================= */
+
+.registration-page {
+  min-height: 100vh;
+
+  display: grid;
+
+  grid-template-columns:
+    1.1fr 1fr;
+
+  background: #08090d;
+}
+
+
+/* =========================
+   LEFT BRAND PANEL
+========================= */
+
+.brand-panel {
+  position: sticky;
+
+  top: 0;
+
+  height: 100vh;
+
+  padding: 38px 7%;
+
+  display: flex;
+
+  flex-direction: column;
+
+  background:
+    radial-gradient(
+      circle at 85% 40%,
+      rgba(239, 48, 56, 0.09),
+      transparent 38%
+    ),
+    #08090d;
+
+  border-right:
+    1px solid #17191f;
+}
+
+
+.brand {
+  width: fit-content;
+
+  color: #ffffff;
+
+  font-size: 24px;
+
+  font-weight: 800;
+
+  letter-spacing: -1px;
+
+  text-decoration: none;
+}
+
+
+.brand span {
+  color: #ef3038;
+}
+
+
+.brand-content {
+  max-width: 620px;
+
+  margin: auto 0;
+}
+
+
+.eyebrow {
+  margin: 0 0 25px;
+
+  color: #ef3038;
+
+  font-size: 11px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.2px;
+
+  text-transform: uppercase;
+}
+
+
+.brand-content h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: clamp(
+    55px,
+    5.4vw,
+    82px
+  );
+
+  line-height: 0.96;
+
+  letter-spacing: -4px;
+}
+
+
+.brand-content h1 span {
+  color: #ef3038;
+}
+
+
+.brand-description {
+  max-width: 550px;
+
+  margin: 28px 0 0;
+
+  color: #c1c3ca;
+
+  font-size: 15px;
+
+  line-height: 1.8;
+}
+
+
+.brand-footer {
+  margin: 0;
+
+  color: #969aa4;
+
+  font-size: 10px;
+
+  letter-spacing: 1.8px;
+}
+
+
+.brand-footer span {
+  margin: 0 6px;
+
+  color: #ef3038;
+}
+
+
+/* =========================
+   FORM PANEL
+========================= */
+
+.form-panel {
+  position: relative;
+
+  min-height: 100vh;
+
+  padding: 42px 6% 55px;
+
+  background: #0c0d12;
+}
+
+
+.back-link {
+  display: block;
+
+  width: fit-content;
+
+  margin-bottom: 30px;
+
+  color: #d1d3d8;
+
+  font-size: 12px;
+
+  text-decoration: none;
+}
+
+
+.back-link:hover {
+  color: #ffffff;
+}
+
+
+.form-container {
+  width: 100%;
+
+  max-width: 760px;
+
+  margin: 0 auto;
+}
+
+
+.form-heading {
+  margin-bottom: 36px;
+}
+
+
+.form-heading h2 {
+  margin: 0 0 10px;
+
+  color: #ffffff;
+
+  font-size: 34px;
+
+  letter-spacing: -1.5px;
+}
+
+
+.form-heading p {
+  margin: 0;
+
+  color: #9b9fa9;
+
+  font-size: 15px;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form-section {
+  margin-bottom: 28px;
+}
+
+
+.section-label,
+.form-group label {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: #f2f2f3;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+
+.section-label span,
+.form-group label span,
+.terms-row label > span {
+  color: #ef3038;
+}
+
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+
+.two-column {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 16px;
+}
+
+
+input[type='text'],
+input[type='email'],
+input[type='tel'],
+input[type='password'] {
+  width: 100%;
+
+  height: 50px;
+
+  padding: 0 14px;
+
+  color: #ffffff;
+
+  background: #16171d;
+
+  border:
+    1px solid #34363e;
+
+  border-radius: 6px;
+
+  font-size: 14px;
+
+  outline: none;
+
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+
+input::placeholder {
+  color: #747983;
+}
+
+
+input:focus {
+  border-color: #ef3038;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(239, 48, 56, 0.08);
+}
+
+
+/* =========================
+   INVALID INPUTS
+========================= */
+
+input.invalid {
+  border-color: #ff4d55;
+}
+
+
+input.invalid:focus {
+  border-color: #ff4d55;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(255, 77, 85, 0.1);
+}
+
+
+/* =========================
+   PHONE PREFIX
+========================= */
+
+.phone-input {
+  width: 100%;
+
+  height: 50px;
+
+  display: flex;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  background: #16171d;
+
+  border:
+    1px solid #34363e;
+
+  border-radius: 6px;
+
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+
+.phone-input:focus-within {
+  border-color: #ef3038;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(239, 48, 56, 0.08);
+}
+
+
+.phone-input.invalid {
+  border-color: #ff4d55;
+}
+
+
+.phone-prefix {
+  height: 100%;
+
+  padding:
+    0 12px 0 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  color: #ffffff;
+
+  background: #202127;
+
+  border-right:
+    1px solid #34363e;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  user-select: none;
+}
+
+
+.phone-input input {
+  height: 100%;
+
+  flex: 1;
+
+  padding:
+    0 14px;
+
+  color: #ffffff;
+
+  background: transparent;
+
+  border: none;
+
+  border-radius: 0;
+
+  box-shadow: none;
+}
+
+
+.phone-input input:focus {
+  border: none;
+
+  box-shadow: none;
+}
+
+
+/* =========================
+   ROLE CARDS
+========================= */
+
+.role-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 10px;
+}
+
+
+.role-card {
+  min-height: 74px;
+
+  padding: 13px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  justify-content: center;
+
+  color: #ffffff;
+
+  background: #16171d;
+
+  border:
+    1px solid #34363e;
+
+  border-radius: 7px;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+
+.role-card strong {
+  margin-bottom: 6px;
+
+  font-size: 12px;
+}
+
+
+.role-card small {
+  color: #777b84;
+
+  font-size: 10px;
+}
+
+
+.role-card:hover {
+  border-color: #686b73;
+}
+
+
+.role-card.selected {
+  background:
+    rgba(239, 48, 56, 0.12);
+
+  border-color: #ef3038;
+}
+
+
+/* =========================
+   PASSWORD
+========================= */
+
+.password-field {
+  position: relative;
+}
+
+
+.password-field input {
+  padding-right: 65px;
+}
+
+
+.show-button {
+  position: absolute;
+
+  top: 50%;
+
+  right: 13px;
+
+  transform:
+    translateY(-50%);
+
+  padding: 0;
+
+  color: #ffffff;
+
+  background: transparent;
+
+  border: none;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   HINT / ERROR
+========================= */
+
+.field-hint {
+  margin: 7px 0 0;
+
+  color: #777b84;
+
+  font-size: 10px;
+
+  line-height: 1.5;
+}
+
+
+.error-message {
+  margin: 7px 0 0;
+
+  color: #ff555c;
+
+  font-size: 10px;
+
+  line-height: 1.45;
+}
+
+
+/* =========================
+   PROFESSIONAL
+========================= */
+
+.professional-section {
+  margin: 6px 0 26px;
+
+  padding-top: 22px;
+
+  border-top:
+    1px solid #30323a;
+}
+
+
+.professional-heading {
+  margin-bottom: 20px;
+}
+
+
+.professional-heading h3 {
+  margin: 0 0 5px;
+
+  font-size: 15px;
+}
+
+
+.professional-heading p {
+  margin: 0;
+
+  color: #e7a900;
+
+  font-size: 10px;
+}
+
+
+.file-input {
+  width: 100%;
+
+  padding: 11px;
+
+  color: #9fa2aa;
+
+  background: #16171d;
+
+  border:
+    1px solid #34363e;
+
+  border-radius: 6px;
+
+  font-size: 11px;
+}
+
+
+.file-input.invalid {
+  border-color: #ff4d55;
+}
+
+
+.file-input::file-selector-button {
+  margin-right: 12px;
+
+  padding: 6px 10px;
+
+  color: #111318;
+
+  background: #ffffff;
+
+  border: none;
+
+  border-radius: 3px;
+
+  cursor: pointer;
+}
+
+
+/* =========================
+   TERMS
+========================= */
+
+.terms-row {
+  margin: 9px 0 25px;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+}
+
+
+.terms-row input {
+  width: 15px;
+
+  height: 15px;
+
+  margin-top: 1px;
+
+  accent-color: #ef3038;
+
+  cursor: pointer;
+}
+
+
+.terms-row label {
+  color: #a7abb4;
+
+  font-size: 11px;
+
+  line-height: 1.5;
+}
+
+
+.terms-row a {
+  color: #ef3038;
+
+  text-decoration: none;
+}
+
+
+.terms-row a:hover {
+  text-decoration: underline;
+}
+
+
+.terms-error {
+  margin-top: -18px;
+
+  margin-bottom: 18px;
+}
+
+
+/* =========================
+   SUBMIT
+========================= */
+
+.submit-button {
+  width: 100%;
+
+  height: 53px;
+
+  padding: 0 24px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 18px;
+
+  color: #ffffff;
+
+  background: #ef3038;
+
+  border: none;
+
+  border-radius: 6px;
+
+  font-size: 14px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s,
+    transform 0.2s;
+}
+
+
+.submit-button:hover {
+  background: #ff4149;
+
+  transform:
+    translateY(-1px);
+}
+
+
+.signin-text {
+  margin: 26px 0 0;
+
+  color: #8c9099;
+
+  font-size: 12px;
+
+  text-align: center;
+}
+
+
+.signin-text a {
+  color: #ef3038;
+
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 1050px) {
+
+  .registration-page {
+    grid-template-columns:
+      0.9fr 1.1fr;
+  }
+
+
+  .brand-content h1 {
+    font-size: 54px;
+  }
+
+
+  .role-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 800px) {
+
+  .registration-page {
+    display: block;
+  }
+
+
+  .brand-panel {
+    position: relative;
+
+    height: auto;
+
+    min-height: 430px;
+
+    padding:
+      30px 24px 55px;
+
+    border-right: none;
+
+    border-bottom:
+      1px solid #22242b;
+  }
+
+
+  .brand-content {
+    margin:
+      80px 0 40px;
+  }
+
+
+  .brand-content h1 {
+    font-size: 52px;
+  }
+
+
+  .brand-footer {
+    display: none;
+  }
+
+
+  .form-panel {
+    padding:
+      35px 24px 55px;
+  }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 560px) {
+
+  .two-column {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .brand-content h1 {
+    font-size: 44px;
+
+    letter-spacing: -3px;
+  }
+
+
+  .form-heading h2 {
+    font-size: 30px;
+  }
+}

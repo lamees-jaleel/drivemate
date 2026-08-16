@@ -1,0 +1,582 @@
+* {
+  box-sizing: border-box;
+}
+
+:host {
+  display: block;
+
+  background: #08090d;
+  color: #ffffff;
+
+  font-family:
+    Inter,
+    Arial,
+    sans-serif;
+}
+
+
+/* =========================
+   GENERAL
+========================= */
+
+.section {
+  padding: 105px 7%;
+}
+
+.eyebrow {
+  margin: 0 0 18px;
+
+  color: #ef3038;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+
+  text-transform: uppercase;
+}
+
+.section-heading h2,
+.center-heading h2,
+.ecosystem-intro h2,
+.cta-section h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: clamp(
+    38px,
+    5vw,
+    62px
+  );
+
+  line-height: 0.98;
+
+  letter-spacing: -2px;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
+  position: relative;
+
+  min-height: calc(
+    100vh - 72px
+  );
+
+  padding: 90px 7% 70px;
+
+  display: flex;
+  align-items: center;
+
+  background:
+    radial-gradient(
+      circle at 55% 30%,
+      rgba(239, 48, 56, 0.06),
+      transparent 34%
+    ),
+    #08090d;
+}
+
+.hero-content {
+  width: 100%;
+  max-width: 900px;
+}
+
+.hero h1 {
+  margin: 0;
+
+  max-width: 900px;
+
+  color: #ffffff;
+
+  font-size: clamp(
+    56px,
+    7vw,
+    100px
+  );
+
+  line-height: 0.9;
+
+  letter-spacing: -5px;
+
+  font-weight: 800;
+}
+
+.hero h1 span {
+  display: block;
+
+  color: #ef3038;
+}
+
+/*
+  Keeps "Digital Co-Pilot" together on larger screens.
+*/
+.accent-title {
+  display: block;
+
+  white-space: nowrap;
+}
+
+.hero-description {
+  max-width: 650px;
+
+  margin: 32px 0 0;
+
+  color: #9da1aa;
+
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.hero-actions {
+  margin-top: 35px;
+
+  display: flex;
+  gap: 12px;
+}
+
+.primary-button,
+.secondary-button,
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 13px;
+
+  text-decoration: none;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.primary-button {
+  padding: 13px 18px;
+
+  color: #ffffff;
+  background: #ef3038;
+
+  border-radius: 4px;
+}
+
+.primary-button:hover {
+  background: #ff4048;
+}
+
+.secondary-button {
+  padding: 12px 18px;
+
+  color: #ffffff;
+
+  border: 1px solid #555860;
+  border-radius: 4px;
+}
+
+.secondary-button:hover {
+  border-color: #ffffff;
+}
+
+.explore-link {
+  position: absolute;
+
+  left: 50%;
+  bottom: 28px;
+
+  transform: translateX(-50%);
+
+  color: #747780;
+
+  font-size: 10px;
+  text-decoration: none;
+}
+
+.explore-link span {
+  margin-left: 8px;
+
+  color: #ef3038;
+}
+
+
+/* =========================
+   FEATURES
+========================= */
+
+.features-section {
+  background: #090a0e;
+}
+
+.section-heading {
+  max-width: 720px;
+
+  margin-bottom: 60px;
+}
+
+.section-heading > p:last-child {
+  max-width: 570px;
+
+  margin-top: 24px;
+
+  color: #888c95;
+
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.features-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 18px;
+}
+
+.feature-card {
+  min-height: 195px;
+
+  padding: 26px;
+
+  background: #0c0d12;
+
+  border: 1px solid #272a32;
+  border-radius: 6px;
+
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #ef3038;
+}
+
+.feature-icon {
+  width: 32px;
+  height: 32px;
+
+  margin-bottom: 28px;
+
+  display: grid;
+  place-items: center;
+
+  color: #ef3038;
+
+  border: 1px solid #ef3038;
+  border-radius: 5px;
+
+  font-size: 12px;
+}
+
+.feature-card h3 {
+  margin: 0 0 11px;
+
+  color: #ffffff;
+
+  font-size: 14px;
+}
+
+.feature-card p {
+  margin: 0;
+
+  color: #747983;
+
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+
+/* =========================
+   HOW IT WORKS
+========================= */
+
+.how-section {
+  border-top: 1px solid #292b31;
+  border-bottom: 1px solid #292b31;
+}
+
+.center-heading {
+  margin-bottom: 70px;
+
+  text-align: center;
+}
+
+.steps-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 60px;
+}
+
+.step {
+  position: relative;
+}
+
+.step::before {
+  content: '';
+
+  position: absolute;
+
+  top: -20px;
+  left: 0;
+
+  width: 100%;
+  height: 1px;
+
+  background: #272930;
+}
+
+.step-number {
+  color: #ef3038;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.step h3 {
+  margin: 18px 0 12px;
+
+  font-size: 16px;
+}
+
+.step p {
+  max-width: 320px;
+
+  margin: 0;
+
+  color: #777b84;
+
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+
+/* =========================
+   ECOSYSTEM
+========================= */
+
+.ecosystem-section {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 100px;
+
+  align-items: center;
+}
+
+.ecosystem-intro > p:last-child {
+  max-width: 500px;
+
+  margin-top: 25px;
+
+  color: #828690;
+
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.role-list {
+  border-top: 1px solid #30323a;
+}
+
+.role-item {
+  min-height: 90px;
+
+  padding: 22px 0;
+
+  display: flex;
+  align-items: flex-start;
+
+  gap: 16px;
+
+  border-bottom: 1px solid #30323a;
+}
+
+.role-marker {
+  width: 6px;
+  height: 6px;
+
+  margin-top: 7px;
+
+  flex-shrink: 0;
+
+  background: #ef3038;
+}
+
+.role-item h3 {
+  margin: 0 0 6px;
+
+  font-size: 14px;
+}
+
+.role-item p {
+  margin: 0;
+
+  color: #797d85;
+
+  font-size: 11px;
+}
+
+
+/* =========================
+   CTA
+========================= */
+
+.cta-section {
+  min-height: 390px;
+
+  padding: 80px 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  background:
+    linear-gradient(
+      rgba(82, 24, 28, 0.86),
+      rgba(65, 19, 23, 0.92)
+    );
+}
+
+.cta-section h2 {
+  font-size: clamp(
+    42px,
+    5vw,
+    64px
+  );
+}
+
+.cta-section > p:not(.eyebrow) {
+  margin: 23px 0;
+
+  color: #b6a4a6;
+
+  font-size: 12px;
+}
+
+.cta-button {
+  margin-top: 5px;
+
+  padding: 13px 19px;
+
+  color: #ffffff;
+  background: #ef3038;
+
+  border-radius: 4px;
+}
+
+.cta-button:hover {
+  background: #ff4149;
+}
+
+
+/* =========================
+   TABLET
+========================= */
+
+@media (max-width: 950px) {
+
+  .features-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .ecosystem-section {
+    grid-template-columns: 1fr;
+
+    gap: 60px;
+  }
+
+  .hero h1 {
+    font-size: clamp(
+      52px,
+      8vw,
+      78px
+    );
+  }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+  .section {
+    padding: 80px 24px;
+  }
+
+  .hero {
+    min-height: calc(
+      100vh - 72px
+    );
+
+    padding: 80px 24px;
+  }
+
+  .hero h1 {
+    font-size: clamp(
+      50px,
+      15vw,
+      72px
+    );
+
+    letter-spacing: -3px;
+  }
+
+  /*
+    On smaller screens, wrapping is allowed again
+    so the heading never overflows the screen.
+  */
+  .accent-title {
+    white-space: normal;
+  }
+
+  .features-grid,
+  .steps-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .steps-grid {
+    gap: 55px;
+  }
+
+  .hero-actions {
+    flex-wrap: wrap;
+  }
+}
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 450px) {
+
+  .hero h1 {
+    font-size: 48px;
+  }
+
+  .hero-description {
+    font-size: 14px;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+  }
+}

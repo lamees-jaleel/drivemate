@@ -1,0 +1,1250 @@
+<div class="admin-shell">
+
+  <!-- MOBILE HEADER -->
+
+  <header class="mobile-header">
+
+    <button
+      class="menu-button"
+      type="button"
+      (click)="toggleSidebar()">
+
+      ☰
+
+    </button>
+
+
+    <a
+      class="mobile-brand"
+      routerLink="/admin-dashboard">
+
+      Drive<strong>Mate</strong>
+
+    </a>
+
+  </header>
+
+
+  @if (mobileSidebarOpen) {
+
+    <button
+      class="sidebar-overlay"
+      type="button"
+      (click)="closeSidebar()">
+    </button>
+
+  }
+
+
+  <!-- SIDEBAR -->
+
+  <aside
+    class="sidebar"
+    [class.sidebar-open]="mobileSidebarOpen">
+
+    <div class="sidebar-top">
+
+      <a
+        class="brand"
+        routerLink="/admin-dashboard">
+
+        Drive<strong>Mate</strong>
+
+      </a>
+
+
+      <div class="role-badge">
+
+        <span></span>
+
+        ADMINISTRATOR
+
+      </div>
+
+    </div>
+
+
+    <nav class="navigation">
+
+      <button
+        class="nav-item active"
+        type="button">
+
+        <span>◫</span>
+
+        Dashboard
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        (click)="loadProfessionals('PENDING')">
+
+        <span>◈</span>
+
+        Professional Verification
+
+        @if (pendingCount > 0) {
+
+          <small>
+            {{ pendingCount }}
+          </small>
+
+        }
+
+      </button>
+
+
+      <button
+        class="nav-item disabled"
+        type="button">
+
+        <span>◎</span>
+
+        User Management
+
+        <small>
+          SOON
+        </small>
+
+      </button>
+
+
+      <button
+        class="nav-item disabled"
+        type="button">
+
+        <span>▤</span>
+
+        System Reports
+
+        <small>
+          SOON
+        </small>
+
+      </button>
+
+    </nav>
+
+
+    <div class="sidebar-bottom">
+
+      <div class="admin-user">
+
+        <div class="avatar">
+
+          {{
+            firstName
+              .charAt(0)
+              .toUpperCase()
+          }}
+
+        </div>
+
+
+        <div>
+
+          <strong>
+
+            {{
+              currentUser?.fullName ||
+              'Administrator'
+            }}
+
+          </strong>
+
+          <span>
+            System Administrator
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <button
+        class="logout-button"
+        type="button"
+        (click)="logout()">
+
+        ↪ Sign Out
+
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main-content">
+
+
+    <header class="topbar">
+
+      <div>
+
+        <p>
+          ADMIN CONTROL CENTER
+        </p>
+
+        <h2>
+          Dashboard
+        </h2>
+
+      </div>
+
+
+      <div class="admin-status">
+
+        <span></span>
+
+        Secure Admin Portal
+
+      </div>
+
+    </header>
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <div>
+
+        <p class="eyebrow">
+          PLATFORM ADMINISTRATION
+        </p>
+
+
+        <h1>
+
+          Welcome back,
+
+          <span>
+            {{ firstName }}.
+          </span>
+
+        </h1>
+
+
+        <p class="hero-text">
+
+          Review professional registrations,
+          manage verification decisions and
+          maintain trusted access across
+          DriveMate.
+
+        </p>
+
+      </div>
+
+
+      <div class="admin-visual">
+
+        <span>
+          ◈
+        </span>
+
+        <small>
+          ADMIN SYSTEM
+        </small>
+
+        <strong>
+          ACTIVE
+        </strong>
+
+      </div>
+
+    </section>
+
+
+    <!-- SUMMARY -->
+
+    <section class="summary-grid">
+
+      <button
+        class="summary-card"
+        type="button"
+        [class.selected]="currentFilter === 'PENDING'"
+        (click)="loadProfessionals('PENDING')">
+
+        <span>
+          PENDING APPLICATIONS
+        </span>
+
+        <strong>
+          {{ pendingCount }}
+        </strong>
+
+        <small>
+          Awaiting administrator review
+        </small>
+
+      </button>
+
+
+      <button
+        class="summary-card"
+        type="button"
+        [class.selected]="currentFilter === 'APPROVED'"
+        (click)="loadProfessionals('APPROVED')">
+
+        <span>
+          APPROVED PROFESSIONALS
+        </span>
+
+        <strong>
+          {{ approvedCount }}
+        </strong>
+
+        <small>
+          Verified professional accounts
+        </small>
+
+      </button>
+
+
+      <button
+        class="summary-card"
+        type="button"
+        [class.selected]="currentFilter === 'REJECTED'"
+        (click)="loadProfessionals('REJECTED')">
+
+        <span>
+          REJECTED APPLICATIONS
+        </span>
+
+        <strong>
+          {{ rejectedCount }}
+        </strong>
+
+        <small>
+          Applications not approved
+        </small>
+
+      </button>
+
+
+      <button
+        class="summary-card"
+        type="button"
+        [class.selected]="currentFilter === 'ALL'"
+        (click)="loadProfessionals('ALL')">
+
+        <span>
+          ALL APPLICATIONS
+        </span>
+
+        <strong>
+
+          {{
+            pendingCount +
+            approvedCount +
+            rejectedCount
+          }}
+
+        </strong>
+
+        <small>
+          Complete professional registry
+        </small>
+
+      </button>
+
+    </section>
+
+
+    <!-- MESSAGES -->
+
+    @if (
+      successMessage &&
+      !selectedProfessional
+    ) {
+
+      <div class="success-message">
+
+        ✓ {{ successMessage }}
+
+      </div>
+
+    }
+
+
+    @if (
+      errorMessage &&
+      !selectedProfessional
+    ) {
+
+      <div class="error-message">
+
+        {{ errorMessage }}
+
+      </div>
+
+    }
+
+
+    <!-- APPLICATIONS -->
+
+    <section class="applications-section">
+
+      <div class="section-heading">
+
+        <div>
+
+          <p class="eyebrow">
+            PROFESSIONAL ACCESS
+          </p>
+
+          <h2>
+            Professional Applications
+          </h2>
+
+        </div>
+
+
+        <span class="count-badge">
+
+          {{ professionals.length }}
+
+        </span>
+
+      </div>
+
+
+      <div class="filter-tabs">
+
+        <button
+          type="button"
+          [class.active]="currentFilter === 'PENDING'"
+          (click)="loadProfessionals('PENDING')">
+
+          Pending
+
+        </button>
+
+
+        <button
+          type="button"
+          [class.active]="currentFilter === 'APPROVED'"
+          (click)="loadProfessionals('APPROVED')">
+
+          Approved
+
+        </button>
+
+
+        <button
+          type="button"
+          [class.active]="currentFilter === 'REJECTED'"
+          (click)="loadProfessionals('REJECTED')">
+
+          Rejected
+
+        </button>
+
+
+        <button
+          type="button"
+          [class.active]="currentFilter === 'ALL'"
+          (click)="loadProfessionals('ALL')">
+
+          All
+
+        </button>
+
+      </div>
+
+
+      @if (loading) {
+
+        <div class="empty-state">
+
+          <span>
+            LOADING
+          </span>
+
+          <h3>
+            Loading professional applications...
+          </h3>
+
+        </div>
+
+      }
+
+
+      @else if (
+        professionals.length === 0
+      ) {
+
+        <div class="empty-state">
+
+          <div class="empty-icon">
+            ✓
+          </div>
+
+          <h3>
+            No applications in this category
+          </h3>
+
+          <p>
+
+            Professional registration
+            applications will appear here.
+
+          </p>
+
+        </div>
+
+      }
+
+
+      @else {
+
+        <div class="applications-list">
+
+          @for (
+            professional of professionals;
+            track professional.id
+          ) {
+
+            <article class="application-card">
+
+              <div class="application-avatar">
+
+                {{
+                  professional.user.fullName
+                    .charAt(0)
+                    .toUpperCase()
+                }}
+
+              </div>
+
+
+              <div class="application-main">
+
+                <div class="application-header">
+
+                  <div>
+
+                    <span class="role-label">
+
+                      {{
+                        getRoleLabel(
+                          professional.user.role
+                        )
+                      }}
+
+                    </span>
+
+
+                    <h3>
+
+                      {{
+                        professional.user.fullName
+                      }}
+
+                    </h3>
+
+
+                    <p>
+
+                      {{
+                        professional.user.email
+                      }}
+
+                    </p>
+
+                  </div>
+
+
+                  <span
+                    class="status-badge"
+                    [class]="
+                      getStatusClass(
+                        professional.verificationStatus
+                      )
+                    ">
+
+                    {{
+                      getStatusLabel(
+                        professional.verificationStatus
+                      )
+                    }}
+
+                  </span>
+
+                </div>
+
+
+                <div class="quick-details">
+
+                  <div>
+
+                    <span>
+                      QUALIFICATION
+                    </span>
+
+                    <strong>
+
+                      {{
+                        professional.qualification
+                      }}
+
+                    </strong>
+
+                  </div>
+
+
+                  <div>
+
+                    <span>
+                      SPECIALIZATION
+                    </span>
+
+                    <strong>
+
+                      {{
+                        professional.specialization
+                      }}
+
+                    </strong>
+
+                  </div>
+
+
+                  <div>
+
+                    <span>
+                      EXPERIENCE
+                    </span>
+
+                    <strong>
+
+                      {{
+                        professional.yearsOfExperience
+                      }}
+                      year(s)
+
+                    </strong>
+
+                  </div>
+
+
+                  <div>
+
+                    <span>
+                      LOCATION
+                    </span>
+
+                    <strong>
+
+                      {{
+                        professional.serviceLocation
+                      }}
+
+                    </strong>
+
+                  </div>
+
+                </div>
+
+
+                <div class="application-footer">
+
+                  <span>
+
+                    Submitted
+                    {{
+                      formatDate(
+                        professional.createdAt
+                      )
+                    }}
+
+                  </span>
+
+
+                  <button
+                    class="review-button"
+                    type="button"
+                    (click)="selectProfessional(professional)">
+
+                    Review Application →
+
+                  </button>
+
+                </div>
+
+              </div>
+
+            </article>
+
+          }
+
+        </div>
+
+      }
+
+    </section>
+
+
+    <footer class="footer">
+
+      <strong>
+        DRIVEMATE
+      </strong>
+
+      Administrator Control Center
+
+    </footer>
+
+  </main>
+
+
+  <!-- DETAILS PANEL -->
+
+  @if (
+    selectedProfessional ||
+    detailsLoading
+  ) {
+
+    <div class="details-backdrop">
+
+      <section class="details-panel">
+
+
+        @if (detailsLoading) {
+
+          <div class="details-loading">
+
+            <span>
+              LOADING
+            </span>
+
+            <h2>
+              Loading application...
+            </h2>
+
+          </div>
+
+        }
+
+
+        @if (
+          !detailsLoading &&
+          selectedProfessional
+        ) {
+
+          <header class="details-header">
+
+            <div>
+
+              <p>
+                PROFESSIONAL VERIFICATION
+              </p>
+
+              <h2>
+                Review Application
+              </h2>
+
+            </div>
+
+
+            <button
+              class="close-button"
+              type="button"
+              (click)="closeDetails()">
+
+              ×
+
+            </button>
+
+          </header>
+
+
+          <div class="details-content">
+
+            <div class="profile-heading">
+
+              <div class="large-avatar">
+
+                {{
+                  selectedProfessional
+                    .user.fullName
+                    .charAt(0)
+                    .toUpperCase()
+                }}
+
+              </div>
+
+
+              <div>
+
+                <span class="role-label">
+
+                  {{
+                    getRoleLabel(
+                      selectedProfessional
+                        .user.role
+                    )
+                  }}
+
+                </span>
+
+
+                <h3>
+
+                  {{
+                    selectedProfessional
+                      .user.fullName
+                  }}
+
+                </h3>
+
+
+                <p>
+
+                  {{
+                    selectedProfessional
+                      .user.email
+                  }}
+
+                </p>
+
+              </div>
+
+            </div>
+
+
+            <div class="detail-grid">
+
+              <div>
+
+                <span>
+                  PHONE
+                </span>
+
+                <strong>
+
+                  {{
+                    selectedProfessional
+                      .user.phone
+                  }}
+
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  ACCOUNT STATUS
+                </span>
+
+                <strong>
+
+                  {{
+                    selectedProfessional
+                      .user.accountStatus
+                  }}
+
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  QUALIFICATION
+                </span>
+
+                <strong>
+
+                  {{
+                    selectedProfessional
+                      .qualification
+                  }}
+
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  SPECIALIZATION
+                </span>
+
+                <strong>
+
+                  {{
+                    selectedProfessional
+                      .specialization
+                  }}
+
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  EXPERIENCE
+                </span>
+
+                <strong>
+
+                  {{
+                    selectedProfessional
+                      .yearsOfExperience
+                  }}
+                  year(s)
+
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  ORGANIZATION
+                </span>
+
+                <strong>
+
+                  {{
+                    selectedProfessional
+                      .organizationName
+                  }}
+
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  CERTIFICATE NUMBER
+                </span>
+
+                <strong>
+
+                  {{
+                    selectedProfessional
+                      .certificateNumber
+                  }}
+
+                </strong>
+
+              </div>
+
+
+              <div>
+
+                <span>
+                  SERVICE LOCATION
+                </span>
+
+                <strong>
+
+                  {{
+                    selectedProfessional
+                      .serviceLocation
+                  }}
+
+                </strong>
+
+              </div>
+
+
+              <div class="full-detail">
+
+                <span>
+                  ADDRESS
+                </span>
+
+                <strong>
+
+                  {{
+                    selectedProfessional
+                      .user.address
+                  }}
+
+                </strong>
+
+              </div>
+
+
+              <div class="full-detail">
+
+                <span>
+                  VERIFICATION DOCUMENT
+                </span>
+
+                <strong class="document-path">
+
+                  {{
+                    selectedProfessional
+                      .verificationDocumentPath
+                  }}
+
+                </strong>
+
+                <small>
+
+                  Secure document viewing
+                  will be connected next.
+
+                </small>
+
+              </div>
+
+            </div>
+
+
+            @if (
+              selectedProfessional
+                .verificationStatus !==
+              'PENDING'
+            ) {
+
+              <div class="reviewed-box">
+
+                <span>
+                  REVIEW RESULT
+                </span>
+
+
+                <strong>
+
+                  {{
+                    getStatusLabel(
+                      selectedProfessional
+                        .verificationStatus
+                    )
+                  }}
+
+                </strong>
+
+
+                @if (
+                  selectedProfessional
+                    .verificationNote
+                ) {
+
+                  <p>
+
+                    {{
+                      selectedProfessional
+                        .verificationNote
+                    }}
+
+                  </p>
+
+                }
+
+
+                @if (
+                  selectedProfessional
+                    .reviewedBy
+                ) {
+
+                  <small>
+
+                    Reviewed by
+                    {{
+                      selectedProfessional
+                        .reviewedBy
+                        .fullName
+                    }}
+
+                  </small>
+
+                }
+
+              </div>
+
+            }
+
+
+            @if (
+              selectedProfessional
+                .verificationStatus ===
+              'PENDING'
+            ) {
+
+              <div class="review-section">
+
+                @if (
+                  !rejectionMode
+                ) {
+
+                  <label for="approvalNote">
+
+                    Optional administrator note
+
+                  </label>
+
+
+                  <textarea
+                    id="approvalNote"
+                    maxlength="500"
+                    rows="3"
+                    [(ngModel)]="reviewNote"
+                    placeholder="Optional note for this approval...">
+                  </textarea>
+
+                }
+
+
+                @if (
+                  rejectionMode
+                ) {
+
+                  <div class="rejection-box">
+
+                    <label for="rejectionNote">
+
+                      Rejection reason
+                      <span>*</span>
+
+                    </label>
+
+
+                    <textarea
+                      id="rejectionNote"
+                      maxlength="500"
+                      rows="4"
+                      [(ngModel)]="reviewNote"
+                      placeholder="Explain why this professional application is being rejected...">
+                    </textarea>
+
+
+                    <small>
+
+                      {{
+                        reviewNote.length
+                      }}/500
+
+                    </small>
+
+                  </div>
+
+                }
+
+
+                @if (errorMessage) {
+
+                  <div class="error-message">
+
+                    {{ errorMessage }}
+
+                  </div>
+
+                }
+
+
+                <div class="review-actions">
+
+                  @if (
+                    !rejectionMode
+                  ) {
+
+                    <button
+                      class="reject-button"
+                      type="button"
+                      [disabled]="reviewing"
+                      (click)="startReject()">
+
+                      Reject
+
+                    </button>
+
+
+                    <button
+                      class="approve-button"
+                      type="button"
+                      [disabled]="reviewing"
+                      (click)="approveSelected()">
+
+                      @if (reviewing) {
+
+                        Processing...
+
+                      }
+
+                      @else {
+
+                        ✓ Approve Professional
+
+                      }
+
+                    </button>
+
+                  }
+
+
+                  @if (
+                    rejectionMode
+                  ) {
+
+                    <button
+                      class="secondary-button"
+                      type="button"
+                      [disabled]="reviewing"
+                      (click)="cancelReject()">
+
+                      Cancel
+
+                    </button>
+
+
+                    <button
+                      class="confirm-reject-button"
+                      type="button"
+                      [disabled]="reviewing"
+                      (click)="rejectSelected()">
+
+                      @if (reviewing) {
+
+                        Processing...
+
+                      }
+
+                      @else {
+
+                        Reject Application
+
+                      }
+
+                    </button>
+
+                  }
+
+                </div>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      </section>
+
+    </div>
+
+  }
+
+</div>

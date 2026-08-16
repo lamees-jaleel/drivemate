@@ -1,0 +1,864 @@
+<div class="maintenance-page">
+
+  <header class="topbar">
+
+    <a
+      class="brand"
+      routerLink="/owner-dashboard">
+
+      <span>
+        Drive
+      </span>
+
+      <strong>
+        Mate
+      </strong>
+
+    </a>
+
+
+    @if (vehicle) {
+
+      <a
+        class="back-link"
+        [routerLink]="[
+          '/owner-dashboard/vehicles',
+          vehicle.id
+        ]">
+
+        ← Vehicle Details
+
+      </a>
+
+    }
+
+  </header>
+
+
+  <main class="page-content">
+
+
+    <!-- ===================================================
+         LOADING
+    ==================================================== -->
+
+    @if (loading) {
+
+      <section class="state-card">
+
+        <span>
+          LOADING
+        </span>
+
+        <h1>
+          Loading maintenance history...
+        </h1>
+
+      </section>
+
+    }
+
+
+    <!-- ===================================================
+         ERROR
+    ==================================================== -->
+
+    @if (
+      !loading &&
+      pageErrorMessage
+    ) {
+
+      <section class="state-card error-state">
+
+        <span>
+          MAINTENANCE UNAVAILABLE
+        </span>
+
+        <h1>
+          {{ pageErrorMessage }}
+        </h1>
+
+        <a
+          class="primary-button"
+          routerLink="/owner-dashboard/vehicles">
+
+          Back to My Vehicles
+
+        </a>
+
+      </section>
+
+    }
+
+
+    <!-- ===================================================
+         MAIN CONTENT
+    ==================================================== -->
+
+    @if (
+      !loading &&
+      !pageErrorMessage &&
+      vehicle
+    ) {
+
+
+      <!-- ===============================================
+           HERO
+      ================================================ -->
+
+      <section class="hero">
+
+        <div>
+
+          <p class="eyebrow">
+            VEHICLE MAINTENANCE
+          </p>
+
+
+          <h1>
+
+            {{ vehicle.make }}
+            <span>
+              {{ vehicle.model }}
+            </span>
+
+          </h1>
+
+
+          <p class="registration">
+
+            {{ vehicle.registrationNumber }}
+
+            @if (vehicle.variant) {
+
+              · {{ vehicle.variant }}
+
+            }
+
+          </p>
+
+
+          <p class="hero-copy">
+
+            Keep a complete history of
+            services, repairs and upcoming
+            maintenance requirements.
+
+          </p>
+
+        </div>
+
+
+        <div class="odometer-card">
+
+          <span>
+            CURRENT ODOMETER
+          </span>
+
+          <strong>
+            {{ vehicle.odometerKm }}
+          </strong>
+
+          <small>
+            KM
+          </small>
+
+        </div>
+
+      </section>
+
+
+      <!-- ===============================================
+           SUMMARY
+      ================================================ -->
+
+      <section class="summary-grid">
+
+        <article>
+
+          <span>
+            SERVICE RECORDS
+          </span>
+
+          <strong>
+            {{ recordCount }}
+          </strong>
+
+        </article>
+
+
+        <article>
+
+          <span>
+            TOTAL MAINTENANCE COST
+          </span>
+
+          <strong>
+            {{ formatCost(totalMaintenanceCost) }}
+          </strong>
+
+        </article>
+
+
+        <article>
+
+          <span>
+            LATEST ODOMETER
+          </span>
+
+          <strong>
+            {{ vehicle.odometerKm }} km
+          </strong>
+
+        </article>
+
+      </section>
+
+
+      <!-- ===============================================
+           ADD SERVICE RECORD
+      ================================================ -->
+
+      <section class="form-card">
+
+        <div class="section-heading">
+
+          <span class="section-number">
+            01
+          </span>
+
+          <div>
+
+            <p>
+              NEW MAINTENANCE ENTRY
+            </p>
+
+            <h2>
+              Add Service Record
+            </h2>
+
+          </div>
+
+        </div>
+
+
+        @if (successMessage) {
+
+          <div class="success-message">
+
+            ✓ {{ successMessage }}
+
+          </div>
+
+        }
+
+
+        @if (formErrorMessage) {
+
+          <div class="error-message">
+
+            {{ formErrorMessage }}
+
+          </div>
+
+        }
+
+
+        <form
+          [formGroup]="maintenanceForm"
+          (ngSubmit)="submit()"
+          novalidate>
+
+
+          <div class="form-grid">
+
+
+            <!-- TYPE -->
+
+            <div class="form-field">
+
+              <label for="maintenanceType">
+
+                Maintenance Type
+                <span>*</span>
+
+              </label>
+
+
+              <select
+                id="maintenanceType"
+                formControlName="maintenanceType">
+
+                <option value="">
+                  Select maintenance type
+                </option>
+
+
+                @for (
+                  type of maintenanceTypes;
+                  track type.value
+                ) {
+
+                  <option
+                    [value]="type.value">
+
+                    {{ type.label }}
+
+                  </option>
+
+                }
+
+              </select>
+
+
+              @if (
+                showError(
+                  f.maintenanceType
+                )
+              ) {
+
+                <small class="error">
+                  Select a maintenance type.
+                </small>
+
+              }
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <div class="form-field">
+
+              <label for="title">
+
+                Service Title
+                <span>*</span>
+
+              </label>
+
+
+              <input
+                id="title"
+                type="text"
+                maxlength="120"
+                formControlName="title"
+                placeholder="30,000 km periodic service">
+
+
+              @if (
+                showError(
+                  f.title
+                )
+              ) {
+
+                <small class="error">
+                  Service title is required.
+                </small>
+
+              }
+
+            </div>
+
+
+            <!-- DATE -->
+
+            <div class="form-field">
+
+              <label for="serviceDate">
+
+                Service Date
+                <span>*</span>
+
+              </label>
+
+
+              <input
+                id="serviceDate"
+                type="date"
+                formControlName="serviceDate">
+
+
+              @if (
+                showError(
+                  f.serviceDate
+                )
+              ) {
+
+                <small class="error">
+                  Service date is required.
+                </small>
+
+              }
+
+            </div>
+
+
+            <!-- ODOMETER -->
+
+            <div class="form-field">
+
+              <label for="odometerKm">
+
+                Odometer Reading
+                <span>*</span>
+
+              </label>
+
+
+              <div class="input-suffix">
+
+                <input
+                  id="odometerKm"
+                  type="number"
+                  min="0"
+                  max="5000000"
+                  formControlName="odometerKm">
+
+                <span>
+                  KM
+                </span>
+
+              </div>
+
+
+              @if (
+                showError(
+                  f.odometerKm
+                )
+              ) {
+
+                <small class="error">
+                  Enter a valid odometer reading.
+                </small>
+
+              }
+
+            </div>
+
+
+            <!-- SERVICE CENTER -->
+
+            <div class="form-field">
+
+              <label for="serviceCenter">
+
+                Service Center
+
+              </label>
+
+
+              <input
+                id="serviceCenter"
+                type="text"
+                maxlength="150"
+                formControlName="serviceCenter"
+                placeholder="Honda Authorized Service">
+
+            </div>
+
+
+            <!-- COST -->
+
+            <div class="form-field">
+
+              <label for="cost">
+
+                Service Cost
+                <span>*</span>
+
+              </label>
+
+
+              <div class="input-prefix">
+
+                <span>
+                  ₹
+                </span>
+
+                <input
+                  id="cost"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  formControlName="cost">
+
+              </div>
+
+
+              @if (
+                showError(
+                  f.cost
+                )
+              ) {
+
+                <small class="error">
+                  Enter a valid maintenance cost.
+                </small>
+
+              }
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="form-field full-width">
+
+              <label for="description">
+
+                Description
+
+              </label>
+
+
+              <textarea
+                id="description"
+                rows="4"
+                maxlength="1000"
+                formControlName="description"
+                placeholder="Describe the service, repairs or parts replaced...">
+              </textarea>
+
+            </div>
+
+          </div>
+
+
+          <div class="next-service">
+
+            <div class="next-service-heading">
+
+              <p>
+                NEXT SERVICE REMINDER
+              </p>
+
+              <span>
+                Optional
+              </span>
+
+            </div>
+
+
+            <div class="form-grid">
+
+              <div class="form-field">
+
+                <label for="nextServiceDate">
+
+                  Next Service Date
+
+                </label>
+
+
+                <input
+                  id="nextServiceDate"
+                  type="date"
+                  formControlName="nextServiceDate">
+
+              </div>
+
+
+              <div class="form-field">
+
+                <label for="nextServiceOdometerKm">
+
+                  Next Service Odometer
+
+                </label>
+
+
+                <div class="input-suffix">
+
+                  <input
+                    id="nextServiceOdometerKm"
+                    type="number"
+                    min="0"
+                    max="5000000"
+                    formControlName="nextServiceOdometerKm"
+                    placeholder="30000">
+
+                  <span>
+                    KM
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-actions">
+
+            <button
+              class="save-button"
+              type="submit"
+              [disabled]="isSubmitting">
+
+              @if (isSubmitting) {
+
+                Saving...
+
+              }
+
+              @else {
+
+                + Add Service Record
+
+              }
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </section>
+
+
+      <!-- ===============================================
+           HISTORY
+      ================================================ -->
+
+      <section class="history-section">
+
+        <div class="history-heading">
+
+          <div>
+
+            <p class="eyebrow">
+              SERVICE HISTORY
+            </p>
+
+            <h2>
+              Maintenance Records
+            </h2>
+
+          </div>
+
+
+          <span class="record-badge">
+
+            {{ recordCount }}
+
+          </span>
+
+        </div>
+
+
+        @if (
+          maintenanceRecords.length === 0
+        ) {
+
+          <div class="empty-history">
+
+            <div class="empty-icon">
+              ⚙
+            </div>
+
+
+            <h3>
+              No maintenance records yet
+            </h3>
+
+
+            <p>
+
+              Your first service record
+              will appear here after you
+              add it above.
+
+            </p>
+
+          </div>
+
+        }
+
+
+        @else {
+
+          <div class="history-list">
+
+            @for (
+              record of maintenanceRecords;
+              track record.id
+            ) {
+
+              <article class="history-card">
+
+                <div class="history-icon">
+
+                  ⚙
+
+                </div>
+
+
+                <div class="history-content">
+
+                  <div class="history-top">
+
+                    <div>
+
+                      <span class="type">
+
+                        {{
+                          getMaintenanceLabel(
+                            record.maintenanceType
+                          )
+                        }}
+
+                      </span>
+
+
+                      <h3>
+
+                        {{ record.title }}
+
+                      </h3>
+
+                    </div>
+
+
+                    <strong class="cost">
+
+                      {{ formatCost(record.cost) }}
+
+                    </strong>
+
+                  </div>
+
+
+                  <div class="history-details">
+
+                    <div>
+
+                      <span>
+                        SERVICE DATE
+                      </span>
+
+                      <strong>
+
+                        {{ formatDate(record.serviceDate) }}
+
+                      </strong>
+
+                    </div>
+
+
+                    <div>
+
+                      <span>
+                        ODOMETER
+                      </span>
+
+                      <strong>
+
+                        {{ record.odometerKm }} km
+
+                      </strong>
+
+                    </div>
+
+
+                    <div>
+
+                      <span>
+                        SERVICE CENTER
+                      </span>
+
+                      <strong>
+
+                        {{
+                          record.serviceCenter ||
+                          'Not specified'
+                        }}
+
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+
+                  @if (record.description) {
+
+                    <p class="description">
+
+                      {{ record.description }}
+
+                    </p>
+
+                  }
+
+
+                  @if (
+                    record.nextServiceDate ||
+                    record.nextServiceOdometerKm
+                  ) {
+
+                    <div class="reminder-box">
+
+                      <span>
+                        NEXT SERVICE
+                      </span>
+
+
+                      <strong>
+
+                        @if (record.nextServiceDate) {
+
+                          {{
+                            formatDate(
+                              record.nextServiceDate
+                            )
+                          }}
+
+                        }
+
+
+                        @if (
+                          record.nextServiceDate &&
+                          record.nextServiceOdometerKm
+                        ) {
+
+                          ·
+
+                        }
+
+
+                        @if (
+                          record.nextServiceOdometerKm
+                        ) {
+
+                          {{
+                            record.nextServiceOdometerKm
+                          }} km
+
+                        }
+
+                      </strong>
+
+                    </div>
+
+                  }
+
+                </div>
+
+              </article>
+
+            }
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+  </main>
+
+</div>

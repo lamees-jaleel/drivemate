@@ -1,0 +1,1119 @@
+<div class="dashboard-shell">
+
+  @if (mobileSidebarOpen) {
+    <button
+      class="sidebar-overlay"
+      type="button"
+      aria-label="Close navigation"
+      (click)="closeSidebar()">
+    </button>
+  }
+
+
+  <!-- =====================================================
+       SIDEBAR
+  ====================================================== -->
+
+  <aside
+    class="sidebar"
+    [class.sidebar-open]="mobileSidebarOpen">
+
+    <div class="sidebar-top">
+
+      <a
+        class="brand"
+        routerLink="/">
+
+        <span class="brand-drive">
+          Drive
+        </span>
+
+        <span class="brand-mate">
+          Mate
+        </span>
+
+      </a>
+
+
+      <button
+        class="sidebar-close"
+        type="button"
+        (click)="closeSidebar()">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <div class="owner-mini-profile">
+
+      <div class="avatar">
+        {{ firstName.charAt(0).toUpperCase() }}
+      </div>
+
+
+      <div class="owner-mini-info">
+
+        <strong>
+          {{ currentUser?.fullName }}
+        </strong>
+
+        <span>
+          Vehicle Owner
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <button
+        class="nav-item active"
+        type="button">
+
+        <span class="nav-icon">
+          ◫
+        </span>
+
+        Dashboard
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        (click)="openModule('My Vehicles')">
+
+        <span class="nav-icon">
+          ◇
+        </span>
+
+        My Vehicles
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        (click)="openModule('Maintenance')">
+
+        <span class="nav-icon">
+          ⚙
+        </span>
+
+        Maintenance
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        (click)="openModule('Expenses')">
+
+        <span class="nav-icon">
+          ₹
+        </span>
+
+        Expenses
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        (click)="openModule('Documents')">
+
+        <span class="nav-icon">
+          ▤
+        </span>
+
+        Documents
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        (click)="openModule('Safety & Compliance')">
+
+        <span class="nav-icon">
+          ◈
+        </span>
+
+        Safety & Compliance
+
+      </button>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        (click)="openModule('Roadside Assistance')">
+
+        <span class="nav-icon">
+          +
+        </span>
+
+        Roadside Assistance
+
+      </button>
+
+
+      <div class="nav-divider"></div>
+
+
+      <button
+        class="nav-item"
+        type="button"
+        (click)="openModule('Profile')">
+
+        <span class="nav-icon">
+          ○
+        </span>
+
+        Profile
+
+      </button>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+      <button
+        class="logout-button"
+        type="button"
+        (click)="logout()">
+
+        ↗ Sign Out
+
+      </button>
+
+
+      <p>
+        DRIVEMATE
+        <span>—</span>
+        YOUR ROAD. REIMAGINED.
+      </p>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =====================================================
+       MAIN
+  ====================================================== -->
+
+  <main class="main-area">
+
+    <header class="topbar">
+
+      <div class="topbar-left">
+
+        <button
+          class="menu-button"
+          type="button"
+          (click)="toggleSidebar()">
+
+          ☰
+
+        </button>
+
+
+        <div>
+
+          <p class="topbar-label">
+            VEHICLE OWNER PORTAL
+          </p>
+
+          <h1>
+            Dashboard
+          </h1>
+
+        </div>
+
+      </div>
+
+
+      <div class="topbar-right">
+
+        <button
+          class="notification-button"
+          type="button">
+
+          ♢
+
+        </button>
+
+
+        <div class="topbar-user">
+
+          <div class="topbar-avatar">
+            {{ firstName.charAt(0).toUpperCase() }}
+          </div>
+
+
+          <div class="topbar-user-text">
+
+            <strong>
+              {{ currentUser?.fullName }}
+            </strong>
+
+            <span>
+              {{ currentUser?.email }}
+            </span>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <div class="dashboard-content">
+
+
+      <!-- =================================================
+           WELCOME
+      ================================================== -->
+
+      <section class="welcome-section">
+
+        <div>
+
+          <p class="eyebrow">
+            YOUR VEHICLE LIFECYCLE
+          </p>
+
+
+          <h2>
+            Welcome back,
+            <span>
+              {{ firstName }}.
+            </span>
+          </h2>
+
+
+          <p class="welcome-copy">
+
+            Everything about your vehicle ownership,
+            organised in one intelligent place.
+
+          </p>
+
+        </div>
+
+
+        <button
+          class="primary-button"
+          type="button"
+          (click)="addVehicle()">
+
+          <span class="plus">
+            +
+          </span>
+
+          Add Vehicle
+
+        </button>
+
+      </section>
+
+
+      <!-- =================================================
+           STATS
+      ================================================== -->
+
+      <section class="stats-grid">
+
+        <article class="stat-card">
+
+          <div class="stat-card-top">
+
+            <span class="stat-icon">
+              ◇
+            </span>
+
+            <span class="stat-label">
+              MY VEHICLES
+            </span>
+
+          </div>
+
+
+          <div class="stat-value">
+            {{ vehicleCount }}
+          </div>
+
+
+          <p>
+            Vehicles registered
+          </p>
+
+        </article>
+
+
+        <article class="stat-card">
+
+          <div class="stat-card-top">
+
+            <span class="stat-icon">
+              ⚙
+            </span>
+
+            <span class="stat-label">
+              UPCOMING SERVICES
+            </span>
+
+          </div>
+
+
+          <div class="stat-value">
+            {{ upcomingServices }}
+          </div>
+
+
+          <p>
+            Services due
+          </p>
+
+        </article>
+
+
+        <article class="stat-card">
+
+          <div class="stat-card-top">
+
+            <span class="stat-icon">
+              ₹
+            </span>
+
+            <span class="stat-label">
+              MONTHLY EXPENSES
+            </span>
+
+          </div>
+
+
+          <div class="stat-value expense">
+            ₹{{ monthlyExpense }}
+          </div>
+
+
+          <p>
+            Recorded this month
+          </p>
+
+        </article>
+
+
+        <article class="stat-card">
+
+          <div class="stat-card-top">
+
+            <span class="stat-icon">
+              !
+            </span>
+
+            <span class="stat-label">
+              COMPLIANCE ALERTS
+            </span>
+
+          </div>
+
+
+          <div class="stat-value">
+            {{ complianceAlerts }}
+          </div>
+
+
+          <p>
+            Items requiring attention
+          </p>
+
+        </article>
+
+      </section>
+
+
+      <!-- =================================================
+           GARAGE
+      ================================================== -->
+
+      <section class="dashboard-card garage-card">
+
+        <div class="section-heading">
+
+          <div>
+
+            <p class="section-kicker">
+              YOUR GARAGE
+            </p>
+
+            <h3>
+              My Vehicles
+            </h3>
+
+          </div>
+
+
+          <button
+            class="text-button"
+            type="button"
+            (click)="openModule('My Vehicles')">
+
+            View all →
+
+          </button>
+
+        </div>
+
+
+        <!-- ===============================================
+             LOADING
+        ================================================ -->
+
+        @if (loadingVehicles) {
+
+          <div class="empty-garage">
+
+            <div class="empty-garage-content">
+
+              <span class="empty-tag">
+                LOADING
+              </span>
+
+              <h4>
+                Loading your vehicles...
+              </h4>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        <!-- ===============================================
+             NO VEHICLES
+        ================================================ -->
+
+        @if (
+          !loadingVehicles &&
+          vehicles.length === 0
+        ) {
+
+          <div class="empty-garage">
+
+            <div class="vehicle-illustration">
+
+              <div class="vehicle-roof"></div>
+
+              <div class="vehicle-body"></div>
+
+              <div
+                class="vehicle-wheel wheel-left">
+              </div>
+
+              <div
+                class="vehicle-wheel wheel-right">
+              </div>
+
+            </div>
+
+
+            <div class="empty-garage-content">
+
+              <span class="empty-tag">
+                YOUR FIRST MILE STARTS HERE
+              </span>
+
+
+              <h4>
+                No vehicles added yet
+              </h4>
+
+
+              <p>
+
+                Add your first vehicle to begin
+                tracking maintenance, expenses,
+                documents and ownership history.
+
+              </p>
+
+
+              <button
+                class="primary-button compact"
+                type="button"
+                (click)="addVehicle()">
+
+                + Add Your First Vehicle
+
+              </button>
+
+            </div>
+
+          </div>
+
+        }
+
+
+        <!-- ===============================================
+             REAL VEHICLES
+        ================================================ -->
+
+        @if (
+          !loadingVehicles &&
+          vehicles.length > 0
+        ) {
+
+          <div class="garage-vehicle-list">
+
+            @for (
+              vehicle of vehicles;
+              track vehicle.id
+            ) {
+
+              <article class="garage-vehicle-card">
+
+                <div class="vehicle-card-visual">
+
+                  <div class="vehicle-illustration">
+
+                    <div class="vehicle-roof"></div>
+
+                    <div class="vehicle-body"></div>
+
+                    <div
+                      class="vehicle-wheel wheel-left">
+                    </div>
+
+                    <div
+                      class="vehicle-wheel wheel-right">
+                    </div>
+
+                  </div>
+
+                </div>
+
+
+                <div class="vehicle-card-content">
+
+                  <div class="vehicle-card-top">
+
+                    <span class="empty-tag">
+                      {{ vehicle.registrationNumber }}
+                    </span>
+
+
+                    <span class="vehicle-status">
+                      {{ vehicle.status }}
+                    </span>
+
+                  </div>
+
+
+                  <h4>
+
+                    {{ vehicle.make }}
+                    {{ vehicle.model }}
+
+                  </h4>
+
+
+                  @if (vehicle.variant) {
+
+                    <p class="vehicle-variant">
+
+                      {{ vehicle.variant }}
+
+                    </p>
+
+                  }
+
+
+                  <div class="vehicle-details-grid">
+
+                    <div>
+
+                      <span>
+                        YEAR
+                      </span>
+
+                      <strong>
+                        {{ vehicle.manufacturingYear }}
+                      </strong>
+
+                    </div>
+
+
+                    <div>
+
+                      <span>
+                        FUEL
+                      </span>
+
+                      <strong>
+                        {{ vehicle.fuelType }}
+                      </strong>
+
+                    </div>
+
+
+                    <div>
+
+                      <span>
+                        TRANSMISSION
+                      </span>
+
+                      <strong>
+
+                        {{
+                          vehicle.transmission
+                          || 'Not specified'
+                        }}
+
+                      </strong>
+
+                    </div>
+
+
+                    <div>
+
+                      <span>
+                        ODOMETER
+                      </span>
+
+                      <strong>
+                        {{ vehicle.odometerKm }} km
+                      </strong>
+
+                    </div>
+
+                  </div>
+
+
+                  <button
+                    class="primary-button compact"
+                    type="button"
+                    (click)="openModule('Vehicle Details')">
+
+                    View Vehicle →
+
+                  </button>
+
+                </div>
+
+              </article>
+
+            }
+
+          </div>
+
+        }
+
+      </section>
+
+
+      <!-- =================================================
+           FEATURE GRID
+      ================================================== -->
+
+      <section class="information-grid">
+
+
+        <article class="dashboard-card feature-card">
+
+          <div class="feature-header">
+
+            <div class="feature-icon">
+              ⚙
+            </div>
+
+          </div>
+
+
+          <p class="section-kicker">
+            VEHICLE CARE
+          </p>
+
+
+          <h3>
+            Maintenance
+          </h3>
+
+
+          <p class="feature-description">
+
+            Track services, repairs and
+            maintenance history.
+
+          </p>
+
+
+          <div class="empty-feature">
+
+            <span>
+              No service records yet
+            </span>
+
+          </div>
+
+
+          <button
+            class="secondary-button"
+            type="button"
+            (click)="openModule('Maintenance')">
+
+            View Maintenance →
+
+          </button>
+
+        </article>
+
+
+        <article class="dashboard-card feature-card">
+
+          <div class="feature-header">
+
+            <div class="feature-icon">
+              ₹
+            </div>
+
+          </div>
+
+
+          <p class="section-kicker">
+            OWNERSHIP COST
+          </p>
+
+
+          <h3>
+            Expenses
+          </h3>
+
+
+          <p class="feature-description">
+
+            Track fuel, repairs,
+            servicing and insurance costs.
+
+          </p>
+
+
+          <div class="expense-placeholder">
+
+            <div class="expense-line">
+
+              <span>
+                This month
+              </span>
+
+              <strong>
+                ₹0
+              </strong>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="secondary-button"
+            type="button"
+            (click)="openModule('Expenses')">
+
+            Track Expenses →
+
+          </button>
+
+        </article>
+
+
+        <article class="dashboard-card feature-card">
+
+          <div class="feature-header">
+
+            <div class="feature-icon">
+              ▤
+            </div>
+
+          </div>
+
+
+          <p class="section-kicker">
+            STAY COMPLIANT
+          </p>
+
+
+          <h3>
+            Documents
+          </h3>
+
+
+          <p class="feature-description">
+
+            Manage insurance,
+            registration and important
+            vehicle documents.
+
+          </p>
+
+
+          <div class="document-status-list">
+
+            <div>
+
+              <span>
+                Insurance
+              </span>
+
+              <span class="status-empty">
+                Not added
+              </span>
+
+            </div>
+
+
+            <div>
+
+              <span>
+                Registration
+              </span>
+
+              <span class="status-empty">
+                Not added
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <button
+            class="secondary-button"
+            type="button"
+            (click)="openModule('Documents')">
+
+            Manage Documents →
+
+          </button>
+
+        </article>
+
+
+        <article
+          class="dashboard-card feature-card roadside-card">
+
+          <div class="feature-header">
+
+            <div class="feature-icon emergency-icon">
+              +
+            </div>
+
+          </div>
+
+
+          <p class="section-kicker red">
+            SAFETY & SUPPORT
+          </p>
+
+
+          <h3>
+            Roadside Assistance
+          </h3>
+
+
+          <p class="feature-description">
+
+            Access DriveMate roadside
+            support when you need help.
+
+          </p>
+
+
+          <div class="roadside-message">
+
+            <span class="roadside-symbol">
+              !
+            </span>
+
+            <p>
+              Emergency support workflow
+              will be available here.
+            </p>
+
+          </div>
+
+
+          <button
+            class="emergency-button"
+            type="button"
+            (click)="openModule('Roadside Assistance')">
+
+            Request Assistance →
+
+          </button>
+
+        </article>
+
+      </section>
+
+
+      <!-- =================================================
+           QUICK ACTIONS
+      ================================================== -->
+
+      <section class="quick-actions-section">
+
+        <div class="section-heading">
+
+          <div>
+
+            <p class="section-kicker">
+              SHORTCUTS
+            </p>
+
+            <h3>
+              Quick Actions
+            </h3>
+
+          </div>
+
+        </div>
+
+
+        <div class="quick-actions-grid">
+
+          <button
+            class="quick-action"
+            type="button"
+            (click)="addVehicle()">
+
+            <span class="quick-icon">
+              +
+            </span>
+
+            <span>
+
+              <strong>
+                Add Vehicle
+              </strong>
+
+              <small>
+                Register a vehicle
+              </small>
+
+            </span>
+
+          </button>
+
+
+          <button
+            class="quick-action"
+            type="button"
+            (click)="openModule('Maintenance')">
+
+            <span class="quick-icon">
+              ⚙
+            </span>
+
+            <span>
+
+              <strong>
+                Add Maintenance
+              </strong>
+
+              <small>
+                Record vehicle care
+              </small>
+
+            </span>
+
+          </button>
+
+
+          <button
+            class="quick-action"
+            type="button"
+            (click)="openModule('Expenses')">
+
+            <span class="quick-icon">
+              ₹
+            </span>
+
+            <span>
+
+              <strong>
+                Add Expense
+              </strong>
+
+              <small>
+                Track ownership cost
+              </small>
+
+            </span>
+
+          </button>
+
+
+          <button
+            class="quick-action"
+            type="button"
+            (click)="openModule('Documents')">
+
+            <span class="quick-icon">
+              ↑
+            </span>
+
+            <span>
+
+              <strong>
+                Upload Document
+              </strong>
+
+              <small>
+                Save important files
+              </small>
+
+            </span>
+
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <footer class="dashboard-footer">
+
+        <p>
+          © 2026 DriveMate.
+          Your vehicle lifecycle,
+          intelligently managed.
+        </p>
+
+        <span>
+          DRIVE SMARTER. OWN BETTER.
+        </span>
+
+      </footer>
+
+    </div>
+
+  </main>
+
+</div>

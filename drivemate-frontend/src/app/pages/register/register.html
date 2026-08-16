@@ -1,0 +1,1838 @@
+<div class="registration-page">
+
+  <!-- =====================================================
+       LEFT BRAND PANEL
+  ====================================================== -->
+
+  <section class="brand-panel">
+
+    <a routerLink="/" class="brand">
+      Drive<span>Mate</span>
+    </a>
+
+    <div class="brand-content">
+
+      <p class="eyebrow">
+        NEW TO DRIVEMATE?
+      </p>
+
+      <h1>
+        Your vehicle’s
+        <br />
+
+        digital
+        <span>co-pilot</span>
+
+        <br />
+        starts here.
+      </h1>
+
+      <p class="brand-description">
+        Organise vehicle records, documents,
+        maintenance history, expenses,
+        reminders, and professional assistance
+        in one secure platform.
+      </p>
+
+    </div>
+
+    <p class="brand-footer">
+      DRIVEMATE
+      <span>—</span>
+      YOUR ROAD, REIMAGINED
+    </p>
+
+  </section>
+
+
+  <!-- =====================================================
+       RIGHT FORM PANEL
+  ====================================================== -->
+
+  <section class="form-panel">
+
+    <a routerLink="/" class="back-link">
+      ← Back to Home
+    </a>
+
+
+    <div class="form-container">
+
+      <header class="form-heading">
+
+        <h2>
+          Create Your Account
+        </h2>
+
+        <p>
+          Join DriveMate and start managing
+          your vehicle lifecycle.
+        </p>
+
+      </header>
+
+
+      <form
+        [formGroup]="registerForm"
+        (ngSubmit)="submit()"
+        novalidate
+      >
+
+
+        <!-- =================================================
+             ROLE
+        ================================================== -->
+
+        <div class="form-section">
+
+          <label class="section-label">
+            Choose your role
+            <span>*</span>
+          </label>
+
+
+          <div class="role-grid">
+
+            <button
+              type="button"
+              class="role-card"
+              [class.selected]="
+                selectedRole === 'VEHICLE_OWNER'
+              "
+              (click)="selectRole('VEHICLE_OWNER')"
+            >
+
+              <strong>
+                Vehicle Owner
+              </strong>
+
+              <small>
+                Manage your vehicle
+              </small>
+
+            </button>
+
+
+            <button
+              type="button"
+              class="role-card"
+              [class.selected]="
+                selectedRole === 'DIAGNOSTIC_EXPERT'
+              "
+              (click)="selectRole('DIAGNOSTIC_EXPERT')"
+            >
+
+              <strong>
+                Automotive Diagnostic Expert
+              </strong>
+
+              <small>
+                Offer technical guidance
+              </small>
+
+            </button>
+
+
+            <button
+              type="button"
+              class="role-card"
+              [class.selected]="
+                selectedRole === 'COMPLIANCE_ADVISOR'
+              "
+              (click)="selectRole('COMPLIANCE_ADVISOR')"
+            >
+
+              <strong>
+                Insurance & Compliance Advisor
+              </strong>
+
+              <small>
+                Support vehicle owners
+              </small>
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             NAME + PHONE
+        ================================================== -->
+
+        <div class="two-column">
+
+
+          <!-- FULL NAME -->
+
+          <div class="form-group">
+
+            <label for="fullName">
+              Full Name
+              <span>*</span>
+            </label>
+
+            <input
+              id="fullName"
+              type="text"
+              maxlength="80"
+              formControlName="fullName"
+              placeholder="Your full name"
+              autocomplete="name"
+
+              [class.invalid]="
+                showError(f.fullName)
+              "
+
+              (beforeinput)="
+                onFullNameBeforeInput($event)
+              "
+
+              (input)="
+                onFullNameInput($event)
+              "
+
+              (paste)="
+                onFullNamePaste($event)
+              "
+
+              (blur)="
+                trimTextControl(f.fullName)
+              "
+            />
+
+
+            @if (showError(f.fullName)) {
+
+              @if (
+                f.fullName.hasError('required')
+              ) {
+
+                <p class="error-message">
+                  Full name is required.
+                </p>
+
+              }
+
+              @else if (
+                f.fullName.hasError('minlength')
+              ) {
+
+                <p class="error-message">
+                  Full name must contain at least 2 letters.
+                </p>
+
+              }
+
+              @else if (
+                f.fullName.hasError('pattern')
+              ) {
+
+                <p class="error-message">
+                  Only letters and single spaces are allowed.
+                </p>
+
+              }
+
+            }
+
+          </div>
+
+
+          <!-- PHONE -->
+
+          <div class="form-group">
+
+            <label for="phone">
+              Phone Number
+              <span>*</span>
+            </label>
+
+
+            <div
+              class="phone-input"
+              [class.invalid]="
+                showError(f.phone)
+              "
+            >
+
+              <span class="phone-prefix">
+                +91
+              </span>
+
+              <input
+                id="phone"
+                type="tel"
+                inputmode="numeric"
+                maxlength="10"
+                formControlName="phone"
+                placeholder="9876543210"
+                autocomplete="tel"
+
+                (beforeinput)="
+                  onPhoneBeforeInput($event)
+                "
+
+                (input)="
+                  onPhoneInput($event)
+                "
+
+                (paste)="
+                  onPhonePaste($event)
+                "
+              />
+
+            </div>
+
+
+            <p class="field-hint">
+              +91 is fixed. Enter exactly 10 digits.
+            </p>
+
+
+            @if (showError(f.phone)) {
+
+              @if (
+                f.phone.hasError('required')
+              ) {
+
+                <p class="error-message">
+                  Phone number is required.
+                </p>
+
+              }
+
+              @else {
+
+                <p class="error-message">
+                  Please enter exactly 10 numeric digits.
+                </p>
+
+              }
+
+            }
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             EMAIL
+        ================================================== -->
+
+        <div class="form-group">
+
+          <label for="email">
+            Email Address
+            <span>*</span>
+          </label>
+
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+
+            [class.invalid]="
+              showError(f.email)
+            "
+
+            (input)="
+              onEmailInput($event)
+            "
+
+            (paste)="
+              onEmailPaste($event)
+            "
+          />
+
+
+          @if (showError(f.email)) {
+
+            @if (
+              f.email.hasError('required')
+            ) {
+
+              <p class="error-message">
+                Email address is required.
+              </p>
+
+            }
+
+            @else {
+
+              <p class="error-message">
+                Please enter a valid email address.
+              </p>
+
+            }
+
+          }
+
+        </div>
+
+
+        <!-- =================================================
+             ADDRESS
+        ================================================== -->
+
+        <div class="form-group">
+
+          <label for="address">
+            Address
+            <span>*</span>
+          </label>
+
+          <input
+            id="address"
+            type="text"
+            formControlName="address"
+            placeholder="Your complete address"
+            autocomplete="street-address"
+
+            [class.invalid]="
+              showError(f.address)
+            "
+
+            (input)="
+              onAddressInput($event)
+            "
+
+            (paste)="
+              onAddressPaste($event)
+            "
+
+            (blur)="
+              trimTextControl(f.address)
+            "
+          />
+
+
+          @if (showError(f.address)) {
+
+            @if (
+              f.address.hasError('required') ||
+              f.address.hasError('blank')
+            ) {
+
+              <p class="error-message">
+                Address is required.
+              </p>
+
+            }
+
+            @else {
+
+              <p class="error-message">
+                Address must contain at least 10 characters.
+              </p>
+
+            }
+
+          }
+
+        </div>
+
+
+        <!-- =================================================
+             PASSWORDS
+        ================================================== -->
+
+        <div class="two-column">
+
+
+          <!-- PASSWORD -->
+
+          <div class="form-group">
+
+            <label for="password">
+              Password
+              <span>*</span>
+            </label>
+
+
+            <div class="password-field">
+
+              <input
+                id="password"
+
+                [type]="
+                  showPassword
+                    ? 'text'
+                    : 'password'
+                "
+
+                formControlName="password"
+
+                placeholder="Minimum 8 characters"
+
+                autocomplete="new-password"
+
+                [class.invalid]="
+                  showError(f.password)
+                "
+              />
+
+
+              <button
+                type="button"
+                class="show-button"
+                (click)="togglePassword()"
+              >
+                {{
+                  showPassword
+                    ? 'Hide'
+                    : 'Show'
+                }}
+              </button>
+
+            </div>
+
+
+            @if (showError(f.password)) {
+
+              @if (
+                f.password.hasError('required')
+              ) {
+
+                <p class="error-message">
+                  Password is required.
+                </p>
+
+              }
+
+              @else {
+
+                <p class="error-message">
+                  Use at least 8 characters with uppercase,
+                  lowercase, number and special character.
+                </p>
+
+              }
+
+            }
+
+            @else {
+
+              <p class="field-hint">
+                8+ characters with uppercase,
+                lowercase, number and special symbol.
+              </p>
+
+            }
+
+          </div>
+
+
+          <!-- CONFIRM PASSWORD -->
+
+          <div class="form-group">
+
+            <label for="confirmPassword">
+              Confirm Password
+              <span>*</span>
+            </label>
+
+
+            <div class="password-field">
+
+              <input
+                id="confirmPassword"
+
+                [type]="
+                  showConfirmPassword
+                    ? 'text'
+                    : 'password'
+                "
+
+                formControlName="confirmPassword"
+
+                placeholder="Re-enter your password"
+
+                autocomplete="new-password"
+
+                [class.invalid]="
+                  (
+                    submitted ||
+                    f.confirmPassword.touched
+                  )
+                  &&
+                  (
+                    f.confirmPassword.invalid ||
+                    registerForm.hasError(
+                      'passwordMismatch'
+                    )
+                  )
+                "
+              />
+
+
+              <button
+                type="button"
+                class="show-button"
+                (click)="toggleConfirmPassword()"
+              >
+                {{
+                  showConfirmPassword
+                    ? 'Hide'
+                    : 'Show'
+                }}
+              </button>
+
+            </div>
+
+
+            @if (
+              submitted ||
+              f.confirmPassword.touched
+            ) {
+
+              @if (
+                f.confirmPassword.hasError(
+                  'required'
+                )
+              ) {
+
+                <p class="error-message">
+                  Please confirm your password.
+                </p>
+
+              }
+
+              @else if (
+                registerForm.hasError(
+                  'passwordMismatch'
+                )
+              ) {
+
+                <p class="error-message">
+                  Passwords do not match.
+                </p>
+
+              }
+
+            }
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PROFESSIONAL INFORMATION
+        ================================================== -->
+
+        @if (
+          selectedRole !== 'VEHICLE_OWNER'
+        ) {
+
+          <section class="professional-section">
+
+            <div class="professional-heading">
+
+              <h3>
+                Professional Information
+              </h3>
+
+              <p>
+                Professional accounts require
+                administrator verification before activation.
+              </p>
+
+            </div>
+
+
+            <!-- QUALIFICATION + SPECIALIZATION -->
+
+            <div class="two-column">
+
+
+              <!-- QUALIFICATION -->
+
+              <div class="form-group">
+
+                <label for="qualification">
+                  Qualification
+                  <span>*</span>
+                </label>
+
+                <input
+                  id="qualification"
+                  type="text"
+                  formControlName="qualification"
+
+                  placeholder="e.g. B.Tech, M.Sc, Ph.D/MD"
+
+                  [class.invalid]="
+                    showError(f.qualification)
+                  "
+
+                  (beforeinput)="
+                    onQualificationBeforeInput($event)
+                  "
+
+                  (input)="
+                    onQualificationInput($event)
+                  "
+
+                  (paste)="
+                    onQualificationPaste($event)
+                  "
+
+                  (blur)="
+                    trimTextControl(f.qualification)
+                  "
+                />
+
+
+                @if (
+                  showError(f.qualification)
+                ) {
+
+                  @if (
+                    f.qualification.hasError(
+                      'required'
+                    ) ||
+                    f.qualification.hasError(
+                      'blank'
+                    )
+                  ) {
+
+                    <p class="error-message">
+                      Qualification is required.
+                    </p>
+
+                  }
+
+                  @else if (
+                    f.qualification.hasError(
+                      'pattern'
+                    )
+                  ) {
+
+                    <p class="error-message">
+                      Qualification may contain only letters,
+                      spaces, dots and slashes.
+                    </p>
+
+                  }
+
+                }
+
+              </div>
+
+
+              <!-- SPECIALIZATION -->
+
+              <div class="form-group">
+
+                <label for="specialization">
+                  Specialization
+                  <span>*</span>
+                </label>
+
+                <input
+                  id="specialization"
+                  type="text"
+                  formControlName="specialization"
+
+                  placeholder="e.g. Engine Diagnostics"
+
+                  [class.invalid]="
+                    showError(f.specialization)
+                  "
+
+                  (beforeinput)="
+                    onSpecializationBeforeInput($event)
+                  "
+
+                  (input)="
+                    onSpecializationInput($event)
+                  "
+
+                  (paste)="
+                    onSpecializationPaste($event)
+                  "
+
+                  (blur)="
+                    trimTextControl(f.specialization)
+                  "
+                />
+
+
+                @if (
+                  showError(f.specialization)
+                ) {
+
+                  @if (
+                    f.specialization.hasError(
+                      'required'
+                    ) ||
+                    f.specialization.hasError(
+                      'blank'
+                    )
+                  ) {
+
+                    <p class="error-message">
+                      Specialization is required.
+                    </p>
+
+                  }
+
+                  @else {
+
+                    <p class="error-message">
+                      Specialization may contain only letters,
+                      spaces and hyphens.
+                    </p>
+
+                  }
+
+                }
+
+              </div>
+
+            </div>
+
+
+            <!-- EXPERIENCE + ORGANIZATION -->
+
+            <div class="two-column">
+
+
+              <!-- EXPERIENCE -->
+
+              <div class="form-group">
+
+                <label for="experience">
+                  Years of Experience
+                  <span>*</span>
+                </label>
+
+                <input
+                  id="experience"
+                  type="text"
+                  inputmode="numeric"
+                  maxlength="2"
+
+                  formControlName="yearsOfExperience"
+
+                  placeholder="e.g. 5"
+
+                  [class.invalid]="
+                    showError(
+                      f.yearsOfExperience
+                    )
+                  "
+
+                  (beforeinput)="
+                    onExperienceBeforeInput($event)
+                  "
+
+                  (input)="
+                    onExperienceInput($event)
+                  "
+
+                  (paste)="
+                    onExperiencePaste($event)
+                  "
+                />
+
+
+                @if (
+                  showError(
+                    f.yearsOfExperience
+                  )
+                ) {
+
+                  @if (
+                    f.yearsOfExperience.hasError(
+                      'required'
+                    )
+                  ) {
+
+                    <p class="error-message">
+                      Years of experience is required.
+                    </p>
+
+                  }
+
+                  @else if (
+                    f.yearsOfExperience.hasError(
+                      'pattern'
+                    )
+                  ) {
+
+                    <p class="error-message">
+                      Only whole numbers are allowed.
+                    </p>
+
+                  }
+
+                  @else {
+
+                    <p class="error-message">
+                      Years of experience must be
+                      between 0 and 60.
+                    </p>
+
+                  }
+
+                }
+
+              </div>
+
+
+              <!-- ORGANIZATION -->
+
+              <div class="form-group">
+
+                <label for="organization">
+                  Organization or Workshop Name
+                  <span>*</span>
+                </label>
+
+                <input
+                  id="organization"
+                  type="text"
+
+                  formControlName="organizationName"
+
+                  placeholder="Organization name"
+
+                  [class.invalid]="
+                    showError(
+                      f.organizationName
+                    )
+                  "
+
+                  (blur)="
+                    trimTextControl(
+                      f.organizationName
+                    )
+                  "
+                />
+
+
+                @if (
+                  showError(
+                    f.organizationName
+                  )
+                ) {
+
+                  <p class="error-message">
+                    Organization or workshop name is required.
+                  </p>
+
+                }
+
+              </div>
+
+            </div>
+
+
+            <!-- CERTIFICATE + LOCATION -->
+
+            <div class="two-column">
+
+
+              <!-- CERTIFICATE -->
+
+              <div class="form-group">
+
+                <label for="certificate">
+                  Licence or Certificate Number
+                  <span>*</span>
+                </label>
+
+                <input
+                  id="certificate"
+                  type="text"
+
+                  formControlName="certificateNumber"
+
+                  placeholder="e.g. CERT-984210-AUTO"
+
+                  [class.invalid]="
+                    showError(
+                      f.certificateNumber
+                    )
+                  "
+
+                  (blur)="
+                    trimTextControl(
+                      f.certificateNumber
+                    )
+                  "
+                />
+
+
+                @if (
+                  showError(
+                    f.certificateNumber
+                  )
+                ) {
+
+                  @if (
+                    f.certificateNumber.hasError(
+                      'required'
+                    )
+                  ) {
+
+                    <p class="error-message">
+                      Licence or certificate number is required.
+                    </p>
+
+                  }
+
+                  @else {
+
+                    <p class="error-message">
+                      Use letters, numbers and hyphens only.
+                    </p>
+
+                  }
+
+                }
+
+              </div>
+
+
+              <!-- SERVICE LOCATION -->
+
+              <div class="form-group">
+
+                <label for="location">
+                  Service Location
+                  <span>*</span>
+                </label>
+
+                <input
+                  id="location"
+                  type="text"
+
+                  formControlName="serviceLocation"
+
+                  placeholder="Mumbai, Maharashtra"
+
+                  [class.invalid]="
+                    showError(
+                      f.serviceLocation
+                    )
+                  "
+
+                  (beforeinput)="
+                    onServiceLocationBeforeInput(
+                      $event
+                    )
+                  "
+
+                  (input)="
+                    onServiceLocationInput(
+                      $event
+                    )
+                  "
+
+                  (paste)="
+                    onServiceLocationPaste(
+                      $event
+                    )
+                  "
+
+                  (blur)="
+                    trimTextControl(
+                      f.serviceLocation
+                    )
+                  "
+                />
+
+
+                @if (
+                  showError(
+                    f.serviceLocation
+                  )
+                ) {
+
+                  @if (
+                    f.serviceLocation.hasError(
+                      'required'
+                    )
+                  ) {
+
+                    <p class="error-message">
+                      Service location is required.
+                    </p>
+
+                  }
+
+                  @else {
+
+                    <p class="error-message">
+                      Use letters, spaces, commas
+                      and hyphens only.
+                    </p>
+
+                  }
+
+                }
+
+              </div>
+
+            </div>
+
+
+            <!-- VERIFICATION DOCUMENT -->
+
+            <div class="form-group">
+
+              <label for="verificationDocument">
+                Upload Verification Document
+                <span>*</span>
+              </label>
+
+              <input
+                id="verificationDocument"
+                type="file"
+
+                class="file-input"
+
+                [class.invalid]="
+                  showError(
+                    f.verificationDocument
+                  )
+                "
+
+                accept=".pdf,.jpg,.jpeg,.png"
+
+                (change)="
+                  onFileSelected($event)
+                "
+              />
+
+
+              <p class="field-hint">
+                PDF, JPG, JPEG or PNG only.
+                Maximum size: 5 MB.
+              </p>
+
+
+              @if (
+                showError(
+                  f.verificationDocument
+                )
+              ) {
+
+                @if (
+                  f.verificationDocument.hasError(
+                    'required'
+                  )
+                ) {
+
+                  <p class="error-message">
+                    Verification document is required.
+                  </p>
+
+                }
+
+                @else if (
+                  f.verificationDocument.hasError(
+                    'invalidFileType'
+                  )
+                ) {
+
+                  <p class="error-message">
+                    Only PDF, JPG, JPEG and PNG
+                    files are allowed.
+                  </p>
+
+                }
+
+                @else if (
+                  f.verificationDocument.hasError(
+                    'fileTooLarge'
+                  )
+                ) {
+
+                  <p class="error-message">
+                    File size must not exceed 5 MB.
+                  </p>
+
+                }
+
+              }
+
+            </div>
+
+          </section>
+
+        }
+
+
+        <!-- =================================================
+             TERMS & PRIVACY
+        ================================================== -->
+
+        <div class="terms-row">
+
+          <input
+            id="acceptTerms"
+            type="checkbox"
+            formControlName="acceptTerms"
+          />
+
+
+          <div class="small text-secondary">
+
+            <label
+              for="acceptTerms"
+              class="d-inline"
+            >
+              I agree to the
+            </label>
+
+
+            <!-- TERMS LINK -->
+
+            <button
+              type="button"
+
+              class="
+                btn
+                btn-link
+                btn-sm
+                p-0
+                text-danger
+                text-decoration-none
+                align-baseline
+              "
+
+              data-bs-toggle="modal"
+              data-bs-target="#termsModal"
+            >
+              Terms and Conditions
+            </button>
+
+
+            <span>
+              and
+            </span>
+
+
+            <!-- PRIVACY LINK -->
+
+            <button
+              type="button"
+
+              class="
+                btn
+                btn-link
+                btn-sm
+                p-0
+                text-danger
+                text-decoration-none
+                align-baseline
+              "
+
+              data-bs-toggle="modal"
+              data-bs-target="#privacyModal"
+            >
+              Privacy Policy
+            </button>
+
+            <span class="text-danger">*</span>
+
+          </div>
+
+        </div>
+
+
+        @if (
+          showError(f.acceptTerms)
+        ) {
+
+          <p class="error-message terms-error">
+            You must accept the Terms and Conditions
+            and Privacy Policy before continuing.
+          </p>
+
+        }
+
+
+        <!-- =================================================
+             SUBMIT
+        ================================================== -->
+
+        <button
+          type="submit"
+          class="submit-button"
+        >
+
+          <span>
+            Create Account
+          </span>
+
+          <span>
+            →
+          </span>
+
+        </button>
+
+
+        <p class="signin-text">
+
+          Already have an account?
+
+          <a routerLink="/login">
+            Sign in
+          </a>
+
+        </p>
+
+      </form>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+
+<!-- ========================================================
+     TERMS AND CONDITIONS MODAL
+========================================================= -->
+
+<div
+  class="modal fade"
+  id="termsModal"
+  tabindex="-1"
+
+  aria-labelledby="termsModalLabel"
+  aria-hidden="true"
+>
+
+  <div
+    class="
+      modal-dialog
+      modal-dialog-centered
+      modal-dialog-scrollable
+      modal-lg
+    "
+  >
+
+    <div
+      class="
+        modal-content
+        bg-dark
+        text-light
+        border
+        border-secondary
+      "
+    >
+
+
+      <!-- STICKY HEADER -->
+
+      <div
+        class="
+          modal-header
+          sticky-top
+          bg-dark
+          border-secondary
+          py-3
+        "
+      >
+
+        <div>
+
+          <p
+            class="
+              text-danger
+              small
+              fw-bold
+              mb-1
+              text-uppercase
+            "
+          >
+            DRIVEMATE LEGAL
+          </p>
+
+          <h5
+            class="modal-title fw-bold"
+            id="termsModalLabel"
+          >
+            Terms and Conditions
+          </h5>
+
+        </div>
+
+
+        <button
+          type="button"
+
+          class="
+            btn-close
+            btn-close-white
+          "
+
+          data-bs-dismiss="modal"
+
+          aria-label="Close"
+        ></button>
+
+      </div>
+
+
+      <!-- SCROLLABLE BODY -->
+
+      <div class="modal-body px-4 py-4">
+
+        <p class="text-secondary">
+          Please read these Terms and Conditions
+          before creating or using a DriveMate account.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          1. Account Registration
+        </h6>
+
+        <p class="text-secondary">
+          Users must provide accurate and current
+          information when creating an account.
+          You are responsible for maintaining the
+          confidentiality of your login credentials.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          2. Vehicle Information
+        </h6>
+
+        <p class="text-secondary">
+          Information relating to vehicles,
+          maintenance records, expenses and documents
+          should be entered accurately. DriveMate
+          relies on the information supplied by users
+          when presenting vehicle records and reminders.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          3. Professional Accounts
+        </h6>
+
+        <p class="text-secondary">
+          Automotive Diagnostic Experts and Insurance
+          &amp; Compliance Advisors may be required to
+          submit professional information and supporting
+          documents. Professional accounts may remain
+          pending until administrator verification is
+          completed.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          4. Documents
+        </h6>
+
+        <p class="text-secondary">
+          Users are responsible for ensuring they have
+          permission to upload and store documents on
+          DriveMate. Documents must not contain unlawful,
+          misleading or malicious material.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          5. Maintenance and Diagnostic Guidance
+        </h6>
+
+        <p class="text-secondary">
+          Information presented by DriveMate is intended
+          to support vehicle management and decision
+          making. It should not replace inspection or
+          repair by a qualified automotive professional
+          when professional assistance is required.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          6. Emergency Assistance
+        </h6>
+
+        <p class="text-secondary">
+          Emergency and roadside assistance features
+          depend on available information, location
+          services and participating responders.
+          Users should contact appropriate emergency
+          services whenever immediate danger exists.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          7. Acceptable Use
+        </h6>
+
+        <p class="text-secondary">
+          Users must not misuse DriveMate, attempt
+          unauthorized access, upload malicious files,
+          impersonate another person, or use the platform
+          for fraudulent or unlawful purposes.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          8. Account Suspension
+        </h6>
+
+        <p class="text-secondary">
+          Accounts may be restricted or suspended where
+          fraudulent information, misuse, security risks,
+          or violations of these terms are identified.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          9. Changes to These Terms
+        </h6>
+
+        <p class="text-secondary mb-0">
+          These terms may be updated as DriveMate
+          functionality changes. Updated terms should
+          be reviewed before continued use of the
+          platform.
+        </p>
+
+      </div>
+
+
+      <!-- FOOTER -->
+
+      <div
+        class="
+          modal-footer
+          border-secondary
+          bg-dark
+        "
+      >
+
+        <button
+          type="button"
+
+          class="
+            btn
+            btn-outline-light
+            btn-sm
+          "
+
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+
+
+        <button
+          type="button"
+
+          class="
+            btn
+            btn-danger
+            px-4
+          "
+
+          data-bs-dismiss="modal"
+
+          (click)="
+            f.acceptTerms.setValue(true);
+            f.acceptTerms.markAsTouched()
+          "
+        >
+          I Agree
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ========================================================
+     PRIVACY POLICY MODAL
+========================================================= -->
+
+<div
+  class="modal fade"
+  id="privacyModal"
+  tabindex="-1"
+
+  aria-labelledby="privacyModalLabel"
+  aria-hidden="true"
+>
+
+  <div
+    class="
+      modal-dialog
+      modal-dialog-centered
+      modal-dialog-scrollable
+      modal-lg
+    "
+  >
+
+    <div
+      class="
+        modal-content
+        bg-dark
+        text-light
+        border
+        border-secondary
+      "
+    >
+
+
+      <!-- STICKY HEADER -->
+
+      <div
+        class="
+          modal-header
+          sticky-top
+          bg-dark
+          border-secondary
+          py-3
+        "
+      >
+
+        <div>
+
+          <p
+            class="
+              text-danger
+              small
+              fw-bold
+              mb-1
+              text-uppercase
+            "
+          >
+            DRIVEMATE PRIVACY
+          </p>
+
+          <h5
+            class="modal-title fw-bold"
+            id="privacyModalLabel"
+          >
+            Privacy Policy
+          </h5>
+
+        </div>
+
+
+        <button
+          type="button"
+
+          class="
+            btn-close
+            btn-close-white
+          "
+
+          data-bs-dismiss="modal"
+
+          aria-label="Close"
+        ></button>
+
+      </div>
+
+
+      <!-- SCROLLABLE BODY -->
+
+      <div class="modal-body px-4 py-4">
+
+        <p class="text-secondary">
+          This Privacy Policy describes the types of
+          information DriveMate may process and how that
+          information is used within the platform.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          1. Personal Information
+        </h6>
+
+        <p class="text-secondary">
+          DriveMate may process information such as your
+          name, phone number, email address, address and
+          selected account role.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          2. Vehicle Information
+        </h6>
+
+        <p class="text-secondary">
+          Vehicle information may include registration
+          details, ownership records, maintenance
+          history, expenses, reminders and other
+          vehicle lifecycle records entered by users.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          3. Professional Information
+        </h6>
+
+        <p class="text-secondary">
+          Professional users may provide qualifications,
+          specialization, experience, organization
+          information, certificate information, service
+          location and verification documents for
+          administrator review.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          4. Uploaded Documents
+        </h6>
+
+        <p class="text-secondary">
+          Documents uploaded to DriveMate may contain
+          vehicle, insurance, compliance or professional
+          verification information. Access should be
+          restricted to authorized platform functions
+          and authorized users.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          5. Location Information
+        </h6>
+
+        <p class="text-secondary">
+          Location information may be processed when
+          location-based or roadside assistance
+          functionality is used and where the user
+          permits location access.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          6. How Information Is Used
+        </h6>
+
+        <p class="text-secondary">
+          Information may be used to manage accounts,
+          maintain vehicle lifecycle records, generate
+          reminders, support verification workflows,
+          provide relevant platform functionality and
+          improve system security.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          7. Security
+        </h6>
+
+        <p class="text-secondary">
+          DriveMate should apply appropriate technical
+          and organizational controls to protect stored
+          personal, vehicle and professional information
+          against unauthorized access or modification.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          8. Information Sharing
+        </h6>
+
+        <p class="text-secondary">
+          Information should only be shared where needed
+          to provide requested services, support approved
+          professional interactions, comply with legal
+          requirements, or protect platform security.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          9. Data Retention
+        </h6>
+
+        <p class="text-secondary">
+          Information should be retained only for as long
+          as necessary for the purposes for which it was
+          collected, subject to applicable operational
+          and legal requirements.
+        </p>
+
+
+        <h6 class="fw-bold mt-4">
+          10. User Choices
+        </h6>
+
+        <p class="text-secondary mb-0">
+          Users should be able to review and update
+          appropriate account information and may request
+          account-related changes in accordance with
+          DriveMate's available account management
+          functionality.
+        </p>
+
+      </div>
+
+
+      <!-- FOOTER -->
+
+      <div
+        class="
+          modal-footer
+          border-secondary
+          bg-dark
+        "
+      >
+
+        <button
+          type="button"
+
+          class="
+            btn
+            btn-outline-light
+            btn-sm
+          "
+
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+
+
+        <button
+          type="button"
+
+          class="
+            btn
+            btn-danger
+            px-4
+          "
+
+          data-bs-dismiss="modal"
+
+          (click)="
+            f.acceptTerms.setValue(true);
+            f.acceptTerms.markAsTouched()
+          "
+        >
+          I Agree
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

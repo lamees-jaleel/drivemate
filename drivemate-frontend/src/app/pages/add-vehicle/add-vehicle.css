@@ -1,0 +1,814 @@
+:host {
+  display: block;
+
+  min-height:
+    100vh;
+
+  color:
+    #ffffff;
+
+  background:
+    #07080b;
+
+  font-family:
+    Inter,
+    Arial,
+    Helvetica,
+    sans-serif;
+}
+
+
+* {
+  box-sizing:
+    border-box;
+}
+
+
+button,
+input,
+select {
+  font:
+    inherit;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.add-vehicle-page {
+  min-height:
+    100vh;
+
+  background:
+    radial-gradient(
+      circle at 70% 10%,
+      rgba(
+        245,
+        53,
+        67,
+        0.08
+      ),
+      transparent 33%
+    ),
+    #07080b;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar {
+  min-height:
+    82px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  justify-content:
+    space-between;
+
+  padding:
+    0 6vw;
+
+  border-bottom:
+    1px solid #202127;
+
+  background:
+    rgba(
+      7,
+      8,
+      11,
+      0.95
+    );
+}
+
+
+.brand {
+  text-decoration:
+    none;
+
+  color:
+    #ffffff;
+
+  font-size:
+    23px;
+
+  font-weight:
+    900;
+
+  letter-spacing:
+    -1px;
+}
+
+
+.brand strong {
+  color:
+    #f53543;
+}
+
+
+.back-link {
+  color:
+    #a7a9b1;
+
+  text-decoration:
+    none;
+
+  font-size:
+    12px;
+
+  font-weight:
+    700;
+}
+
+
+.back-link:hover {
+  color:
+    #ffffff;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.page-content {
+  width:
+    min(
+      1100px,
+      calc(
+        100% - 40px
+      )
+    );
+
+  margin:
+    0 auto;
+
+  padding:
+    64px 0 80px;
+}
+
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.page-heading {
+  max-width:
+    720px;
+
+  margin-bottom:
+    38px;
+}
+
+
+.eyebrow {
+  margin:
+    0 0 12px;
+
+  color:
+    #f53543;
+
+  font-size:
+    10px;
+
+  font-weight:
+    900;
+
+  letter-spacing:
+    1.8px;
+}
+
+
+.page-heading h1 {
+  margin:
+    0;
+
+  color:
+    #ffffff;
+
+  font-size:
+    clamp(
+      42px,
+      6vw,
+      68px
+    );
+
+  line-height:
+    0.98;
+
+  letter-spacing:
+    -3px;
+}
+
+
+.page-heading h1 span {
+  color:
+    #f53543;
+}
+
+
+.page-heading > p:last-child {
+  max-width:
+    650px;
+
+  margin:
+    20px 0 0;
+
+  color:
+    #91949e;
+
+  font-size:
+    14px;
+
+  line-height:
+    1.7;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.vehicle-form {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    18px;
+}
+
+
+.form-section {
+  padding:
+    30px;
+
+  border:
+    1px solid #202127;
+
+  border-radius:
+    16px;
+
+  background:
+    #0d0e12;
+}
+
+
+/* =========================================================
+   SECTION HEADING
+========================================================= */
+
+.section-heading {
+  display:
+    flex;
+
+  gap:
+    15px;
+
+  margin-bottom:
+    28px;
+}
+
+
+.section-number {
+  width:
+    38px;
+
+  height:
+    38px;
+
+  display:
+    grid;
+
+  place-items:
+    center;
+
+  flex:
+    0 0 auto;
+
+  border:
+    1px solid
+      rgba(
+        245,
+        53,
+        67,
+        0.28
+      );
+
+  border-radius:
+    9px;
+
+  color:
+    #f53543;
+
+  background:
+    rgba(
+      245,
+      53,
+      67,
+      0.08
+    );
+
+  font-size:
+    10px;
+
+  font-weight:
+    900;
+}
+
+
+.section-heading h2 {
+  margin:
+    0;
+
+  color:
+    #ffffff;
+
+  font-size:
+    20px;
+}
+
+
+.section-heading p {
+  margin:
+    6px 0 0;
+
+  color:
+    #6f727c;
+
+  font-size:
+    11px;
+}
+
+
+/* =========================================================
+   GRID
+========================================================= */
+
+.form-grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap:
+    22px;
+}
+
+
+.form-field {
+  display:
+    flex;
+
+  flex-direction:
+    column;
+
+  gap:
+    8px;
+}
+
+
+.form-field.full-width {
+  grid-column:
+    1 / -1;
+}
+
+
+/* =========================================================
+   LABEL
+========================================================= */
+
+.form-field label {
+  color:
+    #dedfe3;
+
+  font-size:
+    11px;
+
+  font-weight:
+    800;
+}
+
+
+.form-field label > span {
+  color:
+    #f53543;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+input,
+select {
+  width:
+    100%;
+
+  min-height:
+    48px;
+
+  padding:
+    0 14px;
+
+  border:
+    1px solid #292a31;
+
+  border-radius:
+    8px;
+
+  outline:
+    none;
+
+  color:
+    #ffffff;
+
+  background:
+    #131419;
+
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+
+input::placeholder {
+  color:
+    #555862;
+}
+
+
+input:focus,
+select:focus {
+  border-color:
+    #f53543;
+
+  box-shadow:
+    0 0 0 3px
+      rgba(
+        245,
+        53,
+        67,
+        0.08
+      );
+}
+
+
+select {
+  cursor:
+    pointer;
+}
+
+
+select option {
+  color:
+    #ffffff;
+
+  background:
+    #131419;
+}
+
+
+/* =========================================================
+   ODOMETER
+========================================================= */
+
+.input-suffix {
+  position:
+    relative;
+}
+
+
+.input-suffix input {
+  padding-right:
+    60px;
+}
+
+
+.input-suffix > span {
+  position:
+    absolute;
+
+  top:
+    50%;
+
+  right:
+    14px;
+
+  transform:
+    translateY(-50%);
+
+  color:
+    #676a74;
+
+  font-size:
+    10px;
+
+  font-weight:
+    900;
+}
+
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error {
+  color:
+    #ff5a66;
+
+  font-size:
+    10px;
+
+  line-height:
+    1.4;
+}
+
+
+/* =========================================================
+   OWNERSHIP
+========================================================= */
+
+.ownership-grid {
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      1fr
+    );
+
+  gap:
+    10px;
+}
+
+
+.ownership-option {
+  min-height:
+    60px;
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    10px;
+
+  padding:
+    0 16px;
+
+  border:
+    1px solid #292a31;
+
+  border-radius:
+    9px;
+
+  color:
+    #8d9099;
+
+  background:
+    #111217;
+
+  cursor:
+    pointer;
+
+  transition:
+    150ms ease;
+}
+
+
+.ownership-option input {
+  display:
+    none;
+}
+
+
+.ownership-option.selected {
+  color:
+    #ffffff;
+
+  border-color:
+    #f53543;
+
+  background:
+    rgba(
+      245,
+      53,
+      67,
+      0.08
+    );
+}
+
+
+.radio-circle {
+  width:
+    15px;
+
+  height:
+    15px;
+
+  flex:
+    0 0 auto;
+
+  border:
+    2px solid #5e616b;
+
+  border-radius:
+    50%;
+}
+
+
+.ownership-option.selected
+.radio-circle {
+  border:
+    4px solid #f53543;
+
+  background:
+    #ffffff;
+}
+
+
+.ownership-option strong {
+  font-size:
+    11px;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.form-actions {
+  display:
+    flex;
+
+  justify-content:
+    flex-end;
+
+  gap:
+    12px;
+
+  padding-top:
+    10px;
+}
+
+
+.cancel-button,
+.save-button {
+  min-height:
+    48px;
+
+  padding:
+    0 24px;
+
+  border-radius:
+    8px;
+
+  font-size:
+    11px;
+
+  font-weight:
+    900;
+
+  cursor:
+    pointer;
+}
+
+
+.cancel-button {
+  border:
+    1px solid #292a31;
+
+  color:
+    #b8bac1;
+
+  background:
+    #111217;
+}
+
+
+.cancel-button:hover {
+  color:
+    #ffffff;
+
+  border-color:
+    #42444d;
+}
+
+
+.save-button {
+  min-width:
+    150px;
+
+  border:
+    1px solid #f53543;
+
+  color:
+    #ffffff;
+
+  background:
+    #f53543;
+}
+
+
+.save-button:hover {
+  background:
+    #ff4553;
+}
+
+
+button:disabled {
+  cursor:
+    not-allowed;
+
+  opacity:
+    0.6;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (
+  max-width: 760px
+) {
+
+  .topbar {
+    padding:
+      0 20px;
+  }
+
+
+  .page-content {
+    width:
+      calc(
+        100% - 30px
+      );
+
+    padding:
+      42px 0 60px;
+  }
+
+
+  .page-heading h1 {
+    letter-spacing:
+      -2px;
+  }
+
+
+  .form-section {
+    padding:
+      22px 18px;
+  }
+
+
+  .form-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .form-field.full-width {
+    grid-column:
+      auto;
+  }
+
+
+  .ownership-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .form-actions {
+    flex-direction:
+      column-reverse;
+  }
+
+
+  .cancel-button,
+  .save-button {
+    width:
+      100%;
+  }
+
+}

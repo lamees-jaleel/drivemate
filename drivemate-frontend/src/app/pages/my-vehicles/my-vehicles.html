@@ -1,0 +1,371 @@
+<div class="vehicles-page">
+
+  <!-- =====================================================
+       TOPBAR
+  ====================================================== -->
+
+  <header class="topbar">
+
+    <a
+      class="brand"
+      routerLink="/owner-dashboard">
+
+      <span>
+        Drive
+      </span>
+
+      <strong>
+        Mate
+      </strong>
+
+    </a>
+
+
+    <a
+      class="back-link"
+      routerLink="/owner-dashboard">
+
+      ← Back to Dashboard
+
+    </a>
+
+  </header>
+
+
+  <!-- =====================================================
+       PAGE CONTENT
+  ====================================================== -->
+
+  <main class="page-content">
+
+
+    <!-- ===================================================
+         HEADING
+    ==================================================== -->
+
+    <section class="page-heading">
+
+      <div>
+
+        <p class="eyebrow">
+          YOUR GARAGE
+        </p>
+
+
+        <h1>
+          My
+          <span>
+            Vehicles.
+          </span>
+        </h1>
+
+
+        <p class="heading-copy">
+
+          View and manage every vehicle
+          connected to your DriveMate account.
+
+        </p>
+
+      </div>
+
+
+      <button
+        class="add-button"
+        type="button"
+        (click)="addVehicle()">
+
+        + Add Vehicle
+
+      </button>
+
+    </section>
+
+
+    <!-- ===================================================
+         LOADING
+    ==================================================== -->
+
+    @if (loading) {
+
+      <section class="state-card">
+
+        <span class="state-label">
+          LOADING
+        </span>
+
+
+        <h2>
+          Loading your garage...
+        </h2>
+
+      </section>
+
+    }
+
+
+    <!-- ===================================================
+         ERROR
+    ==================================================== -->
+
+    @if (
+      !loading &&
+      errorMessage
+    ) {
+
+      <section class="state-card error-state">
+
+        <span class="state-label">
+          SOMETHING WENT WRONG
+        </span>
+
+
+        <h2>
+          {{ errorMessage }}
+        </h2>
+
+      </section>
+
+    }
+
+
+    <!-- ===================================================
+         EMPTY
+    ==================================================== -->
+
+    @if (
+      !loading &&
+      !errorMessage &&
+      vehicles.length === 0
+    ) {
+
+      <section class="state-card">
+
+        <div class="car-illustration">
+
+          <div class="car-roof"></div>
+
+          <div class="car-body"></div>
+
+          <div class="wheel wheel-left"></div>
+
+          <div class="wheel wheel-right"></div>
+
+        </div>
+
+
+        <span class="state-label">
+          YOUR FIRST MILE STARTS HERE
+        </span>
+
+
+        <h2>
+          No vehicles added yet
+        </h2>
+
+
+        <p>
+
+          Add your first vehicle to begin
+          tracking maintenance, expenses,
+          documents and ownership history.
+
+        </p>
+
+
+        <button
+          class="add-button"
+          type="button"
+          (click)="addVehicle()">
+
+          + Add Your First Vehicle
+
+        </button>
+
+      </section>
+
+    }
+
+
+    <!-- ===================================================
+         VEHICLES
+    ==================================================== -->
+
+    @if (
+      !loading &&
+      !errorMessage &&
+      vehicles.length > 0
+    ) {
+
+      <div class="vehicles-summary">
+
+        <span>
+          REGISTERED VEHICLES
+        </span>
+
+
+        <strong>
+          {{ vehicles.length }}
+        </strong>
+
+      </div>
+
+
+      <section class="vehicle-grid">
+
+        @for (
+          vehicle of vehicles;
+          track vehicle.id
+        ) {
+
+          <article class="vehicle-card">
+
+
+            <!-- ===========================================
+                 VISUAL
+            ============================================ -->
+
+            <div class="vehicle-visual">
+
+              <div class="car-illustration">
+
+                <div class="car-roof"></div>
+
+                <div class="car-body"></div>
+
+                <div class="wheel wheel-left"></div>
+
+                <div class="wheel wheel-right"></div>
+
+              </div>
+
+            </div>
+
+
+            <!-- ===========================================
+                 DETAILS
+            ============================================ -->
+
+            <div class="vehicle-content">
+
+              <div class="vehicle-top">
+
+                <span class="registration">
+
+                  {{ vehicle.registrationNumber }}
+
+                </span>
+
+
+                <span class="status">
+
+                  {{ vehicle.status }}
+
+                </span>
+
+              </div>
+
+
+              <h2>
+
+                {{ vehicle.make }}
+                {{ vehicle.model }}
+
+              </h2>
+
+
+              @if (vehicle.variant) {
+
+                <p class="variant">
+
+                  {{ vehicle.variant }}
+
+                </p>
+
+              }
+
+
+              <div class="details-grid">
+
+                <div>
+
+                  <span>
+                    YEAR
+                  </span>
+
+                  <strong>
+                    {{ vehicle.manufacturingYear }}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    FUEL
+                  </span>
+
+                  <strong>
+                    {{ vehicle.fuelType }}
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    TRANSMISSION
+                  </span>
+
+                  <strong>
+
+                    {{
+                      vehicle.transmission ||
+                      'Not specified'
+                    }}
+
+                  </strong>
+
+                </div>
+
+
+                <div>
+
+                  <span>
+                    ODOMETER
+                  </span>
+
+                  <strong>
+                    {{ vehicle.odometerKm }} km
+                  </strong>
+
+                </div>
+
+              </div>
+
+
+              <button
+                class="view-button"
+                type="button"
+                (click)="viewVehicle(vehicle.id)">
+
+                View Vehicle
+                <span>→</span>
+
+              </button>
+
+            </div>
+
+          </article>
+
+        }
+
+      </section>
+
+    }
+
+  </main>
+
+</div>
