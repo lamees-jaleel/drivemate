@@ -96,7 +96,7 @@
       <header class="form-heading">
 
         <h2>
-          Welcome Back
+          Welcome!
         </h2>
 
         <p>
@@ -107,7 +107,7 @@
 
 
 
-      <!-- FORM -->
+      <!-- EMAIL / PASSWORD FORM -->
 
       <form
         [formGroup]="loginForm"
@@ -276,36 +276,10 @@
 
 
         <!-- =============================================
-             REMEMBER + FORGOT
+             FORGOT PASSWORD
         ============================================== -->
 
         <div class="login-options">
-
-
-          <!-- REMEMBER -->
-
-          <label
-            class="remember-option"
-            for="rememberMe"
-          >
-
-            <input
-              id="rememberMe"
-
-              type="checkbox"
-
-              formControlName="rememberMe"
-            />
-
-            <span>
-              Remember me
-            </span>
-
-          </label>
-
-
-
-          <!-- FORGOT PASSWORD -->
 
           <button
             type="button"
@@ -327,36 +301,92 @@
         <button
           type="submit"
           class="signin-button"
+          [disabled]="isSubmitting"
         >
 
           <span>
-            Sign In
+            {{
+              isSubmitting
+                ? 'Signing In...'
+                : 'Sign In'
+            }}
           </span>
 
-          <span>
-            →
-          </span>
+          @if (!isSubmitting) {
+
+            <span>
+              →
+            </span>
+
+          }
 
         </button>
 
-
-
-        <!-- =============================================
-             REGISTER
-        ============================================== -->
-
-        <p class="register-text">
-
-          Don’t have an account?
-
-          <a routerLink="/register">
-            Create one
-          </a>
-
-        </p>
-
-
       </form>
+
+
+
+      <!-- =============================================
+           DIVIDER
+      ============================================== -->
+
+      <div class="auth-divider">
+
+        <span>
+          OR
+        </span>
+
+      </div>
+
+
+
+      <!-- =============================================
+           GOOGLE SIGN IN
+      ============================================== -->
+
+      <div class="google-login">
+
+        <div
+          #googleButton
+          class="google-button-host"
+        ></div>
+
+
+        @if (isGoogleSubmitting) {
+
+          <p class="google-status">
+            Signing in with Google...
+          </p>
+
+        }
+
+
+        @if (googleErrorMessage) {
+
+          <p class="google-error">
+            {{ googleErrorMessage }}
+          </p>
+
+        }
+
+      </div>
+
+
+
+      <!-- =============================================
+           REGISTER
+      ============================================== -->
+
+      <p class="register-text">
+
+        Don’t have an account?
+
+        <a routerLink="/register">
+          Create one
+        </a>
+
+      </p>
+
 
     </div>
 

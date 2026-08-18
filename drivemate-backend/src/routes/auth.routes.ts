@@ -3,6 +3,7 @@ import {
 } from 'express';
 
 import {
+  googleLogin,
   login,
   register
 } from '../controllers/auth.controller.js';
@@ -32,12 +33,22 @@ router.post(
 
 
 /* =========================================================
-   LOGIN
+   EMAIL / PASSWORD LOGIN
 ========================================================= */
 
 router.post(
   '/login',
   login
+);
+
+
+/* =========================================================
+   GOOGLE LOGIN
+========================================================= */
+
+router.post(
+  '/google',
+  googleLogin
 );
 
 

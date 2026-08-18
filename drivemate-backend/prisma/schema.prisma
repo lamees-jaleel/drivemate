@@ -227,6 +227,8 @@ model User {
 
   email String @unique @db.VarChar(150)
 
+  googleSub String? @unique @db.VarChar(255)
+
   address String @db.VarChar(255)
 
   passwordHash String @db.VarChar(255)

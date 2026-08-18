@@ -49,13 +49,8 @@ export class AuthService {
   getToken():
     string | null {
 
-    return (
-      localStorage.getItem(
-        'drivemate_token'
-      ) ??
-      sessionStorage.getItem(
-        'drivemate_token'
-      )
+    return sessionStorage.getItem(
+      'drivemate_token'
     );
 
   }
@@ -69,9 +64,6 @@ export class AuthService {
     AuthenticatedUser | null {
 
     const storedUser =
-      localStorage.getItem(
-        'drivemate_user'
-      ) ??
       sessionStorage.getItem(
         'drivemate_user'
       );
@@ -149,31 +141,25 @@ export class AuthService {
   /* =======================================================
      SAVE SESSION
 
-     We can also reuse this from login.ts later.
+     Remember Me has been removed.
+     Sessions now last for the current browser session only.
   ======================================================= */
 
   saveSession(
     token: string,
-    user: AuthenticatedUser,
-    rememberMe: boolean
+    user: AuthenticatedUser
   ): void {
 
     this.clearSession();
 
 
-    const storage =
-      rememberMe
-        ? localStorage
-        : sessionStorage;
-
-
-    storage.setItem(
+    sessionStorage.setItem(
       'drivemate_token',
       token
     );
 
 
-    storage.setItem(
+    sessionStorage.setItem(
       'drivemate_user',
       JSON.stringify(
         user
@@ -189,6 +175,11 @@ export class AuthService {
 
   clearSession():
     void {
+
+    /*
+      Clear both storages once so old Remember Me sessions
+      from the previous implementation cannot remain active.
+    */
 
     localStorage.removeItem(
       'drivemate_token'

@@ -546,28 +546,16 @@ export class OwnerDashboard
               }
 
 
-              /* ===========================================
-                 MAINTENANCE COST THIS MONTH
-              ============================================ */
-
-              if (
-                this.isCurrentMonth(
-                  record.serviceDate
-                )
-              ) {
-
-                currentMonthTotal +=
-                  Number(
-                    record.cost
-                  );
-
-              }
-
             }
 
 
             /* =============================================
-               OTHER EXPENSES THIS MONTH
+               EXPENSES THIS MONTH
+
+               Maintenance cost is intentionally excluded
+               from this dashboard card. It belongs to the
+               Maintenance module, while Monthly Expenses
+               mirrors the Expenses page only.
             ============================================== */
 
             for (
@@ -837,6 +825,59 @@ export class OwnerDashboard
 
 
   /* =======================================================
+     VEHICLE DETAILS
+  ======================================================= */
+
+  private openVehicleDetails():
+    void {
+
+    this.closeSidebar();
+
+
+    if (
+      this.vehicles.length ===
+      0
+    ) {
+
+      this.router.navigate(
+        [
+          '/owner-dashboard/add-vehicle'
+        ]
+      );
+
+      return;
+
+    }
+
+
+    if (
+      this.vehicles.length ===
+      1
+    ) {
+
+      this.router.navigate(
+        [
+          '/owner-dashboard/vehicles',
+          this.vehicles[0].id
+        ]
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Multiple vehicles:
+      choose which vehicle first.
+    */
+
+    this.openMyVehicles();
+
+  }
+
+
+  /* =======================================================
      MAINTENANCE
   ======================================================= */
 
@@ -1002,6 +1043,18 @@ export class OwnerDashboard
     ) {
 
       this.openMyVehicles();
+
+      return;
+
+    }
+
+
+    if (
+      moduleName ===
+      'Vehicle Details'
+    ) {
+
+      this.openVehicleDetails();
 
       return;
 
