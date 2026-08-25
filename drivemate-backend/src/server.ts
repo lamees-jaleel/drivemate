@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import multer from 'multer';
+import path from 'node:path';
 
 import {
   prisma
@@ -24,6 +25,16 @@ import documentRoutes from
 
 import adminRoutes from
   './routes/admin.routes.js';
+
+import complianceRoutes from
+  './routes/compliance.routes.js';
+
+import roadsideRoutes from
+  './routes/roadside.routes.js';
+
+import diagnosticRoutes, {
+  expertDiagnosticRouter
+} from './routes/diagnostic.routes.js';
 
 
 dotenv.config();
@@ -54,6 +65,21 @@ app.use(
       true
 
   })
+);
+
+
+/* =========================================================
+   STATIC FILES
+========================================================= */
+
+app.use(
+  '/uploads',
+  express.static(
+    path.join(
+      process.cwd(),
+      'uploads'
+    )
+  )
 );
 
 
@@ -171,6 +197,26 @@ app.use(
 
 
 /* =========================================================
+   COMPLIANCE
+========================================================= */
+
+app.use(
+  '/api/compliance',
+  complianceRoutes
+);
+
+
+/* =========================================================
+   ROADSIDE ASSISTANCE
+========================================================= */
+
+app.use(
+  '/api/roadside',
+  roadsideRoutes
+);
+
+
+/* =========================================================
    VEHICLE NESTED MODULES
 ========================================================= */
 
@@ -189,6 +235,18 @@ app.use(
 app.use(
   '/api/vehicles/:vehicleId/documents',
   documentRoutes
+);
+
+
+app.use(
+  '/api/vehicles/:vehicleId/diagnostics',
+  diagnosticRoutes
+);
+
+
+app.use(
+  '/api/diagnostics',
+  expertDiagnosticRouter
 );
 
 

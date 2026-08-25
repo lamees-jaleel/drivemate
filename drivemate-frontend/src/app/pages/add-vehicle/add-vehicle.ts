@@ -1,6 +1,7 @@
 import {
   Component,
-  inject
+  inject,
+  OnInit
 } from '@angular/core';
 
 import {
@@ -18,7 +19,8 @@ import {
 
 import {
   Router,
-  RouterLink
+  RouterLink,
+  ActivatedRoute
 } from '@angular/router';
 
 import {
@@ -86,7 +88,7 @@ const nonBlankValidator:
   styleUrl:
     './add-vehicle.css'
 })
-export class AddVehicle {
+export class AddVehicle implements OnInit {
 
   private readonly formBuilder =
     inject(FormBuilder);
@@ -104,6 +106,15 @@ export class AddVehicle {
     inject(Router);
 
 
+  private readonly route =
+    inject(ActivatedRoute);
+
+
+  vehicleId: number | null = null;
+
+  isEditMode = false;
+
+
   submitted =
     false;
 
@@ -112,12 +123,157 @@ export class AddVehicle {
     false;
 
 
+  selectedFile: File | null = null;
+
+
+  imagePreviewUrl: string | null = null;
+
+
   currentYear =
     new Date().getFullYear();
 
 
   maximumVehicleYear =
     this.currentYear + 1;
+
+
+  ngOnInit(): void {
+
+    const idParam =
+      this.route.snapshot.paramMap.get('id');
+
+
+    if (idParam) {
+
+      this.vehicleId =
+        Number(idParam);
+
+      this.isEditMode =
+        true;
+
+      this.loadVehicleDetails(
+        this.vehicleId
+      );
+
+    }
+
+  }
+
+
+  private loadVehicleDetails(
+    id: number
+  ): void {
+
+    this.vehicleService
+      .getVehicleById(id)
+      .subscribe({
+
+        next: response => {
+
+          const vehicle =
+            response.vehicle;
+
+
+          // Extract placeholder type if exists
+          let placeholderType = 'CAR';
+
+          if (
+            vehicle.vehicleImagePath &&
+            vehicle.vehicleImagePath.startsWith('placeholder:')
+          ) {
+
+            placeholderType =
+              vehicle.vehicleImagePath.split(':')[1] || 'CAR';
+
+          }
+
+          else if (
+            vehicle.vehicleImagePath
+          ) {
+
+            this.imagePreviewUrl =
+              `http://localhost:5000/${vehicle.vehicleImagePath}`;
+
+          }
+
+
+          this.vehicleForm.patchValue({
+
+            vehicleType:
+              placeholderType,
+
+            registrationNumber:
+              vehicle.registrationNumber,
+
+            make:
+              vehicle.make,
+
+            model:
+              vehicle.model,
+
+            variant:
+              vehicle.variant ?? '',
+
+            manufacturingYear:
+              vehicle.manufacturingYear,
+
+            fuelType:
+              vehicle.fuelType,
+
+            transmission:
+              vehicle.transmission ?? '',
+
+            color:
+              vehicle.color ?? '',
+
+            vin:
+              vehicle.vin ?? '',
+
+            engineNumber:
+              vehicle.engineNumber ?? '',
+
+            odometerKm:
+              vehicle.odometerKm,
+
+            purchaseDate:
+              vehicle.purchaseDate
+                ? vehicle.purchaseDate.substring(0, 10)
+                : '',
+
+            ownershipType:
+              vehicle.ownershipType
+
+          });
+
+        },
+
+
+        error: (
+          err: HttpErrorResponse
+        ) => {
+
+          console.error(
+            'Unable to load vehicle details:',
+            err
+          );
+
+
+          alert(
+            'Unable to load vehicle details. Redirecting to dashboard.'
+          );
+
+
+          this.router.navigate(
+            [
+              '/owner-dashboard'
+            ]
+          );
+
+        }
+
+      });
+
+  }
 
 
   /* =======================================================
@@ -234,6 +390,11 @@ export class AddVehicle {
 
   vehicleForm =
     this.formBuilder.group({
+
+      vehicleType: [
+        'CAR',
+        Validators.required
+      ],
 
       registrationNumber: [
         '',
@@ -520,6 +681,120 @@ export class AddVehicle {
 
 
   /* =======================================================
+     FILE UPLOAD HANDLERS
+  ======================================================= */
+
+  onFileSelected(
+    event: Event
+  ): void {
+
+    const input =
+      event.target as
+        HTMLInputElement;
+
+
+    if (
+      !input.files ||
+      input.files.length === 0
+    ) {
+
+      return;
+
+    }
+
+
+    const file =
+      input.files[0];
+
+
+    const allowedExtensions =
+      /\.(jpg|jpeg|png)$/i;
+
+
+    if (
+      !allowedExtensions.test(
+        file.name
+      )
+    ) {
+
+      alert(
+        'Only JPG, JPEG, and PNG files are allowed.'
+      );
+
+      input.value = '';
+
+      return;
+
+    }
+
+
+    if (
+      file.size >
+      5 * 1024 * 1024
+    ) {
+
+      alert(
+        'File size must not exceed 5MB.'
+      );
+
+      input.value = '';
+
+      return;
+
+    }
+
+
+    this.selectedFile =
+      file;
+
+
+    const reader =
+      new FileReader();
+
+
+    reader.onload = () => {
+
+      this.imagePreviewUrl =
+        reader.result as
+          string;
+
+    };
+
+
+    reader.readAsDataURL(
+      file
+    );
+
+  }
+
+
+  removeSelectedImage(): void {
+
+    this.selectedFile =
+      null;
+
+
+    this.imagePreviewUrl =
+      null;
+
+
+    const fileInput =
+      document.getElementById(
+        'vehicleImage'
+      ) as
+        HTMLInputElement;
+
+
+    if (fileInput) {
+
+      fileInput.value = '';
+
+    }
+
+  }
+
+
+  /* =======================================================
      CANCEL
   ======================================================= */
 
@@ -571,102 +846,104 @@ export class AddVehicle {
         .getRawValue();
 
 
-    const payload:
-      AddVehiclePayload = {
+    const formData = new FormData();
 
-      registrationNumber:
-        (
-          values.registrationNumber ??
-          ''
-        ).trim(),
+    formData.append(
+      'registrationNumber',
+      (values.registrationNumber ?? '').trim()
+    );
 
+    formData.append(
+      'make',
+      (values.make ?? '').trim()
+    );
 
-      make:
-        (
-          values.make ??
-          ''
-        ).trim(),
+    formData.append(
+      'model',
+      (values.model ?? '').trim()
+    );
 
+    formData.append(
+      'variant',
+      (values.variant ?? '').trim()
+    );
 
-      model:
-        (
-          values.model ??
-          ''
-        ).trim(),
+    formData.append(
+      'manufacturingYear',
+      String(values.manufacturingYear)
+    );
 
+    formData.append(
+      'fuelType',
+      values.fuelType ?? ''
+    );
 
-      variant:
-        (
-          values.variant ??
-          ''
-        ).trim(),
+    formData.append(
+      'transmission',
+      values.transmission ?? ''
+    );
 
+    formData.append(
+      'color',
+      (values.color ?? '').trim()
+    );
 
-      manufacturingYear:
-        Number(
-          values.manufacturingYear
-        ),
+    formData.append(
+      'vin',
+      (values.vin ?? '').trim()
+    );
 
+    formData.append(
+      'engineNumber',
+      (values.engineNumber ?? '').trim()
+    );
 
-      fuelType:
-        values.fuelType as
-          FuelType,
+    formData.append(
+      'odometerKm',
+      String(values.odometerKm ?? 0)
+    );
 
+    formData.append(
+      'purchaseDate',
+      values.purchaseDate ?? ''
+    );
 
-      transmission:
-        values.transmission ??
-        '',
-
-
-      color:
-        (
-          values.color ??
-          ''
-        ).trim(),
-
-
-      vin:
-        (
-          values.vin ??
-          ''
-        ).trim(),
-
-
-      engineNumber:
-        (
-          values.engineNumber ??
-          ''
-        ).trim(),
-
-
-      odometerKm:
-        Number(
-          values.odometerKm ??
-          0
-        ),
+    formData.append(
+      'ownershipType',
+      values.ownershipType ?? 'OWNED'
+    );
 
 
-      purchaseDate:
-        values.purchaseDate ??
-        '',
+    if (this.selectedFile) {
 
+      formData.append(
+        'vehicleImage',
+        this.selectedFile
+      );
 
-      ownershipType:
-        values.ownershipType as
-          OwnershipType
+    }
 
-    };
+    else {
+
+      formData.append(
+        'vehicleImagePath',
+        'placeholder:' + (values.vehicleType ?? 'CAR')
+      );
+
+    }
 
 
     this.isSubmitting =
       true;
 
 
-    this.vehicleService
-      .addVehicle(
-        payload
-      )
-      .subscribe({
+    const request =
+      this.isEditMode && this.vehicleId
+        ? this.vehicleService.updateVehicle(this.vehicleId, formData)
+        : this.vehicleService.addVehicle(formData);
+
+
+    request.subscribe({
 
         next: response => {
 
@@ -676,13 +953,15 @@ export class AddVehicle {
 
           alert(
             response.message ||
-            'Vehicle added successfully.'
+            (this.isEditMode ? 'Vehicle updated successfully.' : 'Vehicle added successfully.')
           );
 
 
           this.router.navigate(
             [
-              '/owner-dashboard'
+              this.isEditMode
+                ? `/owner-dashboard/vehicles/${this.vehicleId}`
+                : '/owner-dashboard'
             ]
           );
 

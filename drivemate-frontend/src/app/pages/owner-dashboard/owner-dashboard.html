@@ -1,270 +1,124 @@
 <div class="dashboard-shell">
-
   @if (mobileSidebarOpen) {
     <button
       class="sidebar-overlay"
       type="button"
       aria-label="Close navigation"
-      (click)="closeSidebar()">
-    </button>
+      (click)="closeSidebar()"
+    ></button>
   }
-
 
   <!-- =====================================================
        SIDEBAR
   ====================================================== -->
 
-  <aside
-    class="sidebar"
-    [class.sidebar-open]="mobileSidebarOpen">
-
+  <aside class="sidebar" [class.sidebar-open]="mobileSidebarOpen">
     <div class="sidebar-top">
+      <a class="brand" routerLink="/">
+        <span class="brand-drive"> Drive </span>
 
-      <a
-        class="brand"
-        routerLink="/">
-
-        <span class="brand-drive">
-          Drive
-        </span>
-
-        <span class="brand-mate">
-          Mate
-        </span>
-
+        <span class="brand-mate"> Mate </span>
       </a>
 
-
-      <button
-        class="sidebar-close"
-        type="button"
-        (click)="closeSidebar()">
-
-        ×
-
-      </button>
-
+      <button class="sidebar-close" type="button" (click)="closeSidebar()">×</button>
     </div>
 
-
     <div class="owner-mini-profile">
-
       <div class="avatar">
         {{ firstName.charAt(0).toUpperCase() }}
       </div>
 
-
       <div class="owner-mini-info">
-
         <strong>
           {{ currentUser?.fullName }}
         </strong>
 
-        <span>
-          Vehicle Owner
-        </span>
-
+        <span> Vehicle Owner </span>
       </div>
-
     </div>
 
-
     <nav class="sidebar-nav">
-
-      <button
-        class="nav-item active"
-        type="button">
-
-        <span class="nav-icon">
-          ◫
-        </span>
+      <button class="nav-item active" type="button">
+        <span class="nav-icon"> ◫ </span>
 
         Dashboard
-
       </button>
 
-
-      <button
-        class="nav-item"
-        type="button"
-        (click)="openModule('My Vehicles')">
-
-        <span class="nav-icon">
-          ◇
-        </span>
+      <button class="nav-item" type="button" (click)="openModule('My Vehicles')">
+        <span class="nav-icon"> ◇ </span>
 
         My Vehicles
-
       </button>
 
-
-      <button
-        class="nav-item"
-        type="button"
-        (click)="openModule('Maintenance')">
-
-        <span class="nav-icon">
-          ⚙
-        </span>
+      <button class="nav-item" type="button" (click)="openModule('Maintenance')">
+        <span class="nav-icon"> ⚙ </span>
 
         Maintenance
-
       </button>
 
-
-      <button
-        class="nav-item"
-        type="button"
-        (click)="openModule('Expenses')">
-
-        <span class="nav-icon">
-          ₹
-        </span>
+      <button class="nav-item" type="button" (click)="openModule('Expenses')">
+        <span class="nav-icon"> ₹ </span>
 
         Expenses
-
       </button>
 
+      <button class="nav-item" type="button" (click)="openModule('Documents')">
+        <span class="nav-icon"> ▤ </span>
 
-      <button
-        class="nav-item"
-        type="button"
-        (click)="openModule('Documents')">
-
-        <span class="nav-icon">
-          ▤
-        </span>
-
-        Documents
-
+        Documents & Compliance
       </button>
 
-
-      <button
-        class="nav-item"
-        type="button"
-        (click)="openModule('Safety & Compliance')">
-
-        <span class="nav-icon">
-          ◈
-        </span>
-
-        Safety & Compliance
-
-      </button>
-
-
-      <button
-        class="nav-item"
-        type="button"
-        (click)="openModule('Roadside Assistance')">
-
-        <span class="nav-icon">
-          +
-        </span>
+      <button class="nav-item" type="button" (click)="openModule('Roadside Assistance')">
+        <span class="nav-icon"> + </span>
 
         Roadside Assistance
-
       </button>
-
 
       <div class="nav-divider"></div>
 
-
-      <button
-        class="nav-item"
-        type="button"
-        (click)="openModule('Profile')">
-
-        <span class="nav-icon">
-          ○
-        </span>
+      <button class="nav-item" type="button" (click)="openModule('Profile')">
+        <span class="nav-icon"> ○ </span>
 
         Profile
-
       </button>
-
     </nav>
 
-
     <div class="sidebar-footer">
-
-      <button
-        class="logout-button"
-        type="button"
-        (click)="logout()">
-
-        ↗ Sign Out
-
-      </button>
-
+      <button class="logout-button" type="button" (click)="logout()">↗ Sign Out</button>
 
       <p>
         DRIVEMATE
         <span>—</span>
         YOUR ROAD. REIMAGINED.
       </p>
-
     </div>
-
   </aside>
-
 
   <!-- =====================================================
        MAIN
   ====================================================== -->
 
   <main class="main-area">
-
     <header class="topbar">
-
       <div class="topbar-left">
-
-        <button
-          class="menu-button"
-          type="button"
-          (click)="toggleSidebar()">
-
-          ☰
-
-        </button>
-
+        <button class="menu-button" type="button" (click)="toggleSidebar()">☰</button>
 
         <div>
+          <p class="topbar-label">VEHICLE OWNER PORTAL</p>
 
-          <p class="topbar-label">
-            VEHICLE OWNER PORTAL
-          </p>
-
-          <h1>
-            Dashboard
-          </h1>
-
+          <h1>Dashboard</h1>
         </div>
-
       </div>
 
-
       <div class="topbar-right">
-
-        <button
-          class="notification-button"
-          type="button">
-
-          ♢
-
-        </button>
-
+        <button class="notification-button" type="button">♢</button>
 
         <div class="topbar-user">
-
           <div class="topbar-avatar">
             {{ firstName.charAt(0).toUpperCase() }}
           </div>
 
-
           <div class="topbar-user-text">
-
             <strong>
               {{ currentUser?.fullName }}
             </strong>
@@ -272,848 +126,918 @@
             <span>
               {{ currentUser?.email }}
             </span>
-
           </div>
-
         </div>
-
       </div>
-
     </header>
 
-
     <div class="dashboard-content">
-
-
       <!-- =================================================
            WELCOME
       ================================================== -->
 
       <section class="welcome-section">
-
         <div>
-
-          <p class="eyebrow">
-            YOUR VEHICLE LIFECYCLE
-          </p>
-
+          <p class="eyebrow">YOUR VEHICLE LIFECYCLE</p>
 
           <h2>
             Welcome back,
-            <span>
-              {{ firstName }}.
-            </span>
+            <span> {{ firstName }}. </span>
           </h2>
 
-
           <p class="welcome-copy">
-
-            Everything about your vehicle ownership,
-            organised in one intelligent place.
-
+            Everything about your vehicle ownership, organised in one intelligent place.
           </p>
-
         </div>
 
-
-        <button
-          class="primary-button"
-          type="button"
-          (click)="addVehicle()">
-
-          <span class="plus">
-            +
-          </span>
+        <button class="primary-button" type="button" (click)="addVehicle()">
+          <span class="plus"> + </span>
 
           Add Vehicle
-
         </button>
-
       </section>
-
 
       <!-- =================================================
            STATS
       ================================================== -->
 
       <section class="stats-grid">
-
         <article class="stat-card">
-
           <div class="stat-card-top">
+            <span class="stat-icon"> ◇ </span>
 
-            <span class="stat-icon">
-              ◇
-            </span>
-
-            <span class="stat-label">
-              MY VEHICLES
-            </span>
-
+            <span class="stat-label"> MY VEHICLES </span>
           </div>
-
 
           <div class="stat-value">
             {{ vehicleCount }}
           </div>
 
-
-          <p>
-            Vehicles registered
-          </p>
-
+          <p>Vehicles registered</p>
         </article>
 
-
         <article class="stat-card">
-
           <div class="stat-card-top">
+            <span class="stat-icon"> ⚙ </span>
 
-            <span class="stat-icon">
-              ⚙
-            </span>
-
-            <span class="stat-label">
-              UPCOMING SERVICES
-            </span>
-
+            <span class="stat-label"> UPCOMING SERVICES </span>
           </div>
-
 
           <div class="stat-value">
             {{ upcomingServices }}
           </div>
 
-
-          <p>
-            Services due
-          </p>
-
+          <p>Services due</p>
         </article>
 
-
         <article class="stat-card">
-
           <div class="stat-card-top">
+            <span class="stat-icon"> ₹ </span>
 
-            <span class="stat-icon">
-              ₹
-            </span>
-
-            <span class="stat-label">
-              MONTHLY EXPENSES
-            </span>
-
+            <span class="stat-label"> MONTHLY EXPENSES </span>
           </div>
 
+          <div class="stat-value expense">₹{{ monthlyExpense }}</div>
 
-          <div class="stat-value expense">
-            ₹{{ monthlyExpense }}
-          </div>
-
-
-          <p>
-            Recorded this month
-          </p>
-
+          <p>Recorded this month</p>
         </article>
 
-
         <article class="stat-card">
-
           <div class="stat-card-top">
+            <span class="stat-icon"> ! </span>
 
-            <span class="stat-icon">
-              !
-            </span>
-
-            <span class="stat-label">
-              COMPLIANCE ALERTS
-            </span>
-
+            <span class="stat-label"> COMPLIANCE ALERTS </span>
           </div>
-
 
           <div class="stat-value">
             {{ complianceAlerts }}
           </div>
 
-
-          <p>
-            Items requiring attention
-          </p>
-
+          <p>Items requiring attention</p>
         </article>
-
       </section>
-
 
       <!-- =================================================
            GARAGE
       ================================================== -->
 
       <section class="dashboard-card garage-card">
-
         <div class="section-heading">
-
           <div>
+            <p class="section-kicker">YOUR GARAGE</p>
 
-            <p class="section-kicker">
-              YOUR GARAGE
-            </p>
-
-            <h3>
-              My Vehicles
-            </h3>
-
+            <h3>My Vehicles</h3>
           </div>
 
-
-          <button
-            class="text-button"
-            type="button"
-            (click)="openModule('My Vehicles')">
-
+          <button class="text-button" type="button" (click)="openModule('My Vehicles')">
             View all →
-
           </button>
-
         </div>
-
 
         <!-- ===============================================
              LOADING
         ================================================ -->
 
         @if (loadingVehicles) {
-
           <div class="empty-garage">
-
             <div class="empty-garage-content">
+              <span class="empty-tag"> LOADING </span>
 
-              <span class="empty-tag">
-                LOADING
-              </span>
-
-              <h4>
-                Loading your vehicles...
-              </h4>
-
+              <h4>Loading your vehicles...</h4>
             </div>
-
           </div>
-
         }
-
 
         <!-- ===============================================
              NO VEHICLES
         ================================================ -->
 
-        @if (
-          !loadingVehicles &&
-          vehicles.length === 0
-        ) {
-
+        @if (!loadingVehicles && vehicles.length === 0) {
           <div class="empty-garage">
-
             <div class="vehicle-illustration">
-
               <div class="vehicle-roof"></div>
 
               <div class="vehicle-body"></div>
 
-              <div
-                class="vehicle-wheel wheel-left">
-              </div>
+              <div class="vehicle-wheel wheel-left"></div>
 
-              <div
-                class="vehicle-wheel wheel-right">
-              </div>
-
+              <div class="vehicle-wheel wheel-right"></div>
             </div>
-
 
             <div class="empty-garage-content">
+              <span class="empty-tag"> YOUR FIRST MILE STARTS HERE </span>
 
-              <span class="empty-tag">
-                YOUR FIRST MILE STARTS HERE
-              </span>
-
-
-              <h4>
-                No vehicles added yet
-              </h4>
-
+              <h4>No vehicles added yet</h4>
 
               <p>
-
-                Add your first vehicle to begin
-                tracking maintenance, expenses,
-                documents and ownership history.
-
+                Add your first vehicle to begin tracking maintenance, expenses, documents and
+                ownership history.
               </p>
 
-
-              <button
-                class="primary-button compact"
-                type="button"
-                (click)="addVehicle()">
-
+              <button class="primary-button compact" type="button" (click)="addVehicle()">
                 + Add Your First Vehicle
-
               </button>
-
             </div>
-
           </div>
-
         }
-
 
         <!-- ===============================================
              REAL VEHICLES
         ================================================ -->
 
-        @if (
-          !loadingVehicles &&
-          vehicles.length > 0
-        ) {
-
+        @if (!loadingVehicles && vehicles.length > 0) {
           <div class="garage-vehicle-list">
-
-            @for (
-              vehicle of vehicles;
-              track vehicle.id
-            ) {
-
+            @for (vehicle of vehicles; track vehicle.id) {
               <article class="garage-vehicle-card">
-
                 <div class="vehicle-card-visual">
+                  @if (
+                    vehicle.vehicleImagePath && !vehicle.vehicleImagePath.startsWith('placeholder:')
+                  ) {
+                    <img
+                      [src]="'http://localhost:5000/' + vehicle.vehicleImagePath"
+                      alt="Vehicle Image"
+                      class="uploaded-vehicle-display-img"
+                    />
 
-                  <div class="vehicle-illustration">
+                  } @else {
+                    @switch (getVehiclePlaceholderType(vehicle.vehicleImagePath)) {
+                      @case ('BIKE') {
+                        <svg
+                          viewBox="0 0 100 50"
+                          class="vehicle-svg-illustration"
+                          fill="currentColor"
+                        >
+                          <circle
+                            cx="20"
+                            cy="38"
+                            r="10"
+                            fill="none"
+                            stroke="#474a54"
+                            stroke-width="4"
+                          />
+                          <circle
+                            cx="80"
+                            cy="38"
+                            r="10"
+                            fill="none"
+                            stroke="#474a54"
+                            stroke-width="4"
+                          />
+                          <circle cx="20" cy="38" r="3" fill="#a5a9b2" />
+                          <circle cx="80" cy="38" r="3" fill="#a5a9b2" />
+                          <path
+                            d="M 20 38 L 42 38 L 55 24 L 38 24 Z"
+                            stroke="#ef3038"
+                            stroke-width="3"
+                            fill="none"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M 42 38 L 62 20 L 80 38"
+                            stroke="#ef3038"
+                            stroke-width="3"
+                            fill="none"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M 62 20 L 58 12 H 52"
+                            stroke="#a5a9b2"
+                            stroke-width="3"
+                            fill="none"
+                            stroke-linecap="round"
+                          />
+                          <path
+                            d="M 38 24 H 30"
+                            stroke="#a5a9b2"
+                            stroke-width="4"
+                            fill="none"
+                            stroke-linecap="round"
+                          />
+                          <rect x="36" y="32" width="14" height="10" rx="2" fill="#25262d" />
+                        </svg>
+                      }
+                      @case ('TRUCK') {
+                        <svg
+                          viewBox="0 0 100 50"
+                          class="vehicle-svg-illustration"
+                          fill="currentColor"
+                        >
+                          <circle
+                            cx="20"
+                            cy="40"
+                            r="8"
+                            fill="#474a54"
+                            stroke="#18191e"
+                            stroke-width="2"
+                          />
+                          <circle
+                            cx="65"
+                            cy="40"
+                            r="8"
+                            fill="#474a54"
+                            stroke="#18191e"
+                            stroke-width="2"
+                          />
+                          <circle
+                            cx="80"
+                            cy="40"
+                            r="8"
+                            fill="#474a54"
+                            stroke="#18191e"
+                            stroke-width="2"
+                          />
+                          <path
+                            d="M 10 40 L 10 26 H 25 L 34 32 L 34 40 Z"
+                            fill="#ef3038"
+                            opacity="0.9"
+                          />
+                          <rect x="14" y="29" width="8" height="6" fill="#14151a" opacity="0.7" />
+                          <rect
+                            x="36"
+                            y="18"
+                            width="54"
+                            height="22"
+                            rx="2"
+                            fill="#25262d"
+                            stroke="#41434d"
+                            stroke-width="2"
+                          />
+                        </svg>
+                      }
+                      @case ('VAN') {
+                        <svg
+                          viewBox="0 0 100 50"
+                          class="vehicle-svg-illustration"
+                          fill="currentColor"
+                        >
+                          <circle
+                            cx="25"
+                            cy="40"
+                            r="8"
+                            fill="#474a54"
+                            stroke="#18191e"
+                            stroke-width="2"
+                          />
+                          <circle
+                            cx="75"
+                            cy="40"
+                            r="8"
+                            fill="#474a54"
+                            stroke="#18191e"
+                            stroke-width="2"
+                          />
+                          <path
+                            d="M 10 40 V 22 C 10 20 12 18 15 18 H 82 C 86 18 89 20 89 24 V 40 Z"
+                            fill="#ef3038"
+                            opacity="0.9"
+                          />
+                          <path
+                            d="M 16 22 H 30 V 28 H 14 Z M 34 22 H 56 V 28 H 34 Z M 60 22 H 82 L 80 28 H 60 Z"
+                            fill="#14151a"
+                            opacity="0.7"
+                          />
+                        </svg>
+                      }
+                      @case ('OTHER') {
+                        <svg
+                          viewBox="0 0 100 50"
+                          class="vehicle-svg-illustration"
+                          fill="currentColor"
+                        >
+                          <circle
+                            cx="25"
+                            cy="40"
+                            r="8"
+                            fill="#474a54"
+                            stroke="#18191e"
+                            stroke-width="2"
+                          />
+                          <circle
+                            cx="75"
+                            cy="40"
+                            r="8"
+                            fill="#474a54"
+                            stroke="#18191e"
+                            stroke-width="2"
+                          />
+                          <path
+                            d="M 12 40 L 15 24 H 40 L 50 18 H 75 L 88 32 L 88 40 Z"
+                            fill="#ef3038"
+                            opacity="0.9"
+                          />
+                          <rect x="22" y="27" width="12" height="8" fill="#14151a" opacity="0.7" />
+                          <path d="M 52 21 H 72 L 78 30 H 52 Z" fill="#14151a" opacity="0.7" />
+                        </svg>
+                      }
+                      @default {
+                        <div class="vehicle-illustration">
+                          <div class="vehicle-roof"></div>
 
-                    <div class="vehicle-roof"></div>
+                          <div class="vehicle-body"></div>
 
-                    <div class="vehicle-body"></div>
+                          <div class="vehicle-wheel wheel-left"></div>
 
-                    <div
-                      class="vehicle-wheel wheel-left">
-                    </div>
-
-                    <div
-                      class="vehicle-wheel wheel-right">
-                    </div>
-
-                  </div>
-
+                          <div class="vehicle-wheel wheel-right"></div>
+                        </div>
+                      }
+                    }
+                  }
                 </div>
 
-
                 <div class="vehicle-card-content">
-
                   <div class="vehicle-card-top">
-
                     <span class="empty-tag">
                       {{ vehicle.registrationNumber }}
                     </span>
 
-
                     <span class="vehicle-status">
                       {{ vehicle.status }}
                     </span>
-
                   </div>
 
-
                   <h4>
-
                     {{ vehicle.make }}
                     {{ vehicle.model }}
-
                   </h4>
 
-
                   @if (vehicle.variant) {
-
                     <p class="vehicle-variant">
-
                       {{ vehicle.variant }}
-
                     </p>
-
                   }
 
-
                   <div class="vehicle-details-grid">
-
                     <div>
-
-                      <span>
-                        YEAR
-                      </span>
+                      <span> YEAR </span>
 
                       <strong>
                         {{ vehicle.manufacturingYear }}
                       </strong>
-
                     </div>
 
-
                     <div>
-
-                      <span>
-                        FUEL
-                      </span>
+                      <span> FUEL </span>
 
                       <strong>
                         {{ vehicle.fuelType }}
                       </strong>
-
                     </div>
-
 
                     <div>
-
-                      <span>
-                        TRANSMISSION
-                      </span>
+                      <span> TRANSMISSION </span>
 
                       <strong>
-
-                        {{
-                          vehicle.transmission
-                          || 'Not specified'
-                        }}
-
+                        {{ vehicle.transmission || 'Not specified' }}
                       </strong>
-
                     </div>
-
 
                     <div>
+                      <span> ODOMETER </span>
 
-                      <span>
-                        ODOMETER
-                      </span>
-
-                      <strong>
-                        {{ vehicle.odometerKm }} km
-                      </strong>
-
+                      <strong> {{ vehicle.odometerKm }} km </strong>
                     </div>
-
                   </div>
-
 
                   <button
                     class="primary-button compact"
                     type="button"
-                    (click)="openModule('Vehicle Details')">
-
+                    (click)="openVehicleDetailsForId(vehicle.id)"
+                  >
                     View Vehicle →
-
                   </button>
-
                 </div>
-
               </article>
-
             }
-
           </div>
-
         }
-
       </section>
-
 
       <!-- =================================================
            FEATURE GRID
       ================================================== -->
 
       <section class="information-grid">
-
-
         <article class="dashboard-card feature-card">
-
           <div class="feature-header">
-
-            <div class="feature-icon">
-              ⚙
-            </div>
-
+            <div class="feature-icon">⚙</div>
           </div>
 
+          <p class="section-kicker">VEHICLE CARE</p>
 
-          <p class="section-kicker">
-            VEHICLE CARE
-          </p>
+          <h3>Maintenance</h3>
 
-
-          <h3>
-            Maintenance
-          </h3>
-
-
-          <p class="feature-description">
-
-            Track services, repairs and
-            maintenance history.
-
-          </p>
-
+          <p class="feature-description">Track services, repairs and maintenance history.</p>
 
           <div class="empty-feature">
-
-            <span>
-              No service records yet
-            </span>
-
+            <span> No service records yet </span>
           </div>
 
-
-          <button
-            class="secondary-button"
-            type="button"
-            (click)="openModule('Maintenance')">
-
+          <button class="secondary-button" type="button" (click)="openModule('Maintenance')">
             View Maintenance →
-
           </button>
-
         </article>
 
-
         <article class="dashboard-card feature-card">
-
           <div class="feature-header">
-
-            <div class="feature-icon">
-              ₹
-            </div>
-
+            <div class="feature-icon">₹</div>
           </div>
 
+          <p class="section-kicker">OWNERSHIP COST</p>
 
-          <p class="section-kicker">
-            OWNERSHIP COST
-          </p>
+          <h3>Expenses</h3>
 
-
-          <h3>
-            Expenses
-          </h3>
-
-
-          <p class="feature-description">
-
-            Track fuel, repairs,
-            servicing and insurance costs.
-
-          </p>
-
+          <p class="feature-description">Track fuel, repairs, servicing and insurance costs.</p>
 
           <div class="expense-placeholder">
-
             <div class="expense-line">
+              <span> This month </span>
 
-              <span>
-                This month
-              </span>
-
-              <strong>
-                ₹0
-              </strong>
-
+              <strong> ₹0 </strong>
             </div>
-
           </div>
 
-
-          <button
-            class="secondary-button"
-            type="button"
-            (click)="openModule('Expenses')">
-
+          <button class="secondary-button" type="button" (click)="openModule('Expenses')">
             Track Expenses →
-
           </button>
-
         </article>
-
 
         <article class="dashboard-card feature-card">
-
           <div class="feature-header">
-
-            <div class="feature-icon">
-              ▤
-            </div>
-
+            <div class="feature-icon">▤</div>
           </div>
 
+          <p class="section-kicker">STAY COMPLIANT</p>
 
-          <p class="section-kicker">
-            STAY COMPLIANT
-          </p>
-
-
-          <h3>
-            Documents
-          </h3>
-
+          <h3>Documents</h3>
 
           <p class="feature-description">
-
-            Manage insurance,
-            registration and important
-            vehicle documents.
-
+            Manage insurance, registration and important vehicle documents.
           </p>
-
 
           <div class="document-status-list">
-
             <div>
+              <span> Insurance </span>
 
-              <span>
-                Insurance
-              </span>
-
-              <span class="status-empty">
-                Not added
-              </span>
-
+              <span class="status-empty"> Not added </span>
             </div>
 
-
             <div>
+              <span> Registration </span>
 
-              <span>
-                Registration
-              </span>
-
-              <span class="status-empty">
-                Not added
-              </span>
-
+              <span class="status-empty"> Not added </span>
             </div>
-
           </div>
 
-
-          <button
-            class="secondary-button"
-            type="button"
-            (click)="openModule('Documents')">
-
+          <button class="secondary-button" type="button" (click)="openModule('Documents')">
             Manage Documents →
-
           </button>
-
         </article>
 
-
-        <article
-          class="dashboard-card feature-card roadside-card">
-
+        <article class="dashboard-card feature-card roadside-card">
           <div class="feature-header">
-
-            <div class="feature-icon emergency-icon">
-              +
-            </div>
-
+            <div class="feature-icon emergency-icon">+</div>
           </div>
 
+          <p class="section-kicker red">SAFETY & SUPPORT</p>
 
-          <p class="section-kicker red">
-            SAFETY & SUPPORT
-          </p>
+          <h3>Roadside Assistance</h3>
 
-
-          <h3>
-            Roadside Assistance
-          </h3>
-
-
-          <p class="feature-description">
-
-            Access DriveMate roadside
-            support when you need help.
-
-          </p>
-
+          <p class="feature-description">Access DriveMate roadside support when you need help.</p>
 
           <div class="roadside-message">
+            <span class="roadside-symbol"> ! </span>
 
-            <span class="roadside-symbol">
-              !
-            </span>
-
-            <p>
-              Emergency support workflow
-              will be available here.
-            </p>
-
+            <p>Emergency support workflow will be available here.</p>
           </div>
-
 
           <button
             class="emergency-button"
             type="button"
-            (click)="openModule('Roadside Assistance')">
-
+            (click)="openModule('Roadside Assistance')"
+          >
             Request Assistance →
-
           </button>
-
         </article>
-
       </section>
-
 
       <!-- =================================================
            QUICK ACTIONS
       ================================================== -->
 
       <section class="quick-actions-section">
-
         <div class="section-heading">
-
           <div>
+            <p class="section-kicker">SHORTCUTS</p>
 
-            <p class="section-kicker">
-              SHORTCUTS
-            </p>
-
-            <h3>
-              Quick Actions
-            </h3>
-
+            <h3>Quick Actions</h3>
           </div>
-
         </div>
-
 
         <div class="quick-actions-grid">
-
-          <button
-            class="quick-action"
-            type="button"
-            (click)="addVehicle()">
-
-            <span class="quick-icon">
-              +
-            </span>
+          <button class="quick-action" type="button" (click)="addVehicle()">
+            <span class="quick-icon"> + </span>
 
             <span>
+              <strong> Add Vehicle </strong>
 
-              <strong>
-                Add Vehicle
-              </strong>
-
-              <small>
-                Register a vehicle
-              </small>
-
+              <small> Register a vehicle </small>
             </span>
-
           </button>
 
-
-          <button
-            class="quick-action"
-            type="button"
-            (click)="openModule('Maintenance')">
-
-            <span class="quick-icon">
-              ⚙
-            </span>
+          <button class="quick-action" type="button" (click)="openModule('Maintenance')">
+            <span class="quick-icon"> ⚙ </span>
 
             <span>
+              <strong> Add Maintenance </strong>
 
-              <strong>
-                Add Maintenance
-              </strong>
-
-              <small>
-                Record vehicle care
-              </small>
-
+              <small> Record vehicle care </small>
             </span>
-
           </button>
 
-
-          <button
-            class="quick-action"
-            type="button"
-            (click)="openModule('Expenses')">
-
-            <span class="quick-icon">
-              ₹
-            </span>
+          <button class="quick-action" type="button" (click)="openModule('Expenses')">
+            <span class="quick-icon"> ₹ </span>
 
             <span>
+              <strong> Add Expense </strong>
 
-              <strong>
-                Add Expense
-              </strong>
-
-              <small>
-                Track ownership cost
-              </small>
-
+              <small> Track ownership cost </small>
             </span>
-
           </button>
 
-
-          <button
-            class="quick-action"
-            type="button"
-            (click)="openModule('Documents')">
-
-            <span class="quick-icon">
-              ↑
-            </span>
+          <button class="quick-action" type="button" (click)="openModule('Documents')">
+            <span class="quick-icon"> ↑ </span>
 
             <span>
+              <strong> Upload Document </strong>
 
-              <strong>
-                Upload Document
-              </strong>
-
-              <small>
-                Save important files
-              </small>
-
+              <small> Save important files </small>
             </span>
-
           </button>
-
         </div>
-
       </section>
 
-
       <footer class="dashboard-footer">
+        <p>© 2026 DriveMate. Your vehicle lifecycle, intelligently managed.</p>
 
-        <p>
-          © 2026 DriveMate.
-          Your vehicle lifecycle,
-          intelligently managed.
-        </p>
-
-        <span>
-          DRIVE SMARTER. OWN BETTER.
-        </span>
-
+        <span> DRIVE SMARTER. OWN BETTER. </span>
       </footer>
-
     </div>
-
   </main>
 
+  <!-- =========================================================
+       USER PROFILE MODAL
+       ========================================================= -->
+
+  @if (showProfileModal) {
+    <div class="modal-backdrop" (click)="showProfileModal = false">
+      <div class="modal-container" (click)="$event.stopPropagation()">
+        <header class="modal-header">
+          <h3>My Profile</h3>
+          <button class="modal-close-btn" type="button" (click)="showProfileModal = false">
+            ×
+          </button>
+        </header>
+
+        <div class="modal-body">
+          <div class="profile-grid">
+            <div class="profile-item">
+              <span>Full Name</span>
+              <strong>{{ currentUser?.fullName }}</strong>
+            </div>
+
+            <div class="profile-item">
+              <span>Email Address</span>
+              <strong>{{ currentUser?.email }}</strong>
+            </div>
+
+            <div class="profile-item">
+              <span>Phone Number</span>
+              <strong>{{ currentUser?.phone }}</strong>
+            </div>
+
+            <div class="profile-item">
+              <span>Role</span>
+              <strong>Vehicle Owner</strong>
+            </div>
+
+            <div class="profile-item">
+              <span>Account Status</span>
+              <strong>Active</strong>
+            </div>
+
+            <div class="profile-item">
+              <span>Address</span>
+              <strong>{{ currentUser?.address || 'Not Specified' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <footer class="modal-footer">
+          <button class="primary-button compact" type="button" (click)="showProfileModal = false">
+            Close
+          </button>
+        </footer>
+      </div>
+    </div>
+  }
+
+  <!-- =========================================================
+       ROADSIDE ASSISTANCE MODAL
+       ========================================================= -->
+
+  @if (showRoadsideModal) {
+    <div class="modal-backdrop" (click)="showRoadsideModal = false">
+      <div class="modal-container" (click)="$event.stopPropagation()" style="max-width: 650px">
+        <header class="modal-header">
+          <h3>Roadside Assistance</h3>
+          <button class="modal-close-btn" type="button" (click)="showRoadsideModal = false">
+            ×
+          </button>
+        </header>
+
+        <div class="modal-body">
+          @if (roadsideError) {
+            <div class="alert-error">{{ roadsideError }}</div>
+          }
+
+          @if (roadsideSuccess) {
+            <div class="alert-success">{{ roadsideSuccess }}</div>
+          }
+
+          <!-- ACTIVE REQUEST SECTION -->
+          @if (loadingActiveRequest) {
+            <p>Checking active roadside requests...</p>
+          } @else if (activeRoadsideRequest) {
+            <div
+              style="
+                background: rgba(245, 53, 67, 0.08);
+                border: 1px solid #ff3545;
+                padding: 20px;
+                border-radius: 12px;
+                margin-bottom: 24px;
+              "
+            >
+              <h4 style="color: #ff3545; margin-top: 0; margin-bottom: 12px; font-weight: 800">
+                ACTIVE EMERGENCY REQUEST
+              </h4>
+
+              <div
+                style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 14px"
+              >
+                <div>
+                  <span style="color: #858893; display: block; font-size: 11px">VEHICLE</span>
+                  <strong
+                    >{{ activeRoadsideRequest.vehicle?.make }}
+                    {{ activeRoadsideRequest.vehicle?.model }} ({{
+                      activeRoadsideRequest.vehicle?.registrationNumber
+                    }})</strong
+                  >
+                </div>
+
+                <div>
+                  <span style="color: #858893; display: block; font-size: 11px">ISSUE TYPE</span>
+                  <strong>{{ activeRoadsideRequest.issueType.replace('_', ' ') }}</strong>
+                </div>
+
+                <div>
+                  <span style="color: #858893; display: block; font-size: 11px">LOCATION</span>
+                  <strong>{{ activeRoadsideRequest.location }}</strong>
+                </div>
+
+                <div>
+                  <span style="color: #858893; display: block; font-size: 11px">STATUS</span>
+                  <strong style="color: #ff3545">{{ activeRoadsideRequest.status }}</strong>
+                </div>
+              </div>
+
+              <p style="margin: 12px 0 0; font-size: 13px; color: #a0a2ad">
+                <strong>Description:</strong> {{ activeRoadsideRequest.description }}
+              </p>
+
+              @if (activeRoadsideRequest.responder) {
+                <div
+                  style="
+                    margin-top: 18px;
+                    padding-top: 14px;
+                    border-top: 1px dashed rgba(245, 53, 67, 0.3);
+                  "
+                >
+                  <span style="color: #858893; display: block; font-size: 11px; margin-bottom: 4px"
+                    >ASSIGNED RESPONDER</span
+                  >
+                  <strong style="color: #ffffff">{{
+                    activeRoadsideRequest.responder.fullName
+                  }}</strong>
+                  <span style="color: #a0a2ad; display: block; font-size: 13px; margin-top: 2px"
+                    >Phone: {{ activeRoadsideRequest.responder.phone }}</span
+                  >
+                </div>
+              } @else {
+                <p style="margin: 14px 0 0; font-size: 13px; color: #ffbc00; font-style: italic">
+                  Waiting for an emergency responder to accept your request...
+                </p>
+              }
+
+              <div style="margin-top: 20px; display: flex; justify-content: flex-end">
+                <button
+                  class="logout-button"
+                  type="button"
+                  style="width: auto; padding: 0 20px"
+                  [disabled]="cancellingRoadside"
+                  (click)="cancelActiveRoadside(activeRoadsideRequest.id)"
+                >
+                  {{ cancellingRoadside ? 'Cancelling...' : 'Cancel Request' }}
+                </button>
+              </div>
+            </div>
+          } @else {
+            <!-- CREATE REQUEST FORM -->
+            <form (ngSubmit)="submitRoadsideRequest()" #roadsideForm="ngForm">
+              <div class="form-group">
+                <label>Select Vehicle</label>
+                <select
+                  class="form-control"
+                  [(ngModel)]="selectedRoadsideVehicleId"
+                  name="selectedVehicle"
+                >
+                  <option [value]="null" disabled selected>SELECT VEHICLE</option>
+                  @for (v of vehicles; track v.id) {
+                    <option [value]="v.id">
+                      {{ v.make }} {{ v.model }} - {{ v.registrationNumber }}
+                    </option>
+                  }
+                </select>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+                <div class="form-group">
+                  <label>Issue Type</label>
+                  <select class="form-control" [(ngModel)]="roadsideIssueType" name="issueType">
+                    <option value="" disabled selected>SELECT ISSUE TYPE</option>
+                    <option value="FLAT_TYRE">Flat Tyre</option>
+                    <option value="BATTERY_DEAD">Battery Dead</option>
+                    <option value="ENGINE_BREAKDOWN">Engine Breakdown</option>
+                    <option value="FUEL_DELIVERY">Fuel Delivery</option>
+                    <option value="TOWING">Towing</option>
+                    <option value="LOCKOUT">Lockout</option>
+                    <option value="OTHER">Other Issue</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Urgency</label>
+                  <select class="form-control" [(ngModel)]="roadsideUrgency" name="urgency">
+                    <option value="" disabled selected>SELECT URGENCY</option>
+                    <option value="LOW">Low (Not blocking road)</option>
+                    <option value="NORMAL">Normal</option>
+                    <option value="HIGH">High (Stranded on highway)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Current Location</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  [(ngModel)]="roadsideLocation"
+                  name="location"
+                  placeholder="e.g. Near Toll Gate, Highway NH-8"
+                />
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px">
+                <div class="form-group">
+                  <label>Owner Name</label>
+                  <input class="form-control" type="text" [value]="currentUser?.fullName" disabled />
+                </div>
+
+                <div class="form-group">
+                  <label>Contact Phone Number</label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    [(ngModel)]="roadsideContactPhone"
+                    name="contactPhone"
+                    placeholder="Mobile number to reach you"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Issue Details</label>
+                <textarea
+                  class="form-control"
+                  [(ngModel)]="roadsideDescription"
+                  name="description"
+                  placeholder="Provide extra details (e.g. left rear tyre flat, have spare)"
+                ></textarea>
+              </div>
+
+              <div style="display: flex; justify-content: flex-end">
+                <button
+                  class="primary-button compact"
+                  type="submit"
+                  [disabled]="submittingRoadside"
+                >
+                  {{ submittingRoadside ? 'Requesting Help...' : 'Request Emergency Help Now' }}
+                </button>
+              </div>
+            </form>
+          }
+
+          <!-- REQUEST HISTORY SECTION -->
+          <div style="margin-top: 32px; border-top: 1px solid #202127; padding-top: 24px">
+            <h4 style="color: #ffffff; margin-top: 0; margin-bottom: 14px">Assistance History</h4>
+
+            @if (loadingRoadsideHistory) {
+              <p>Loading history...</p>
+            } @else if (roadsideHistory.length === 0) {
+              <p style="color: #858893; font-size: 13px; font-style: italic">
+                No previous roadside assistance requests.
+              </p>
+            } @else {
+              <div class="request-history-list">
+                @for (hist of roadsideHistory; track hist.id) {
+                  <div class="history-card">
+                    <div class="history-card-header">
+                      <strong>{{ hist.issueType.replace('_', ' ') }}</strong>
+                      <span
+                        [class]="
+                          hist.status === 'COMPLETED' ? 'badge-completed' : 'badge-cancelled'
+                        "
+                      >
+                        {{ hist.status }}
+                      </span>
+                    </div>
+                    <div class="history-card-body">
+                      <p>
+                        <strong>Vehicle:</strong> {{ hist.vehicle?.make }} {{ hist.vehicle?.model }}
+                      </p>
+                      <p><strong>Location:</strong> {{ hist.location }}</p>
+                      <p><strong>Requested:</strong> {{ hist.createdAt | date: 'medium' }}</p>
+                      @if (hist.completedAt) {
+                        <p><strong>Completed:</strong> {{ hist.completedAt | date: 'medium' }}</p>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+
+        <footer class="modal-footer">
+          <button
+            class="logout-button"
+            type="button"
+            style="width: auto; padding: 0 20px"
+            (click)="showRoadsideModal = false"
+          >
+            Close
+          </button>
+        </footer>
+      </div>
+    </div>
+  }
 </div>

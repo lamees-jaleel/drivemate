@@ -54,8 +54,7 @@
 
       <a
         class="brand"
-        routerLink="/compliance-dashboard"
-        (click)="closeSidebar()">
+        (click)="switchTab('DASHBOARD')">
 
         <span>Drive</span>
         <strong>Mate</strong>
@@ -77,111 +76,73 @@
     <nav class="navigation">
 
       <button
-        class="nav-item active"
-        type="button">
+        class="nav-item"
+        [class.active]="currentTab === 'DASHBOARD'"
+        type="button"
+        (click)="switchTab('DASHBOARD')">
 
-        <span class="nav-icon">
-          ◫
-        </span>
-
-        <span>
-          Dashboard
-        </span>
+        <span class="nav-icon">◫</span>
+        <span>Dashboard</span>
 
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="currentTab === 'REVIEWS'"
+        type="button"
+        (click)="switchTab('REVIEWS')">
 
-        <span class="nav-icon">
-          ◈
-        </span>
-
-        <span>
-          Compliance Reviews
-        </span>
-
-        <small>
-          SOON
-        </small>
+        <span class="nav-icon">◈</span>
+        <span>Compliance Reviews</span>
 
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="currentTab === 'EXPIRY'"
+        type="button"
+        (click)="switchTab('EXPIRY')">
 
-        <span class="nav-icon">
-          ⚠
-        </span>
-
-        <span>
-          Expiry Monitoring
-        </span>
-
-        <small>
-          SOON
-        </small>
+        <span class="nav-icon">⚠</span>
+        <span>Expiry Monitoring</span>
 
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="currentTab === 'VEHICLE_DOCUMENTS'"
+        type="button"
+        (click)="switchTab('VEHICLE_DOCUMENTS')">
 
-        <span class="nav-icon">
-          ▤
-        </span>
-
-        <span>
-          Vehicle Documents
-        </span>
-
-        <small>
-          SOON
-        </small>
+        <span class="nav-icon">▤</span>
+        <span>Vehicle Documents</span>
 
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="currentTab === 'REPORTS'"
+        type="button"
+        (click)="switchTab('REPORTS')">
 
-        <span class="nav-icon">
-          ✓
-        </span>
-
-        <span>
-          Advisory Reports
-        </span>
-
-        <small>
-          SOON
-        </small>
+        <span class="nav-icon">✓</span>
+        <span>Advisory Reports</span>
 
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="currentTab === 'PROFILE'"
+        type="button"
+        (click)="switchTab('PROFILE')">
 
-        <span class="nav-icon">
-          ◉
-        </span>
-
-        <span>
-          Profile & Verification
-        </span>
-
-        <small>
-          SOON
-        </small>
+        <span class="nav-icon">◉</span>
+        <span>Profile & Verification</span>
 
       </button>
 
@@ -193,25 +154,14 @@
       <div class="sidebar-user">
 
         <div class="avatar">
-
-          {{
-            firstName
-              .charAt(0)
-              .toUpperCase()
-          }}
-
+          {{ firstName.charAt(0).toUpperCase() }}
         </div>
 
 
         <div class="user-details">
 
           <strong>
-
-            {{
-              currentUser?.fullName ||
-              'Compliance Advisor'
-            }}
-
+            {{ currentUser?.fullName || 'Compliance Advisor' }}
           </strong>
 
           <span>
@@ -228,10 +178,7 @@
         type="button"
         (click)="logout()">
 
-        <span>
-          ↪
-        </span>
-
+        <span>↪</span>
         Logout
 
       </button>
@@ -247,7 +194,6 @@
 
   <main class="dashboard-main">
 
-
     <!-- ===================================================
          TOPBAR
     ==================================================== -->
@@ -261,7 +207,12 @@
         </p>
 
         <h2>
-          Advisor Dashboard
+          @if (currentTab === 'DASHBOARD') { Advisor Dashboard }
+          @else if (currentTab === 'REVIEWS') { Compliance Reviews }
+          @else if (currentTab === 'EXPIRY') { Expiry Monitoring }
+          @else if (currentTab === 'VEHICLE_DOCUMENTS') { Vehicle Documents }
+          @else if (currentTab === 'REPORTS') { Advisory Reports }
+          @else if (currentTab === 'PROFILE') { Professional Profile }
         </h2>
 
       </div>
@@ -277,662 +228,466 @@
 
     </section>
 
-
     <!-- ===================================================
-         HERO
+         TABS: DASHBOARD VIEW
     ==================================================== -->
+    @if (currentTab === 'DASHBOARD') {
 
-    <section class="hero">
+      <!-- HERO -->
+      <section class="hero">
 
-      <div class="hero-copy">
-
-        <p class="eyebrow">
-          INSURANCE & COMPLIANCE
-        </p>
-
-
-        <h1>
-
-          Welcome back,
-
-          <span>
-            {{ firstName }}.
-          </span>
-
-        </h1>
-
-
-        <p class="hero-description">
-
-          Review vehicle compliance records,
-          monitor document validity and provide
-          guidance to vehicle owners regarding
-          insurance and regulatory requirements.
-
-        </p>
-
-
-        <div class="hero-tags">
-
-          <span>
-            Document Review
-          </span>
-
-          <span>
-            Expiry Monitoring
-          </span>
-
-          <span>
-            Compliance Guidance
-          </span>
-
-        </div>
-
-      </div>
-
-
-      <div class="compliance-visual">
-
-        <div class="visual-ring ring-large">
-        </div>
-
-
-        <div class="visual-ring ring-small">
-        </div>
-
-
-        <div class="shield-card">
-
-          <span class="shield-icon">
-            ◈
-          </span>
-
-
-          <span class="shield-label">
-            COMPLIANCE SYSTEM
-          </span>
-
-
-          <strong>
-            READY
-          </strong>
-
-
-          <div class="scanner-line">
-          </div>
-
-
-          <small>
-            Advisor workspace initialized
-          </small>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ===================================================
-         STATS
-    ==================================================== -->
-
-    <section class="stats-grid">
-
-      <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span class="stat-icon">
-            ◈
-          </span>
-
-          <small>
-            REVIEWS
-          </small>
-
-        </div>
-
-
-        <strong>
-          {{ pendingReviews }}
-        </strong>
-
-
-        <span class="stat-label">
-          Pending Reviews
-        </span>
-
-
-        <p>
-
-          Compliance cases waiting for
-          professional review.
-
-        </p>
-
-      </article>
-
-
-      <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span class="stat-icon">
-            ⚠
-          </span>
-
-          <small>
-            EXPIRY
-          </small>
-
-        </div>
-
-
-        <strong>
-          {{ expiringDocuments }}
-        </strong>
-
-
-        <span class="stat-label">
-          Expiring Documents
-        </span>
-
-
-        <p>
-
-          Insurance and regulatory records
-          approaching their expiry dates.
-
-        </p>
-
-      </article>
-
-
-      <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span class="stat-icon">
-            ◉
-          </span>
-
-          <small>
-            ACTIVE
-          </small>
-
-        </div>
-
-
-        <strong>
-          {{ activeCases }}
-        </strong>
-
-
-        <span class="stat-label">
-          Active Cases
-        </span>
-
-
-        <p>
-
-          Vehicle compliance assessments
-          currently under review.
-
-        </p>
-
-      </article>
-
-
-      <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span class="stat-icon">
-            ✓
-          </span>
-
-          <small>
-            REPORTS
-          </small>
-
-        </div>
-
-
-        <strong>
-          {{ completedAdvisories }}
-        </strong>
-
-
-        <span class="stat-label">
-          Completed Advisories
-        </span>
-
-
-        <p>
-
-          Compliance recommendations already
-          delivered to vehicle owners.
-
-        </p>
-
-      </article>
-
-    </section>
-
-
-    <!-- ===================================================
-         WORKSPACE
-    ==================================================== -->
-
-    <section class="workspace-grid">
-
-
-      <article class="workspace-card">
-
-        <div class="section-title">
-
-          <span class="section-number">
-            01
-          </span>
-
-
-          <div>
-
-            <p>
-              ADVISOR WORKFLOW
-            </p>
-
-            <h3>
-              Compliance Review Process
-            </h3>
-
-          </div>
-
-        </div>
-
-
-        <div class="workflow">
-
-          <div class="workflow-item">
-
-            <div class="workflow-marker">
-              01
-            </div>
-
-
-            <div>
-
-              <strong>
-                Review Vehicle Records
-              </strong>
-
-              <p>
-
-                Examine the owner's vehicle
-                identity and submitted
-                compliance documents.
-
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="workflow-line">
-          </div>
-
-
-          <div class="workflow-item">
-
-            <div class="workflow-marker">
-              02
-            </div>
-
-
-            <div>
-
-              <strong>
-                Verify Validity
-              </strong>
-
-              <p>
-
-                Review insurance, pollution,
-                registration and other
-                applicable records.
-
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="workflow-line">
-          </div>
-
-
-          <div class="workflow-item">
-
-            <div class="workflow-marker">
-              03
-            </div>
-
-
-            <div>
-
-              <strong>
-                Identify Compliance Issues
-              </strong>
-
-              <p>
-
-                Identify expired, expiring
-                or incomplete vehicle
-                documentation.
-
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="workflow-line">
-          </div>
-
-
-          <div class="workflow-item">
-
-            <div class="workflow-marker">
-              04
-            </div>
-
-
-            <div>
-
-              <strong>
-                Provide Guidance
-              </strong>
-
-              <p>
-
-                Deliver professional advice
-                and recommended next actions
-                to the vehicle owner.
-
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="coming-soon-banner">
-
-          <span>
-            COMPLIANCE ADVISORY SYSTEM
-          </span>
-
-          <strong>
-            Functional workflow will be connected later.
-          </strong>
-
-        </div>
-
-      </article>
-
-
-      <!-- =================================================
-           PROFILE
-      ================================================== -->
-
-      <article class="workspace-card profile-card">
-
-        <div class="section-title">
-
-          <span class="section-number">
-            02
-          </span>
-
-
-          <div>
-
-            <p>
-              PROFESSIONAL ACCOUNT
-            </p>
-
-            <h3>
-              Advisor Profile
-            </h3>
-
-          </div>
-
-        </div>
-
-
-        <div class="profile-avatar">
-
-          {{
-            firstName
-              .charAt(0)
-              .toUpperCase()
-          }}
-
-        </div>
-
-
-        <h4>
-
-          {{
-            currentUser?.fullName ||
-            'Compliance Advisor'
-          }}
-
-        </h4>
-
-
-        <p class="profile-role">
-          Insurance & Compliance Advisor
-        </p>
-
-
-        <div class="profile-info">
-
-          <div>
-
-            <span>
-              ACCOUNT ROLE
-            </span>
-
-            <strong>
-              Compliance Advisor
-            </strong>
-
-          </div>
-
-
-          <div>
-
-            <span>
-              EMAIL
-            </span>
-
-            <strong>
-
-              {{
-                currentUser?.email ||
-                'Not available'
-              }}
-
-            </strong>
-
-          </div>
-
-        </div>
-
-
-        <div class="verification-note">
-
-          <span>
-            ◈
-          </span>
-
-
-          <div>
-
-            <strong>
-              Professional Verification
-            </strong>
-
-            <p>
-
-              Qualification, certificate
-              and advisor verification will
-              be managed through the
-              Administrator module.
-
-            </p>
-
-          </div>
-
-        </div>
-
-      </article>
-
-    </section>
-
-
-    <!-- ===================================================
-         CAPABILITIES
-    ==================================================== -->
-
-    <section class="capabilities-section">
-
-      <div class="capabilities-heading">
-
-        <div>
+        <div class="hero-copy">
 
           <p class="eyebrow">
-            ADVISOR CAPABILITIES
+            INSURANCE & COMPLIANCE
           </p>
 
-          <h2>
-            Compliance intelligence workspace
-          </h2>
+          <h1>
+            Welcome back,
+            <span>
+              {{ firstName }}.
+            </span>
+          </h1>
+
+          <p class="hero-description">
+            Review vehicle compliance records, monitor document validity and provide guidance to vehicle owners regarding insurance and regulatory requirements.
+          </p>
+
+          <div class="hero-tags">
+            <span>Document Review</span>
+            <span>Expiry Monitoring</span>
+            <span>Compliance Guidance</span>
+          </div>
 
         </div>
 
+        <div class="compliance-visual">
+          <div class="visual-ring ring-large"></div>
+          <div class="visual-ring ring-small"></div>
+          <div class="shield-card">
+            <span class="shield-icon">◈</span>
+            <span class="shield-label">COMPLIANCE SYSTEM</span>
+            <strong>READY</strong>
+            <div class="scanner-line"></div>
+            <small>Advisor workspace active</small>
+          </div>
+        </div>
 
-        <span class="development-badge">
-          UNDER DEVELOPMENT
-        </span>
+      </section>
 
-      </div>
+      <!-- STATS -->
+      <section class="stats-grid">
 
+        <article class="stat-card" style="cursor: pointer;" (click)="switchTab('REVIEWS')">
+          <div class="stat-header">
+            <span class="stat-icon">◈</span>
+            <small>REVIEWS</small>
+          </div>
+          <strong>{{ pendingReviews }}</strong>
+          <span class="stat-label">Pending Reviews</span>
+          <p>Compliance cases waiting for professional review.</p>
+        </article>
 
-      <div class="capabilities-grid">
+        <article class="stat-card" style="cursor: pointer;" (click)="switchTab('EXPIRY')">
+          <div class="stat-header">
+            <span class="stat-icon">⚠</span>
+            <small>EXPIRY</small>
+          </div>
+          <strong>{{ expiringDocuments }}</strong>
+          <span class="stat-label">Expiring Documents</span>
+          <p>Insurance and regulatory records approaching expiry.</p>
+        </article>
 
-        <article>
+        <article class="stat-card">
+          <div class="stat-header">
+            <span class="stat-icon">◉</span>
+            <small>ACTIVE</small>
+          </div>
+          <strong>{{ activeCases }}</strong>
+          <span class="stat-label">Active Cases</span>
+          <p>Vehicle compliance assessments currently observed.</p>
+        </article>
 
-          <span class="capability-icon">
-            ▤
-          </span>
+        <article class="stat-card" style="cursor: pointer;" (click)="switchTab('REPORTS')">
+          <div class="stat-header">
+            <span class="stat-icon">✓</span>
+            <small>REPORTS</small>
+          </div>
+          <strong>{{ completedAdvisories }}</strong>
+          <span class="stat-label">Completed Advisories</span>
+          <p>Compliance recommendations already delivered.</p>
+        </article>
 
+      </section>
 
-          <h3>
-            Document Review
-          </h3>
+      <!-- WORKSPACE -->
+      <section class="workspace-grid">
 
+        <article class="workspace-card">
 
-          <p>
+          <div class="section-title">
+            <span class="section-number">01</span>
+            <div>
+              <p>ADVISOR WORKFLOW</p>
+              <h3>Compliance Review Process</h3>
+            </div>
+          </div>
 
-            Review vehicle registration,
-            insurance and other uploaded
-            compliance documents.
-
-          </p>
+          <div class="workflow">
+            <div class="workflow-item">
+              <div class="workflow-marker">01</div>
+              <div>
+                <strong>Review Vehicle Records</strong>
+                <p>Examine the owner's vehicle identity and submitted compliance documents.</p>
+              </div>
+            </div>
+            <div class="workflow-line"></div>
+            <div class="workflow-item">
+              <div class="workflow-marker">02</div>
+              <div>
+                <strong>Verify Validity</strong>
+                <p>Review insurance, pollution, registration and other applicable records.</p>
+              </div>
+            </div>
+            <div class="workflow-line"></div>
+            <div class="workflow-item">
+              <div class="workflow-marker">03</div>
+              <div>
+                <strong>Identify Compliance Issues</strong>
+                <p>Identify expired, expiring or incomplete vehicle documentation.</p>
+              </div>
+            </div>
+            <div class="workflow-line"></div>
+            <div class="workflow-item">
+              <div class="workflow-marker">04</div>
+              <div>
+                <strong>Provide Guidance</strong>
+                <p>Deliver professional advice and recommended next actions to the vehicle owner.</p>
+              </div>
+            </div>
+          </div>
 
         </article>
 
-
-        <article>
-
-          <span class="capability-icon">
-            ⚠
-          </span>
-
-
-          <h3>
-            Expiry Monitoring
-          </h3>
-
-
-          <p>
-
-            Identify expired and
-            soon-to-expire vehicle
-            documents.
-
-          </p>
-
+        <!-- mini profile info -->
+        <article class="workspace-card profile-card">
+          <div class="section-title">
+            <span class="section-number">02</span>
+            <div>
+              <p>PROFESSIONAL ACCOUNT</p>
+              <h3>Advisor Profile</h3>
+            </div>
+          </div>
+          <div class="profile-avatar">
+            {{ firstName.charAt(0).toUpperCase() }}
+          </div>
+          <h4>{{ currentUser?.fullName }}</h4>
+          <p class="profile-role">Insurance & Compliance Advisor</p>
+          <div class="profile-info">
+            <div>
+              <span>ACCOUNT ROLE</span>
+              <strong>Compliance Advisor</strong>
+            </div>
+            <div>
+              <span>EMAIL</span>
+              <strong>{{ currentUser?.email }}</strong>
+            </div>
+          </div>
+          <div class="verification-note">
+            <span>◈</span>
+            <div>
+              <strong>Professional Verification</strong>
+              <p>Qualification, certificate and advisor verification is managed through the Administrator module.</p>
+            </div>
+          </div>
         </article>
 
+      </section>
 
-        <article>
+    }
 
-          <span class="capability-icon">
-            ◈
+    <!-- ===================================================
+         TABS: COMPLIANCE REVIEWS VIEW
+    ==================================================== -->
+    @if (currentTab === 'REVIEWS') {
+      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h3 style="color: #ffffff; margin: 0; font-size: 20px;">Pending Document Reviews</h3>
+            <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">Review and certify newly uploaded vehicle documents.</p>
+          </div>
+          <span style="background: rgba(245, 53, 67, 0.1); color: #ff3545; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 800;">
+            {{ documents.length }} Pending
           </span>
+        </div>
 
+        @if (loading) {
+          <p style="color: #858893; font-style: italic;">Loading reviews...</p>
+        } @else if (documents.length === 0) {
+          <div style="text-align: center; padding: 40px 20px;">
+            <span style="font-size: 40px; color: #28a745; display: block; margin-bottom: 12px;">✓</span>
+            <h4 style="color: #ffffff; margin: 0 0 8px;">All caught up!</h4>
+            <p style="color: #858893; margin: 0; font-size: 13px;">No documents are currently awaiting review.</p>
+          </div>
+        } @else {
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 14px;">
+            @for (doc of documents; track doc.id) {
+              <article style="background: #0d0e12; border: 1px solid #202127; border-radius: 12px; padding: 18px; display: flex; justify-content: space-between; align-items: center; transition: border-color 0.2s;">
+                <div>
+                  <span style="background: #202127; color: #ffffff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">
+                    {{ doc.documentType.replace('_', ' ') }}
+                  </span>
+                  <h4 style="color: #ffffff; margin: 8px 0 4px; font-size: 16px;">{{ doc.title }}</h4>
+                  <p style="color: #858893; margin: 0; font-size: 13px;">
+                    <strong>Vehicle:</strong> {{ doc.vehicle?.make }} {{ doc.vehicle?.model }} ({{ doc.vehicle?.registrationNumber }})
+                  </p>
+                  <p style="color: #858893; margin: 4px 0 0; font-size: 12px;">
+                    <strong>Owner:</strong> {{ doc.vehicle?.owner?.fullName }} | <strong>Uploaded:</strong> {{ doc.createdAt | date:'mediumDate' }}
+                  </p>
+                </div>
+                <button class="primary-button compact" type="button" (click)="selectDocument(doc)">
+                  Review Document →
+                </button>
+              </article>
+            }
+          </div>
 
-          <h3>
-            Compliance Assessment
-          </h3>
+        }
+      </section>
+    }
 
+    <!-- ===================================================
+         TABS: EXPIRY MONITORING VIEW
+    ==================================================== -->
+    @if (currentTab === 'EXPIRY') {
+      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+        <div>
+          <h3 style="color: #ffffff; margin: 0; font-size: 20px;">Expiry Monitoring</h3>
+          <p style="color: #858893; margin: 4px 0 16px; font-size: 13px;">Track expired or soon-to-expire (within 30 days) vehicle records.</p>
+        </div>
 
-          <p>
+        @if (loading) {
+          <p style="color: #858893; font-style: italic;">Loading data...</p>
+        } @else {
+          
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+              <thead>
+                <tr style="border-bottom: 2px solid #202127; color: #858893;">
+                  <th style="padding: 12px 8px;">Vehicle</th>
+                  <th style="padding: 12px 8px;">Document Type</th>
+                  <th style="padding: 12px 8px;">Title</th>
+                  <th style="padding: 12px 8px;">Expiry Date</th>
+                  <th style="padding: 12px 8px;">Days Left</th>
+                  <th style="padding: 12px 8px;">Compliance</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (doc of documents; track doc.id) {
+                  @if (doc.expiryDate && (doc.daysUntilExpiry <= 30 || doc.complianceStatus === 'EXPIRED')) {
+                    <tr style="border-bottom: 1px solid #202127; color: #ffffff;">
+                      <td style="padding: 14px 8px;">
+                        <strong>{{ doc.vehicle?.registrationNumber }}</strong><br>
+                        <small style="color: #858893;">{{ doc.vehicle?.make }} {{ doc.vehicle?.model }}</small>
+                      </td>
+                      <td style="padding: 14px 8px; text-transform: uppercase; font-size: 12px; color: #f53543;">
+                        {{ doc.documentType.replace('_', ' ') }}
+                      </td>
+                      <td style="padding: 14px 8px;">{{ doc.title }}</td>
+                      <td style="padding: 14px 8px;">{{ doc.expiryDate | date:'mediumDate' }}</td>
+                      <td style="padding: 14px 8px; font-weight: 800;">
+                        {{ doc.daysUntilExpiry }} day(s)
+                      </td>
+                      <td style="padding: 14px 8px;">
+                        <span [style.color]="doc.complianceStatus === 'EXPIRED' ? '#ff3545' : '#ffbc00'" style="font-weight: 800;">
+                          {{ doc.complianceStatus }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                } @empty {
+                  <tr>
+                    <td colspan="6" style="padding: 24px; text-align: center; color: #858893;">
+                      No documents are currently expired or expiring soon.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
 
-            Assess vehicle documentation
-            and identify areas requiring
-            owner attention.
+        }
+      </section>
+    }
 
-          </p>
+    <!-- ===================================================
+         TABS: VEHICLE DOCUMENTS VIEW
+    ==================================================== -->
+    @if (currentTab === 'VEHICLE_DOCUMENTS') {
+      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+        <div style="margin-bottom: 20px;">
+          <h3 style="color: #ffffff; margin: 0; font-size: 20px;">All Platform Documents</h3>
+          <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">View and track document details for all registered vehicles.</p>
+        </div>
 
-        </article>
+        @if (loading) {
+          <p style="color: #858893; font-style: italic;">Loading documents...</p>
+        } @else if (documents.length === 0) {
+          <p style="color: #858893;">No documents registered on the platform.</p>
+        } @else {
+          
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; color: #ffffff;">
+              <thead>
+                <tr style="border-bottom: 2px solid #202127; color: #858893;">
+                  <th style="padding: 12px 8px;">Vehicle</th>
+                  <th style="padding: 12px 8px;">Type</th>
+                  <th style="padding: 12px 8px;">Title</th>
+                  <th style="padding: 12px 8px;">Status</th>
+                  <th style="padding: 12px 8px;">Expiry</th>
+                  <th style="padding: 12px 8px;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (doc of documents; track doc.id) {
+                  <tr style="border-bottom: 1px solid #202127;">
+                    <td style="padding: 14px 8px;">
+                      <strong>{{ doc.vehicle?.registrationNumber }}</strong><br>
+                      <small style="color: #858893;">{{ doc.vehicle?.make }} {{ doc.vehicle?.model }}</small>
+                    </td>
+                    <td style="padding: 14px 8px; text-transform: uppercase; font-size: 12px; color: #ff4351;">
+                      {{ doc.documentType.replace('_', ' ') }}
+                    </td>
+                    <td style="padding: 14px 8px;">{{ doc.title }}</td>
+                    <td style="padding: 14px 8px;">
+                      <span [style.color]="doc.verificationStatus === 'APPROVED' ? '#28a745' : (doc.verificationStatus === 'REJECTED' ? '#ff3545' : '#ffbc00')" style="font-weight: 800;">
+                        {{ doc.verificationStatus }}
+                      </span>
+                    </td>
+                    <td style="padding: 14px 8px;">
+                      {{ doc.expiryDate ? (doc.expiryDate | date:'mediumDate') : 'No Expiry' }}
+                    </td>
+                    <td style="padding: 14px 8px;">
+                      <button class="primary-button compact" type="button" (click)="selectDocument(doc)">
+                        Review
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
 
+        }
+      </section>
+    }
 
-        <article>
+    <!-- ===================================================
+         TABS: ADVISORY REPORTS VIEW
+    ==================================================== -->
+    @if (currentTab === 'REPORTS') {
+      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+        <div style="margin-bottom: 20px;">
+          <h3 style="color: #ffffff; margin: 0; font-size: 20px;">Advisory Reports & Decisions</h3>
+          <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">Review historical advisory determinations and client feedback.</p>
+        </div>
 
-          <span class="capability-icon">
-            ✓
-          </span>
+        @if (loading) {
+          <p style="color: #858893; font-style: italic;">Loading data...</p>
+        } @else {
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 14px;">
+            @for (doc of documents; track doc.id) {
+              @if (doc.verificationStatus !== 'PENDING') {
+                <article style="background: #0d0e12; border: 1px solid #202127; border-radius: 12px; padding: 20px;">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <div>
+                      <span style="background: #202127; color: #ffffff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">
+                        {{ doc.documentType.replace('_', ' ') }}
+                      </span>
+                      <h4 style="color: #ffffff; margin: 8px 0 2px; font-size: 16px;">{{ doc.title }}</h4>
+                      <p style="color: #858893; margin: 0; font-size: 13px;">
+                        <strong>Vehicle:</strong> {{ doc.vehicle?.make }} {{ doc.vehicle?.model }} ({{ doc.vehicle?.registrationNumber }})
+                      </p>
+                    </div>
 
+                    <span [style.background-color]="doc.verificationStatus === 'APPROVED' ? 'rgba(40, 167, 69, 0.15)' : 'rgba(245, 53, 67, 0.15)'"
+                          [style.color]="doc.verificationStatus === 'APPROVED' ? '#28a745' : '#ff3545'"
+                          style="font-size: 12px; font-weight: 800; padding: 6px 14px; border-radius: 20px;">
+                      {{ doc.verificationStatus }}
+                    </span>
+                  </div>
 
-          <h3>
-            Advisory Reports
-          </h3>
+                  <div style="background: #14151a; border-radius: 8px; padding: 12px 14px; margin-top: 10px;">
+                    <span style="color: #858893; display: block; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">
+                      ADVISOR VERIFICATION NOTE
+                    </span>
+                    <p style="color: #ffffff; margin: 0; font-size: 13px;">
+                      {{ doc.verificationNote || 'No review remarks provided.' }}
+                    </p>
+                  </div>
 
+                  <p style="color: #858893; margin: 12px 0 0; font-size: 11px; text-align: right;">
+                    Reviewed on {{ doc.reviewedAt | date:'medium' }}
+                  </p>
+                </article>
+              }
+            } @empty {
+              <p style="color: #858893; font-style: italic;">No completed advisories recorded yet.</p>
+            }
+          </div>
 
-          <p>
+        }
+      </section>
+    }
 
-            Provide professional compliance
-            guidance and recommended
-            next actions.
+    <!-- ===================================================
+         TABS: PROFILE VIEW
+    ==================================================== -->
+    @if (currentTab === 'PROFILE') {
+      <section class="workspace-card" style="margin: 20px 0; padding: 24px; max-width: 600px;">
+        <h3 style="color: #ffffff; margin: 0 0 24px; font-size: 20px;">Advisor Professional Profile</h3>
 
-          </p>
+        <div style="display: flex; flex-direction: column; gap: 20px; color: #ffffff;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="profile-avatar" style="margin: 0; width: 64px; height: 64px; font-size: 24px;">
+              {{ firstName.charAt(0).toUpperCase() }}
+            </div>
+            <div>
+              <h4 style="margin: 0; font-size: 18px;">{{ currentUser?.fullName }}</h4>
+              <p style="margin: 4px 0 0; color: #858893; font-size: 14px;">Insurance & Compliance Advisor</p>
+            </div>
+          </div>
 
-        </article>
+          <div style="border-top: 1px solid #202127; padding-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px;">
+            <div>
+              <span style="color: #858893; display: block; font-size: 11px;">EMAIL ADDRESS</span>
+              <strong>{{ currentUser?.email }}</strong>
+            </div>
 
-      </div>
+            <div>
+              <span style="color: #858893; display: block; font-size: 11px;">PHONE NUMBER</span>
+              <strong>{{ currentUser?.phone }}</strong>
+            </div>
 
-    </section>
+            <div>
+              <span style="color: #858893; display: block; font-size: 11px;">VERIFICATION STATUS</span>
+              <strong style="color: #28a745;">VERIFIED PROFESSIONAL</strong>
+            </div>
 
+            <div>
+              <span style="color: #858893; display: block; font-size: 11px;">PORTAL ACCESSIBILITY</span>
+              <strong>FULL WORKSPACE ACCESS</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    }
 
+    <!-- ===================================================
+         FOOTER
+    ==================================================== -->
     <footer class="dashboard-footer">
 
       <span>
@@ -944,5 +699,95 @@
     </footer>
 
   </main>
+
+  <!-- =========================================================
+       DOCUMENT REVIEW MODAL/PANEL (OVERLAY BACKDROP)
+       ========================================================= -->
+  @if (selectedDocument) {
+    <div class="modal-backdrop" (click)="closeReviewPanel()">
+      <div class="modal-container" (click)="$event.stopPropagation()" style="max-width: 600px;">
+        
+        <header class="modal-header">
+          <h3>Verify Vehicle Document</h3>
+          <button class="modal-close-btn" type="button" (click)="closeReviewPanel()">×</button>
+        </header>
+
+        <div class="modal-body" style="color: #ffffff;">
+          
+          @if (errorMessage) {
+            <div class="alert-error">{{ errorMessage }}</div>
+          }
+          @if (successMessage) {
+            <div class="alert-success">{{ successMessage }}</div>
+          }
+
+          <div style="background: #14151a; border: 1px solid #202127; padding: 16px; border-radius: 10px; margin-bottom: 20px;">
+            <span style="background: #202127; color: #ffffff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">
+              {{ selectedDocument.documentType.replace('_', ' ') }}
+            </span>
+            <h4 style="color: #ffffff; margin: 8px 0 10px; font-size: 18px;">{{ selectedDocument.title }}</h4>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; font-size: 13px;">
+              <div>
+                <span style="color: #858893; display: block; font-size: 10px;">PROVIDER</span>
+                <strong>{{ selectedDocument.provider || 'Not Specified' }}</strong>
+              </div>
+              <div>
+                <span style="color: #858893; display: block; font-size: 10px;">DOCUMENT NUMBER</span>
+                <strong>{{ selectedDocument.documentNumber || 'Not Specified' }}</strong>
+              </div>
+              <div>
+                <span style="color: #858893; display: block; font-size: 10px;">ISSUE DATE</span>
+                <strong>{{ selectedDocument.issueDate ? (selectedDocument.issueDate | date:'mediumDate') : 'Not Specified' }}</strong>
+              </div>
+              <div>
+                <span style="color: #858893; display: block; font-size: 10px;">EXPIRY DATE</span>
+                <strong>{{ selectedDocument.expiryDate ? (selectedDocument.expiryDate | date:'mediumDate') : 'No Expiry' }}</strong>
+              </div>
+            </div>
+
+            @if (selectedDocument.notes) {
+              <p style="margin: 14px 0 0; font-size: 13px; color: #a0a2ad; padding-top: 10px; border-top: 1px solid #202127;">
+                <strong>Owner Remarks:</strong> {{ selectedDocument.notes }}
+              </p>
+            }
+
+            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #202127; display: flex; align-items: center; justify-content: space-between;">
+              <span style="color: #858893; font-size: 13px;">Document File:</span>
+              <a [href]="'http://localhost:5000/' + selectedDocument.filePath" target="_blank" class="primary-button compact" style="text-decoration: none; font-size: 11px;">
+                Download / View Uploaded File
+              </a>
+            </div>
+          </div>
+
+          <form (ngSubmit)="submitReview()">
+            <div class="form-group">
+              <label>Review Decision</label>
+              <select class="form-control" [(ngModel)]="reviewStatus" name="status">
+                <option value="APPROVED">APPROVE - Certify document is valid</option>
+                <option value="REJECTED">REJECT - Document is invalid, expired, or incorrect</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Advisory Remarks & Notes</label>
+              <textarea class="form-control" [(ngModel)]="reviewNote" name="note" placeholder="Write feedback, instructions, or reasons for rejection..."></textarea>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+              <button class="logout-button" type="button" style="width: auto; padding: 0 20px;" (click)="closeReviewPanel()">
+                Cancel
+              </button>
+              <button class="primary-button compact" type="submit" [disabled]="submittingReview">
+                {{ submittingReview ? 'Submitting...' : 'Submit Verification' }}
+              </button>
+            </div>
+          </form>
+
+        </div>
+
+      </div>
+    </div>
+  }
 
 </div>

@@ -1153,3 +1153,154 @@ export async function rejectProfessional(
   }
 
 }
+
+
+/* =========================================================
+   USER MANAGEMENT
+   ========================================================= */
+
+export async function getUsers(req: Request, res: Response): Promise<void> {
+  try {
+    const roleQuery = req.query.role ? String(req.query.role).toUpperCase() : undefined;
+
+    const users = await prisma.user.findMany({
+      where: roleQuery ? { role: roleQuery as any } : undefined,
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        phone: true,
+        address: true,
+        role: true,
+        accountStatus: true,
+        createdAt: true
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    res.status(200).json({ success: true, count: users.length, users });
+  } catch (error) {
+    console.error('Get users error:', error);
+    res.status(500).json({ success: false, message: 'Unable to fetch users.' });
+  }
+}
+
+export async function updateUserStatus(req: Request, res: Response): Promise<void> {
+  try {
+    const userId = Number(req.params.userId);
+    const { status } = req.body;
+
+    if (!['ACTIVE', 'SUSPENDED', 'PENDING_VERIFICATION', 'REJECTED'].includes(status)) {
+      res.status(400).json({ success: false, message: 'Invalid account status.' });
+      return;
+    }
+
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) {
+      res.status(404).json({ success: false, message: 'User not found.' });
+      return;
+    }
+
+    const updated = await prisma.user.update({
+      where: { id: userId },
+      data: { accountStatus: status as any }
+    });
+
+    res.status(200).json({ success: true, message: `User account is now ${status.toLowerCase()}.`, user: updated });
+  } catch (error) {
+    console.error('Update user status error:', error);
+    res.status(500).json({ success: false, message: 'Unable to update user status.' });
+  }
+}
+
+
+/* =========================================================
+   SYSTEM REPORTS
+   ========================================================= */
+
+export async function getSystemReports(req: Request, res: Response): Promise<void> {
+  try {
+    const userRoles = await prisma.user.groupBy({
+      by: ['role'],
+      _count: true
+    });
+
+    const userStats = {
+      VEHICLE_OWNER: 0,
+      DIAGNOSTIC_EXPERT: 0,
+      COMPLIANCE_ADVISOR: 0,
+      ROADSIDE_RESPONDER: 0,
+      ADMIN: 0
+    };
+
+    userRoles.forEach(r => {
+      if (r.role in userStats) {
+        userStats[r.role as keyof typeof userStats] = r._count;
+      }
+    });
+
+    const totalVehicles = await prisma.vehicle.count();
+    const totalMaintenance = await prisma.maintenanceRecord.count();
+    const totalExpensesCount = await prisma.expense.count();
+    
+    const totalExpensesSumResult = await prisma.expense.aggregate({
+      _sum: {
+        amount: true
+      }
+    });
+    const totalExpensesSum = Number(totalExpensesSumResult._sum.amount ?? 0);
+
+    const documentsByStatus = await prisma.vehicleDocument.groupBy({
+      by: ['verificationStatus'],
+      _count: true
+    });
+
+    const docStats = {
+      PENDING: 0,
+      APPROVED: 0,
+      REJECTED: 0
+    };
+
+    documentsByStatus.forEach(d => {
+      if (d.verificationStatus in docStats) {
+        docStats[d.verificationStatus as keyof typeof docStats] = d._count;
+      }
+    });
+
+    const roadsideByStatus = await prisma.roadsideRequest.groupBy({
+      by: ['status'],
+      _count: true
+    });
+
+    const roadsideStats = {
+      PENDING: 0,
+      ACCEPTED: 0,
+      IN_PROGRESS: 0,
+      COMPLETED: 0,
+      CANCELLED: 0
+    };
+
+    roadsideByStatus.forEach(r => {
+      if (r.status in roadsideStats) {
+        roadsideStats[r.status as keyof typeof roadsideStats] = r._count;
+      }
+    });
+
+    const systemSummary = {
+      users: userStats,
+      totalVehicles,
+      totalMaintenance,
+      expenses: {
+        count: totalExpensesCount,
+        sum: totalExpensesSum
+      },
+      documents: docStats,
+      roadside: roadsideStats
+    };
+
+    res.status(200).json({ success: true, summary: systemSummary });
+  } catch (error) {
+    console.error('Get system reports error:', error);
+    res.status(500).json({ success: false, message: 'Unable to compile system reports.' });
+  }
+}

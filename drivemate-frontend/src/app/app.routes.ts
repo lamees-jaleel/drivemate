@@ -166,6 +166,24 @@ export const routes:
 
   {
     path:
+      'owner-dashboard/vehicles/:id/edit',
+
+    component:
+      AddVehicle,
+
+    canActivate: [
+      roleAuthGuard
+    ],
+
+    data: {
+      role:
+        'VEHICLE_OWNER'
+    }
+  },
+
+
+  {
+    path:
       'owner-dashboard/vehicles/:id/maintenance',
 
     component:
@@ -184,10 +202,64 @@ export const routes:
 
   {
     path:
+      'owner-dashboard/maintenance',
+
+    component:
+      Maintenance,
+
+    canActivate: [
+      roleAuthGuard
+    ],
+
+    data: {
+      role:
+        'VEHICLE_OWNER'
+    }
+  },
+
+
+  {
+    path:
+      'owner-dashboard/expenses',
+
+    component:
+      Expenses,
+
+    canActivate: [
+      roleAuthGuard
+    ],
+
+    data: {
+      role:
+        'VEHICLE_OWNER'
+    }
+  },
+
+
+  {
+    path:
       'owner-dashboard/vehicles/:id/expenses',
 
     component:
       Expenses,
+
+    canActivate: [
+      roleAuthGuard
+    ],
+
+    data: {
+      role:
+        'VEHICLE_OWNER'
+    }
+  },
+
+
+  {
+    path:
+      'owner-dashboard/documents',
+
+    component:
+      Documents,
 
     canActivate: [
       roleAuthGuard

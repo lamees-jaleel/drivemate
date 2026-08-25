@@ -64,6 +64,20 @@ enum FuelType {
 
 /**
  * =========================================================
+ * VEHICLE TYPE
+ * =========================================================
+ */
+
+enum VehicleType {
+  CAR
+  BIKE
+  TRUCK
+  VAN
+  OTHER
+}
+
+/**
+ * =========================================================
  * VEHICLE TRANSMISSION
  * =========================================================
  */
@@ -169,6 +183,23 @@ enum DiagnosticRequestStatus {
 
 /**
  * =========================================================
+ * SERVICE PROVIDER TYPE
+ * =========================================================
+ */
+
+enum ServiceProviderType {
+  /// Official manufacturer-authorised service centre (dealer, brand workshop)
+  AUTHORIZED_DEALER
+  /// Independent / local workshop, roadside garage, or multi-brand shop
+  LOCAL_SHOP
+  /// Travelling/on-demand mechanic who comes to the owner's location
+  MOBILE_MECHANIC
+  /// Any DriveMate-registered Diagnostic Expert (routed through the platform)
+  DRIVEMATE_EXPERT
+}
+
+/**
+ * =========================================================
  * DIAGNOSTIC CONCERN
  * =========================================================
  */
@@ -227,8 +258,6 @@ model User {
 
   email String @unique @db.VarChar(150)
 
-  googleSub String? @unique @db.VarChar(255)
-
   address String @db.VarChar(255)
 
   passwordHash String @db.VarChar(255)
@@ -254,6 +283,10 @@ model User {
   vehicles Vehicle[]
 
   diagnosticAssignments DiagnosticRequest[] @relation("DiagnosticExpertRequests")
+
+  roadsideRequests RoadsideRequest[] @relation("ResponderRequests")
+
+  reviewedDocuments VehicleDocument[] @relation("ReviewedDocuments")
 
   @@map("users")
 }
@@ -335,6 +368,8 @@ model Vehicle {
 
   vehicleImagePath String? @db.VarChar(500)
 
+  vehicleType VehicleType @default(CAR)
+
   vin String? @unique @db.VarChar(50)
 
   engineNumber String? @unique @db.VarChar(50)
@@ -358,6 +393,8 @@ model Vehicle {
   documents VehicleDocument[]
 
   diagnosticRequests DiagnosticRequest[]
+
+  roadsideRequests RoadsideRequest[]
 
   @@index([ownerId])
   @@index([make, model])
@@ -478,6 +515,16 @@ model VehicleDocument {
 
   notes String? @db.VarChar(1000)
 
+  verificationStatus VerificationStatus @default(PENDING)
+
+  verificationNote String? @db.VarChar(500)
+
+  reviewedById Int?
+
+  reviewedBy User? @relation("ReviewedDocuments", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  reviewedAt DateTime?
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
@@ -486,6 +533,7 @@ model VehicleDocument {
   @@index([documentType])
   @@index([expiryDate])
   @@index([vehicleId, expiryDate])
+  @@index([reviewedById])
   @@map("vehicle_documents")
 }
 
@@ -535,6 +583,18 @@ model DiagnosticRequest {
   symptoms String @db.VarChar(1500)
 
   odometerKm Int?
+
+  /**
+   * -------------------------------------------------------
+   * SERVICE PROVIDER PREFERENCE
+   * Set by the owner at booking time.
+   * -------------------------------------------------------
+   */
+
+  providerType ServiceProviderType @default(DRIVEMATE_EXPERT)
+
+  /// Free-text name of the preferred shop / dealer (optional)
+  shopName String? @db.VarChar(150)
 
   status DiagnosticRequestStatus @default(PENDING)
 
@@ -629,4 +689,80 @@ model DiagnosticReport {
 
   @@index([severity])
   @@map("diagnostic_reports")
+}
+
+/**
+ * =========================================================
+ * ROADSIDE REQUEST STATUS
+ * =========================================================
+ */
+
+enum RoadsideRequestStatus {
+  PENDING
+  ACCEPTED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+/**
+ * =========================================================
+ * ROADSIDE ISSUE TYPE
+ * =========================================================
+ */
+
+enum RoadsideIssueType {
+  FLAT_TYRE
+  BATTERY_DEAD
+  ENGINE_BREAKDOWN
+  FUEL_DELIVERY
+  TOWING
+  LOCKOUT
+  OTHER
+}
+
+/**
+ * =========================================================
+ * ROADSIDE REQUEST
+ * =========================================================
+ */
+
+model RoadsideRequest {
+  id Int @id @default(autoincrement())
+
+  vehicleId Int
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  ownerId Int
+
+  issueType RoadsideIssueType
+
+  description String @db.VarChar(1000)
+
+  location String @db.VarChar(255)
+
+  contactPhone String @db.VarChar(20)
+
+  urgency String @db.VarChar(20) @default("NORMAL")
+
+  status RoadsideRequestStatus @default(PENDING)
+
+  responderId Int?
+
+  responder User? @relation("ResponderRequests", fields: [responderId], references: [id], onDelete: SetNull)
+
+  acceptedAt DateTime?
+
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([vehicleId])
+  @@index([responderId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("roadside_requests")
 }

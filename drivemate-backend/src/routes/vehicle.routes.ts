@@ -5,13 +5,19 @@ import {
 import {
   createVehicle,
   getMyVehicles,
-  getVehicleById
+  getVehicleById,
+  updateVehicle,
+  deleteVehicle
 } from '../controllers/vehicle.controller.js';
 
 import {
   requireAuth,
   requireVehicleOwner
 } from '../middleware/auth.middleware.js';
+
+import {
+  vehicleImageUpload
+} from '../middleware/vehicle-image-upload.js';
 
 
 const router =
@@ -69,7 +75,33 @@ router.get(
 
 router.post(
   '/',
+  vehicleImageUpload.single('vehicleImage'),
   createVehicle
+);
+
+
+/* =========================================================
+   UPDATE VEHICLE
+
+   PUT /api/vehicles/:id
+========================================================= */
+
+router.put(
+  '/:id',
+  vehicleImageUpload.single('vehicleImage'),
+  updateVehicle
+);
+
+
+/* =========================================================
+   DELETE VEHICLE
+
+   DELETE /api/vehicles/:id
+========================================================= */
+
+router.delete(
+  '/:id',
+  deleteVehicle
 );
 
 

@@ -6,7 +6,10 @@ import {
   approveProfessional,
   getProfessionalById,
   getProfessionals,
-  rejectProfessional
+  rejectProfessional,
+  getUsers,
+  updateUserStatus,
+  getSystemReports
 } from '../controllers/admin.controller.js';
 
 import {
@@ -65,6 +68,32 @@ router.patch(
 router.patch(
   '/professionals/:profileId/reject',
   rejectProfessional
+);
+
+
+/* =========================================================
+   USER MANAGEMENT
+========================================================= */
+
+router.get(
+  '/users',
+  getUsers
+);
+
+
+router.patch(
+  '/users/:userId/status',
+  updateUserStatus
+);
+
+
+/* =========================================================
+   SYSTEM REPORTS
+========================================================= */
+
+router.get(
+  '/reports',
+  getSystemReports
 );
 
 

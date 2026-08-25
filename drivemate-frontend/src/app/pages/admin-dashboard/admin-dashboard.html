@@ -67,20 +67,10 @@
     <nav class="navigation">
 
       <button
-        class="nav-item active"
-        type="button">
-
-        <span>◫</span>
-
-        Dashboard
-
-      </button>
-
-
-      <button
         class="nav-item"
+        [class.active]="currentTab === 'VERIFICATIONS'"
         type="button"
-        (click)="loadProfessionals('PENDING')">
+        (click)="switchTab('VERIFICATIONS')">
 
         <span>◈</span>
 
@@ -98,31 +88,27 @@
 
 
       <button
-        class="nav-item disabled"
-        type="button">
+        class="nav-item"
+        [class.active]="currentTab === 'USER_MANAGEMENT'"
+        type="button"
+        (click)="switchTab('USER_MANAGEMENT')">
 
         <span>◎</span>
 
         User Management
 
-        <small>
-          SOON
-        </small>
-
       </button>
 
 
       <button
-        class="nav-item disabled"
-        type="button">
+        class="nav-item"
+        [class.active]="currentTab === 'SYSTEM_REPORTS'"
+        type="button"
+        (click)="switchTab('SYSTEM_REPORTS')">
 
         <span>▤</span>
 
         System Reports
-
-        <small>
-          SOON
-        </small>
 
       </button>
 
@@ -192,7 +178,9 @@
         </p>
 
         <h2>
-          Dashboard
+          @if (currentTab === 'VERIFICATIONS') { Professional Verifications }
+          @else if (currentTab === 'USER_MANAGEMENT') { User Management }
+          @else if (currentTab === 'SYSTEM_REPORTS') { System Reports }
         </h2>
 
       </div>
@@ -208,6 +196,11 @@
 
     </header>
 
+
+    <!-- ===================================================
+         TABS: VERIFICATIONS WORKSPACE
+    ==================================================== -->
+    @if (currentTab === 'VERIFICATIONS') {
 
     <!-- HERO -->
 
@@ -690,6 +683,220 @@
       }
 
     </section>
+
+    }
+
+
+    <!-- ===================================================
+         TABS: USER MANAGEMENT WORKSPACE
+    ==================================================== -->
+    @if (currentTab === 'USER_MANAGEMENT') {
+      <section class="applications-section" style="margin-top: 35px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h2 style="color: #ffffff; margin: 0; font-size: 20px;">User Account Management</h2>
+            <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">Suspend or activate user accounts across all platform roles.</p>
+          </div>
+          <span style="background: rgba(245, 53, 67, 0.1); color: #ff3545; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 800;">
+            {{ users.length }} Account(s)
+          </span>
+        </div>
+
+        @if (successMessage) {
+          <div class="success-message" style="margin-bottom: 18px; display: block; width: 100%;">✓ {{ successMessage }}</div>
+        }
+        @if (errorMessage) {
+          <div class="error-message" style="margin-bottom: 18px; display: block; width: 100%;">{{ errorMessage }}</div>
+        }
+
+        <div class="filter-tabs" style="margin-bottom: 20px;">
+          <button type="button" [class.active]="userFilter === 'ALL'" (click)="loadUsers('ALL')">All Users</button>
+          <button type="button" [class.active]="userFilter === 'VEHICLE_OWNER'" (click)="loadUsers('VEHICLE_OWNER')">Vehicle Owners</button>
+          <button type="button" [class.active]="userFilter === 'DIAGNOSTIC_EXPERT'" (click)="loadUsers('DIAGNOSTIC_EXPERT')">Diagnostic Experts</button>
+          <button type="button" [class.active]="userFilter === 'COMPLIANCE_ADVISOR'" (click)="loadUsers('COMPLIANCE_ADVISOR')">Compliance Advisors</button>
+          <button type="button" [class.active]="userFilter === 'ROADSIDE_RESPONDER'" (click)="loadUsers('ROADSIDE_RESPONDER')">Roadside Responders</button>
+          <button type="button" [class.active]="userFilter === 'ADMIN'" (click)="loadUsers('ADMIN')">Admins</button>
+        </div>
+
+        @if (loadingUsers) {
+          <div class="empty-state">
+            <h3>Loading users registry...</h3>
+          </div>
+        } @else if (users.length === 0) {
+          <div class="empty-state">
+            <h3>No users found matching this role filter</h3>
+          </div>
+        } @else {
+          <div style="overflow-x: auto; background: #0d0e12; border: 1px solid #202127; border-radius: 12px;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; color: #ffffff;">
+              <thead>
+                <tr style="border-bottom: 2px solid #202127; color: #858893;">
+                  <th style="padding: 14px 18px;">User Detail</th>
+                  <th style="padding: 14px 18px;">Contact info</th>
+                  <th style="padding: 14px 18px;">Role</th>
+                  <th style="padding: 14px 18px;">Joined</th>
+                  <th style="padding: 14px 18px;">Status</th>
+                  <th style="padding: 14px 18px; text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (u of users; track u.id) {
+                  <tr style="border-bottom: 1px solid #202127;">
+                    <td style="padding: 14px 18px;">
+                      <strong>{{ u.fullName }}</strong>
+                    </td>
+                    <td style="padding: 14px 18px;">
+                      <span>{{ u.email }}</span><br>
+                      <small style="color: #858893;">{{ u.phone }}</small>
+                    </td>
+                    <td style="padding: 14px 18px;">
+                      <span style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #ff3545;">
+                        {{ u.role.replace('_', ' ') }}
+                      </span>
+                    </td>
+                    <td style="padding: 14px 18px;">
+                      {{ u.createdAt | date:'mediumDate' }}
+                    </td>
+                    <td style="padding: 14px 18px;">
+                      <span [style.color]="u.accountStatus === 'ACTIVE' ? '#28a745' : '#ff3545'" style="font-weight: 800;">
+                        {{ u.accountStatus }}
+                      </span>
+                    </td>
+                    <td style="padding: 14px 18px; text-align: right;">
+                      @if (u.id !== currentUser?.id) {
+                        <button class="review-button" type="button" style="min-height: auto; padding: 6px 12px; font-size: 11px;" [disabled]="updatingUserStatus" (click)="toggleUserStatus(u)">
+                          {{ u.accountStatus === 'ACTIVE' ? 'Suspend' : 'Activate' }}
+                        </button>
+                      } @else {
+                        <span style="color: #858893; font-style: italic; font-size: 12px;">You</span>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
+      </section>
+    }
+
+
+    <!-- ===================================================
+         TABS: SYSTEM REPORTS WORKSPACE
+    ==================================================== -->
+    @if (currentTab === 'SYSTEM_REPORTS') {
+      <section class="applications-section" style="margin-top: 35px;">
+        <div style="margin-bottom: 20px;">
+          <h2 style="color: #ffffff; margin: 0; font-size: 20px;">System Reports & Analytics</h2>
+          <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">View system resource distributions, operational status, and statistics.</p>
+        </div>
+
+        @if (loadingReports) {
+          <div class="empty-state">
+            <h3>Compiling reports...</h3>
+          </div>
+        } @else if (reports) {
+          <div class="summary-grid" style="margin-bottom: 24px;">
+            <div class="summary-card">
+              <span>TOTAL VEHICLES</span>
+              <strong>{{ reports.totalVehicles }}</strong>
+              <small>Vehicles registered on platform</small>
+            </div>
+            <div class="summary-card">
+              <span>TOTAL MAINTENANCE LOGS</span>
+              <strong>{{ reports.totalMaintenance }}</strong>
+              <small>Service logs completed by owners</small>
+            </div>
+            <div class="summary-card">
+              <span>TOTAL EXPENSES RECORDED</span>
+              <strong>{{ reports.expenses.count }}</strong>
+              <small>Expense records filed by owners</small>
+            </div>
+            <div class="summary-card">
+              <span>CUMULATIVE EXPENSES SUM</span>
+              <strong>₹{{ reports.expenses.sum | number }}</strong>
+              <small>Aggregate of owner expenditures</small>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <!-- USER ROLES CARD -->
+            <div style="background: #0d0e12; border: 1px solid #202127; padding: 20px; border-radius: 12px;">
+              <h3 style="color: #ffffff; margin: 0 0 16px; font-size: 16px;">Platform Users Breakdown</h3>
+              <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #202127; padding-bottom: 8px;">
+                  <span>Vehicle Owners</span>
+                  <strong>{{ reports.users.VEHICLE_OWNER }}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #202127; padding-bottom: 8px;">
+                  <span>Diagnostic Experts</span>
+                  <strong>{{ reports.users.DIAGNOSTIC_EXPERT }}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #202127; padding-bottom: 8px;">
+                  <span>Compliance Advisors</span>
+                  <strong>{{ reports.users.COMPLIANCE_ADVISOR }}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #202127; padding-bottom: 8px;">
+                  <span>Roadside Responders</span>
+                  <strong>{{ reports.users.ROADSIDE_RESPONDER }}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; padding-bottom: 4px;">
+                  <span>Platform Administrators</span>
+                  <strong>{{ reports.users.ADMIN }}</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- COMPLIANCE & ROADSIDE CARD -->
+            <div style="background: #0d0e12; border: 1px solid #202127; padding: 20px; border-radius: 12px;">
+              <h3 style="color: #ffffff; margin: 0 0 16px; font-size: 16px;">Compliance & Support Status</h3>
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 13px;">
+                <div>
+                  <strong style="color: #f53543; display: block; margin-bottom: 8px; font-size: 11px;">VEHICLE DOCUMENTS</strong>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span>Pending:</span>
+                    <strong>{{ reports.documents.PENDING }}</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span>Approved:</span>
+                    <strong>{{ reports.documents.APPROVED }}</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span>Rejected:</span>
+                    <strong>{{ reports.documents.REJECTED }}</strong>
+                  </div>
+                </div>
+
+                <div>
+                  <strong style="color: #f53543; display: block; margin-bottom: 8px; font-size: 11px;">ROADSIDE ASSISTANCES</strong>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span>Pending:</span>
+                    <strong>{{ reports.roadside.PENDING }}</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span>Accepted:</span>
+                    <strong>{{ reports.roadside.ACCEPTED }}</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span>In Progress:</span>
+                    <strong>{{ reports.roadside.IN_PROGRESS }}</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <span>Completed:</span>
+                    <strong>{{ reports.roadside.COMPLETED }}</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between;">
+                    <span>Cancelled:</span>
+                    <strong>{{ reports.roadside.CANCELLED }}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </section>
+    }
 
 
     <footer class="footer">

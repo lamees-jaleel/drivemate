@@ -90,8 +90,18 @@ export class Expenses
     Expense[] = [];
 
 
-  vehicleId =
-    0;
+  vehicles:
+    Vehicle[] = [];
+
+
+  showVehicleSelector =
+    false;
+
+
+  vehicleId = 0;
+
+  isDirectRoute = false;
+
 
 
   loading =
@@ -364,12 +374,24 @@ export class Expenses
 
   ngOnInit(): void {
 
+    const idParam =
+      this.route.snapshot.paramMap.get('id');
+
+
+    if (!idParam) {
+      this.isDirectRoute = false;
+
+      this.loadAllVehicles();
+
+      return;
+
+    }
+
+
+    this.isDirectRoute = true;
+
     const id =
-      Number(
-        this.route.snapshot
-          .paramMap
-          .get('id')
-      );
+      Number(idParam);
 
 
     if (
@@ -379,13 +401,7 @@ export class Expenses
       id <= 0
     ) {
 
-      this.loading =
-        false;
-
-
-      this.pageErrorMessage =
-        'Invalid vehicle ID.';
-
+      this.loadAllVehicles();
 
       return;
 
@@ -401,9 +417,105 @@ export class Expenses
   }
 
 
+  loadAllVehicles(): void {
+
+    this.loading =
+      true;
+
+
+    this.vehicleService
+      .getMyVehicles()
+      .subscribe({
+
+        next: response => {
+
+          this.vehicles =
+            response.vehicles;
+
+
+          if (
+            this.vehicles.length ===
+            0
+          ) {
+
+            this.pageErrorMessage =
+              'You do not have any registered vehicles yet.';
+
+            this.loading =
+              false;
+
+          }
+
+          else if (
+            this.vehicles.length ===
+            1
+          ) {
+
+            this.vehicleId =
+              this.vehicles[0].id;
+
+            this.loadVehicle();
+
+          }
+
+          else {
+
+            this.showVehicleSelector =
+              true;
+
+            this.loading =
+              false;
+
+          }
+
+        },
+
+
+        error: (
+          err: HttpErrorResponse
+        ) => {
+
+          this.loading =
+            false;
+
+
+          this.pageErrorMessage =
+            'Unable to load your vehicles. Please try again.';
+
+        }
+
+      });
+
+  }
+
+
+  selectVehicle(
+    vehicleId: number
+  ): void {
+
+    this.vehicleId =
+      vehicleId;
+
+
+    this.showVehicleSelector =
+      false;
+
+
+    this.loadVehicle();
+
+  }
+
+
   /* =======================================================
      LOAD VEHICLE
   ======================================================= */
+
+  
+  clearSelection(): void {
+    this.vehicle = null;
+    this.vehicleId = 0;
+    this.showVehicleSelector = true;
+  }
 
   private loadVehicle():
     void {
@@ -424,11 +536,38 @@ export class Expenses
             response.vehicle;
 
 
-          this.f.odometerKm
-            .setValue(
-              response.vehicle
-                .odometerKm
+          const fuelCategory =
+            this.categories.find(
+              c =>
+                c.value ===
+                'FUEL'
             );
+
+
+          if (fuelCategory) {
+
+            if (
+              this.vehicle &&
+              this.vehicle.fuelType ===
+              'ELECTRIC'
+            ) {
+
+              fuelCategory.label =
+                'Charging';
+
+            }
+
+            else {
+
+              fuelCategory.label =
+                'Fuel';
+
+            }
+
+          }
+
+
+
 
 
           this.loadExpenses();
@@ -708,8 +847,6 @@ export class Expenses
                 '',
 
               odometerKm:
-                this.vehicle
-                  ?.odometerKm ??
                 null,
 
               merchant:

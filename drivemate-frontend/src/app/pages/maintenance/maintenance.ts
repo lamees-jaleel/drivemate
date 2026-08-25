@@ -5,6 +5,10 @@ import {
 } from '@angular/core';
 
 import {
+  NgClass
+} from '@angular/common';
+
+import {
   AbstractControl,
   FormBuilder,
   ReactiveFormsModule,
@@ -37,6 +41,13 @@ import {
   MaintenanceType
 } from '../../services/maintenance.service';
 
+import {
+  DiagnosticService,
+  DiagnosticRequest,
+  DiagnosticConcernType,
+  DiagnosticUrgency
+} from '../../services/diagnostic.service';
+
 
 @Component({
   selector:
@@ -47,7 +58,8 @@ import {
 
   imports: [
     ReactiveFormsModule,
-    RouterLink
+    RouterLink,
+    NgClass
   ],
 
   templateUrl:
@@ -83,6 +95,10 @@ export class Maintenance
     inject(AuthService);
 
 
+  private readonly diagnosticService =
+    inject(DiagnosticService);
+
+
   vehicle:
     Vehicle |
     null = null;
@@ -92,8 +108,42 @@ export class Maintenance
     MaintenanceRecord[] = [];
 
 
-  vehicleId =
-    0;
+  vehicles:
+    Vehicle[] = [];
+
+
+  showVehicleSelector =
+    false;
+
+
+  activeTab: 'logs' | 'bookings' =
+    'logs';
+
+
+  bookings:
+    DiagnosticRequest[] = [];
+
+
+  loadingBookings =
+    false;
+
+
+  bookingSubmitting =
+    false;
+
+
+  bookingSuccess =
+    '';
+
+
+  bookingError =
+    '';
+
+
+  vehicleId = 0;
+
+  isDirectRoute = false;
+
 
 
   loading =
@@ -271,6 +321,51 @@ export class Maintenance
     });
 
 
+  bookingForm =
+    this.formBuilder.group({
+
+      title: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(120)
+        ]
+      ],
+
+      concernType: [
+        '',
+        Validators.required
+      ],
+
+      urgency: [
+        'NORMAL',
+        Validators.required
+      ],
+
+      providerType: [
+        'AUTHORIZED',
+        Validators.required
+      ],
+
+      shopName: [
+        ''
+      ],
+
+      symptoms: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(1500)
+        ]
+      ],
+
+      odometerKm: [
+        null as number | null
+      ]
+
+    });
+
+
   get f() {
 
     return this.maintenanceForm
@@ -322,12 +417,24 @@ export class Maintenance
 
   ngOnInit(): void {
 
+    const idParam =
+      this.route.snapshot.paramMap.get('id');
+
+
+    if (!idParam) {
+      this.isDirectRoute = false;
+
+      this.loadAllVehicles();
+
+      return;
+
+    }
+
+
+    this.isDirectRoute = true;
+
     const id =
-      Number(
-        this.route.snapshot
-          .paramMap
-          .get('id')
-      );
+      Number(idParam);
 
 
     if (
@@ -337,13 +444,7 @@ export class Maintenance
       id <= 0
     ) {
 
-      this.loading =
-        false;
-
-
-      this.pageErrorMessage =
-        'Invalid vehicle ID.';
-
+      this.loadAllVehicles();
 
       return;
 
@@ -359,9 +460,105 @@ export class Maintenance
   }
 
 
+  loadAllVehicles(): void {
+
+    this.loading =
+      true;
+
+
+    this.vehicleService
+      .getMyVehicles()
+      .subscribe({
+
+        next: response => {
+
+          this.vehicles =
+            response.vehicles;
+
+
+          if (
+            this.vehicles.length ===
+            0
+          ) {
+
+            this.pageErrorMessage =
+              'You do not have any registered vehicles yet.';
+
+            this.loading =
+              false;
+
+          }
+
+          else if (
+            this.vehicles.length ===
+            1
+          ) {
+
+            this.vehicleId =
+              this.vehicles[0].id;
+
+            this.loadVehicle();
+
+          }
+
+          else {
+
+            this.showVehicleSelector =
+              true;
+
+            this.loading =
+              false;
+
+          }
+
+        },
+
+
+        error: (
+          err: HttpErrorResponse
+        ) => {
+
+          this.loading =
+            false;
+
+
+          this.pageErrorMessage =
+            'Unable to load your vehicles. Please try again.';
+
+        }
+
+      });
+
+  }
+
+
+  selectVehicle(
+    vehicleId: number
+  ): void {
+
+    this.vehicleId =
+      vehicleId;
+
+
+    this.showVehicleSelector =
+      false;
+
+
+    this.loadVehicle();
+
+  }
+
+
   /* =======================================================
      LOAD VEHICLE
   ======================================================= */
+
+  
+  clearSelection(): void {
+    this.vehicle = null;
+    this.vehicleId = 0;
+    this.showVehicleSelector = true;
+  }
 
   private loadVehicle():
     void {
@@ -396,6 +593,9 @@ export class Maintenance
 
 
           this.loadMaintenance();
+
+
+          this.loadBookings();
 
         },
 
@@ -880,6 +1080,229 @@ export class Maintenance
         ?.label ??
       type
     );
+
+  }
+
+
+  /* =======================================================
+     LIVE MAINTENANCE BOOKINGS
+  ======================================================= */
+
+  setTab(tab: 'logs' | 'bookings'): void {
+
+    this.activeTab = tab;
+
+
+    if (tab === 'bookings') {
+
+      this.loadBookings();
+
+    }
+
+  }
+
+
+  loadBookings(): void {
+
+    if (!this.vehicleId) return;
+
+
+    this.loadingBookings = true;
+
+
+    this.diagnosticService
+      .getVehicleRequests(this.vehicleId)
+      .subscribe({
+
+        next: response => {
+
+          this.bookings = response.requests;
+
+          this.loadingBookings = false;
+
+        },
+
+
+        error: () => {
+
+          this.loadingBookings = false;
+
+        }
+
+      });
+
+  }
+
+
+  submitBooking(): void {
+
+    if (this.bookingForm.invalid) {
+
+      this.bookingForm.markAllAsTouched();
+
+      return;
+
+    }
+
+
+    this.bookingSubmitting = true;
+
+    this.bookingSuccess = '';
+
+    this.bookingError = '';
+
+
+    const v = this.bookingForm.value;
+
+    const payload = {
+      title:        v.title ?? '',
+      concernType:  v.concernType as any,
+      urgency:      (v.urgency ?? 'NORMAL') as any,
+      providerType: (v.providerType ?? 'DRIVEMATE_EXPERT') as any,
+      shopName:     v.shopName?.trim() || undefined,
+      symptoms:     v.symptoms ?? '',
+      odometerKm:   v.odometerKm ? Number(v.odometerKm) : undefined
+    };
+
+
+    this.diagnosticService
+      .bookSlot(this.vehicleId, payload)
+      .subscribe({
+
+        next: response => {
+
+          this.bookingSuccess = 'Your maintenance slot booking was successfully submitted! A provider will accept it shortly.';
+
+          this.bookingForm.reset({
+            urgency: 'NORMAL',
+            providerType: 'DRIVEMATE_EXPERT'
+          });
+
+          this.loadBookings();
+
+          this.bookingSubmitting = false;
+
+        },
+
+
+        error: () => {
+
+          this.bookingError = 'Failed to book slot. Please try again later.';
+
+          this.bookingSubmitting = false;
+
+        }
+
+      });
+
+  }
+
+
+  getConcernLabel(type: string): string {
+
+    return type
+      .replace(/_/g, ' ')
+      .split(' ')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ');
+
+  }
+
+
+  getProviderTypeLabel(type: string): string {
+
+    switch (type) {
+
+      case 'AUTHORIZED_DEALER':
+        return '🏢 Authorised Dealer';
+
+      case 'LOCAL_SHOP':
+        return '🔧 Local Shop';
+
+      case 'MOBILE_MECHANIC':
+        return '🚐 Mobile Mechanic';
+
+      case 'DRIVEMATE_EXPERT':
+        return '⭐ DriveMate Expert';
+
+      default:
+        return type;
+
+    }
+
+  }
+
+
+  getProviderTypeClass(type: string): string {
+
+    switch (type) {
+
+      case 'AUTHORIZED_DEALER':
+        return 'provider-authorized';
+
+      case 'LOCAL_SHOP':
+        return 'provider-local';
+
+      case 'MOBILE_MECHANIC':
+        return 'provider-mobile';
+
+      case 'DRIVEMATE_EXPERT':
+        return 'provider-drivemate';
+
+      default:
+        return '';
+
+    }
+
+  }
+
+  getUrgencyClass(urgency: string): string {
+
+    switch (urgency) {
+
+      case 'LOW':
+        return 'urgency-low';
+
+      case 'NORMAL':
+        return 'urgency-normal';
+
+      case 'HIGH':
+        return 'urgency-high';
+
+      case 'CRITICAL':
+        return 'urgency-critical';
+
+      default:
+        return 'urgency-normal';
+
+    }
+
+  }
+
+
+  getStatusClass(status: string): string {
+
+    switch (status) {
+
+      case 'PENDING':
+        return 'status-pending';
+
+      case 'ACCEPTED':
+        return 'status-accepted';
+
+      case 'IN_PROGRESS':
+        return 'status-inprogress';
+
+      case 'COMPLETED':
+        return 'status-completed';
+
+      case 'CANCELLED':
+        return 'status-cancelled';
+
+      default:
+        return 'status-pending';
+
+    }
 
   }
 

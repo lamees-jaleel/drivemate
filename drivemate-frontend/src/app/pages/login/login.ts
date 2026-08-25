@@ -1,8 +1,5 @@
 import {
-  AfterViewInit,
   Component,
-  ElementRef,
-  ViewChild,
   inject
 } from '@angular/core';
 
@@ -46,55 +43,6 @@ interface LoginResponse {
 }
 
 
-interface GoogleCredentialResponse {
-
-  credential: string;
-
-  select_by?: string;
-
-}
-
-
-interface GoogleIdentityApi {
-
-  initialize(config: {
-    client_id: string;
-    callback: (
-      response: GoogleCredentialResponse
-    ) => void;
-  }): void;
-
-  renderButton(
-    parent: HTMLElement,
-    options: {
-      type: 'standard';
-      theme: 'outline' | 'filled_blue' | 'filled_black';
-      size: 'large' | 'medium' | 'small';
-      text: 'signin_with' | 'signup_with' | 'continue_with';
-      shape: 'rectangular' | 'pill';
-      logo_alignment: 'left' | 'center';
-      width: number;
-    }
-  ): void;
-
-}
-
-
-declare global {
-
-  interface Window {
-
-    google?: {
-      accounts: {
-        id: GoogleIdentityApi;
-      };
-    };
-
-  }
-
-}
-
-
 @Component({
   selector: 'app-login',
 
@@ -111,8 +59,7 @@ declare global {
   styleUrl:
     './login.css'
 })
-export class Login
-  implements AfterViewInit {
+export class Login {
 
   private readonly formBuilder =
     inject(FormBuilder);
@@ -130,13 +77,6 @@ export class Login
     inject(AuthService);
 
 
-  @ViewChild(
-    'googleButton'
-  )
-  private googleButton?:
-    ElementRef<HTMLDivElement>;
-
-
   submitted =
     false;
 
@@ -147,18 +87,6 @@ export class Login
 
   isSubmitting =
     false;
-
-
-  isGoogleSubmitting =
-    false;
-
-
-  googleErrorMessage =
-    '';
-
-
-  private googleRenderAttempts =
-    0;
 
 
   loginForm =
@@ -182,16 +110,7 @@ export class Login
           Validators.required
         ]
       ]
-
     });
-
-
-  ngAfterViewInit():
-    void {
-
-    this.renderGoogleButton();
-
-  }
 
 
   get f() {
@@ -340,201 +259,6 @@ export class Login
 
 
   /* =======================================================
-     GOOGLE BUTTON
-  ======================================================= */
-
-  private renderGoogleButton():
-    void {
-
-    const host =
-      this.googleButton
-        ?.nativeElement;
-
-
-    if (!host) {
-
-      return;
-
-    }
-
-
-    const clientId =
-      document
-        .querySelector<HTMLMetaElement>(
-          'meta[name="google-client-id"]'
-        )
-        ?.content
-        .trim() ??
-      '';
-
-
-    if (
-      !clientId ||
-      clientId ===
-        'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com'
-    ) {
-
-      this.googleErrorMessage =
-        'Google Sign-In is not configured yet.';
-
-      return;
-
-    }
-
-
-    if (!window.google?.accounts?.id) {
-
-      if (
-        this.googleRenderAttempts <
-        20
-      ) {
-
-        this.googleRenderAttempts +=
-          1;
-
-
-        window.setTimeout(
-          () =>
-            this.renderGoogleButton(),
-          250
-        );
-
-        return;
-
-      }
-
-
-      this.googleErrorMessage =
-        'Unable to load Google Sign-In. Please refresh the page.';
-
-      return;
-
-    }
-
-
-    this.googleErrorMessage =
-      '';
-
-
-    host.innerHTML =
-      '';
-
-
-    window.google.accounts.id.initialize({
-
-      client_id:
-        clientId,
-
-      callback:
-        response =>
-          this.handleGoogleCredential(
-            response
-          )
-
-    });
-
-
-    window.google.accounts.id.renderButton(
-      host,
-      {
-        type: 'standard',
-        theme: 'outline',
-        size: 'large',
-        text: 'continue_with',
-        shape: 'rectangular',
-        logo_alignment: 'left',
-        width: 400
-      }
-    );
-
-  }
-
-
-  private handleGoogleCredential(
-    response: GoogleCredentialResponse
-  ): void {
-
-    if (
-      this.isGoogleSubmitting ||
-      !response.credential
-    ) {
-
-      return;
-
-    }
-
-
-    this.googleErrorMessage =
-      '';
-
-
-    this.isGoogleSubmitting =
-      true;
-
-
-    this.http
-      .post<LoginResponse>(
-
-        'http://localhost:5000/api/auth/google',
-
-        {
-          credential:
-            response.credential
-        }
-
-      )
-      .subscribe({
-
-        next: loginResponse => {
-
-          this.isGoogleSubmitting =
-            false;
-
-
-          this.authService
-            .saveSession(
-
-              loginResponse.token,
-
-              loginResponse.user
-
-            );
-
-
-          this.redirectUser(
-            loginResponse.user.role
-          );
-
-        },
-
-
-        error: (
-          error:
-            HttpErrorResponse
-        ) => {
-
-          this.isGoogleSubmitting =
-            false;
-
-
-          console.error(
-            'DriveMate Google login failed:',
-            error
-          );
-
-
-          this.googleErrorMessage =
-            error.error?.message ||
-            'Unable to continue with Google. Please try again.';
-
-        }
-
-      });
-
-  }
-
-
-  /* =======================================================
      ROLE-BASED DASHBOARD REDIRECT
   ======================================================= */
 
@@ -614,10 +338,6 @@ export class Login
   }
 
 
-  /* =======================================================
-     EMAIL / PASSWORD LOGIN
-  ======================================================= */
-
   submit():
     void {
 
@@ -666,6 +386,9 @@ export class Login
       '';
 
 
+    const rememberMe = true;
+
+
     const loginPayload = {
 
       email,
@@ -704,7 +427,9 @@ export class Login
 
               response.token,
 
-              response.user
+              response.user,
+
+              rememberMe
 
             );
 

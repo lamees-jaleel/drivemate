@@ -18,18 +18,23 @@
 
 
     @if (vehicle) {
-
-      <a
-        class="back-link"
-        [routerLink]="[
-          '/owner-dashboard/vehicles',
-          vehicle.id
-        ]">
-
-        ← Vehicle Details
-
-      </a>
-
+      @if (isDirectRoute) {
+        <a class="back-link" [routerLink]="['/owner-dashboard/vehicles', vehicle.id]">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+          <span>Vehicle Details</span>
+        </a>
+      } @else {
+        <button class="back-link" type="button" (click)="clearSelection()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+          <span>Back to Select Vehicle</span>
+        </button>
+      }
     }
 
   </header>
@@ -85,6 +90,92 @@
           Back to My Vehicles
 
         </a>
+
+      </section>
+
+    }
+
+
+    <!-- ===================================================
+         VEHICLE SELECTOR
+    ==================================================== -->
+
+    @if (
+      !loading &&
+      !pageErrorMessage &&
+      showVehicleSelector
+    ) {
+
+      <section class="vehicle-selector-centered">
+
+        <div class="selector-container">
+
+          <span class="eyebrow">
+            VEHICLE CARE
+          </span>
+
+          <h1>
+            Select a
+            <span>
+              Vehicle.
+            </span>
+          </h1>
+
+          <p class="selector-desc">
+            Choose a vehicle from your garage to manage its maintenance logs, service history, and diagnostic records.
+          </p>
+
+
+          <div class="vehicle-selector-grid">
+
+            @for (v of vehicles; track v.id) {
+
+              <button
+                class="vehicle-select-card"
+                type="button"
+                (click)="selectVehicle(v.id)">
+
+                <div class="card-visual">
+                  @if (v.vehicleImagePath && !v.vehicleImagePath.startsWith('placeholder:')) {
+                    <img [src]="'http://localhost:5000/' + v.vehicleImagePath" alt="Vehicle Image" />
+                  }
+                  @else {
+                    <svg viewBox="0 0 100 50" class="vehicle-svg-icon" fill="currentColor">
+                      <circle cx="25" cy="38" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                      <circle cx="75" cy="38" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                      <path d="M 12 38 L 15 22 H 40 L 50 16 H 75 L 88 30 L 88 38 Z" fill="#ef3038" opacity="0.9"/>
+                    </svg>
+                  }
+                </div>
+
+                <div class="card-info">
+                  <span class="reg">{{ v.registrationNumber }}</span>
+                  <h3>{{ v.make }} {{ v.model }}</h3>
+                  @if (v.variant) {
+                    <small>{{ v.variant }}</small>
+                  }
+                </div>
+
+              </button>
+
+            }
+
+          </div>
+
+
+          <div class="selector-actions">
+
+            <a class="back-link" routerLink="/owner-dashboard">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+              <span>Back to Dashboard</span>
+            </a>
+
+          </div>
+
+        </div>
 
       </section>
 
@@ -166,6 +257,39 @@
         </div>
 
       </section>
+
+
+      <!-- ===============================================
+           TABS SELECTOR
+      ================================================ -->
+
+      <div class="maintenance-tabs" id="tabs-section">
+
+        <button
+          class="tab-btn"
+          [class.active]="activeTab === 'logs'"
+          type="button"
+          (click)="setTab('logs')">
+
+          ⚙ Service History Logs
+
+        </button>
+
+
+        <button
+          class="tab-btn"
+          [class.active]="activeTab === 'bookings'"
+          type="button"
+          (click)="setTab('bookings')">
+
+          📅 Provider Slot Bookings
+
+        </button>
+
+      </div>
+
+
+      @if (activeTab === 'logs') {
 
 
       <!-- ===============================================
@@ -623,7 +747,7 @@
            HISTORY
       ================================================ -->
 
-      <section class="history-section">
+      <section class="history-section" id="history-section-target">
 
         <div class="history-heading">
 
@@ -856,6 +980,302 @@
         }
 
       </section>
+
+      }
+
+
+      @if (activeTab === 'bookings') {
+
+        <!-- BOOKING FORM -->
+        <section class="form-card" id="bookings-section-target">
+
+          <div class="section-heading">
+            <span class="section-number">01</span>
+            <div>
+              <p>MAINTENANCE SLOT BOOKING</p>
+              <h2>Book Service Slot</h2>
+            </div>
+          </div>
+
+          @if (bookingSuccess) {
+            <div class="success-message">
+              ✓ {{ bookingSuccess }}
+            </div>
+          }
+
+          @if (bookingError) {
+            <div class="error-message">
+              {{ bookingError }}
+            </div>
+          }
+
+          <form [formGroup]="bookingForm" (ngSubmit)="submitBooking()" novalidate>
+
+            <div class="form-grid">
+
+              <!-- TITLE -->
+              <div class="form-field">
+                <label for="bookingTitle">Request Title <span>*</span></label>
+                <input id="bookingTitle" type="text" formControlName="title" placeholder="e.g. Annual oil change or Squeaky brakes" />
+                @if (bookingForm.get('title')?.touched && bookingForm.get('title')?.invalid) {
+                  <span class="field-error">Please enter a descriptive title.</span>
+                }
+              </div>
+
+              <!-- CONCERN TYPE -->
+              <div class="form-field">
+                <label for="concernType">Concern Area <span>*</span></label>
+                <select id="concernType" formControlName="concernType">
+                  <option value="">Select concern area</option>
+                  <option value="ENGINE">Engine & Powertrain</option>
+                  <option value="TRANSMISSION">Transmission & Gearbox</option>
+                  <option value="BRAKES">Braking System</option>
+                  <option value="ELECTRICAL">Electrical & Wiring</option>
+                  <option value="BATTERY">Battery & Charging</option>
+                  <option value="TYRES_SUSPENSION">Tyres & Suspension</option>
+                  <option value="OVERHEATING">Overheating Problems</option>
+                  <option value="WARNING_LIGHT">Dashboard Warning Light</option>
+                  <option value="NOISE_VIBRATION">Unusual Noise / Vibration</option>
+                  <option value="FUEL_EFFICIENCY">Fuel / Charging Efficiency</option>
+                </select>
+                @if (bookingForm.get('concernType')?.touched && bookingForm.get('concernType')?.invalid) {
+                  <span class="field-error">Please select a concern area.</span>
+                }
+              </div>
+
+              <!-- URGENCY -->
+              <div class="form-field">
+                <label for="urgency">Urgency Level <span>*</span></label>
+                <select id="urgency" formControlName="urgency">
+                  <option value="LOW">Low - Routine check</option>
+                  <option value="NORMAL">Normal - Standard service</option>
+                  <option value="HIGH">High - Needs prompt attention</option>
+                  <option value="CRITICAL">Critical - Do not drive</option>
+                </select>
+              </div>
+
+              <!-- CURRENT ODOMETER -->
+              <div class="form-field">
+                <label for="bookingOdometer">Odometer Reading (KM)</label>
+                <input id="bookingOdometer" type="number" formControlName="odometerKm" placeholder="e.g. 45000" />
+              </div>
+
+            <!-- SERVICE PROVIDER TYPE — full-width card picker -->
+            <div class="form-field full-width">
+              <label>Where do you want the service done? <span>*</span></label>
+              <div class="provider-type-grid">
+
+                <label class="provider-card" [class.selected]="bookingForm.get('providerType')?.value === 'AUTHORIZED_DEALER'">
+                  <input type="radio" formControlName="providerType" value="AUTHORIZED_DEALER" />
+                  <span class="provider-icon">🏢</span>
+                  <strong>Authorised Dealer</strong>
+                  <p>Official brand service centre for your vehicle (warranty-safe)</p>
+                </label>
+
+                <label class="provider-card" [class.selected]="bookingForm.get('providerType')?.value === 'LOCAL_SHOP'">
+                  <input type="radio" formControlName="providerType" value="LOCAL_SHOP" />
+                  <span class="provider-icon">🔧</span>
+                  <strong>Local Shop</strong>
+                  <p>Trusted neighbourhood garage or multi-brand workshop</p>
+                </label>
+
+                <label class="provider-card" [class.selected]="bookingForm.get('providerType')?.value === 'MOBILE_MECHANIC'">
+                  <input type="radio" formControlName="providerType" value="MOBILE_MECHANIC" />
+                  <span class="provider-icon">🚐</span>
+                  <strong>Mobile Mechanic</strong>
+                  <p>On-demand mechanic who comes to your location</p>
+                </label>
+
+                <label class="provider-card" [class.selected]="bookingForm.get('providerType')?.value === 'DRIVEMATE_EXPERT'">
+                  <input type="radio" formControlName="providerType" value="DRIVEMATE_EXPERT" />
+                  <span class="provider-icon">⭐</span>
+                  <strong>DriveMate Expert</strong>
+                  <p>Routed to a certified expert registered on our platform</p>
+                </label>
+
+              </div>
+            </div>
+
+            <!-- SHOP / DEALER NAME — shown only when not using DriveMate Expert -->
+            @if (
+              bookingForm.get('providerType')?.value === 'AUTHORIZED_DEALER' ||
+              bookingForm.get('providerType')?.value === 'LOCAL_SHOP' ||
+              bookingForm.get('providerType')?.value === 'MOBILE_MECHANIC'
+            ) {
+              <div class="form-field full-width">
+                <label for="shopName">
+                  @if (bookingForm.get('providerType')?.value === 'AUTHORIZED_DEALER') {
+                    Dealer / Service Centre Name
+                  } @else if (bookingForm.get('providerType')?.value === 'LOCAL_SHOP') {
+                    Shop / Garage Name
+                  } @else {
+                    Mechanic / Service Name (optional)
+                  }
+                </label>
+                <input
+                  id="shopName"
+                  type="text"
+                  formControlName="shopName"
+                  placeholder="e.g. Maruti Arena Indiranagar or Raju Auto Works" />
+              </div>
+            }
+
+            <!-- SYMPTOMS -->
+            <div class="form-field full-width">
+              <label for="symptoms">Describe Issues / Symptoms <span>*</span></label>
+              <textarea id="symptoms" formControlName="symptoms" placeholder="Describe the vehicle symptoms, noises, or services needed in detail..."></textarea>
+              @if (bookingForm.get('symptoms')?.touched && bookingForm.get('symptoms')?.invalid) {
+                <span class="field-error">Please describe the symptoms in detail.</span>
+              }
+            </div>
+
+            </div>
+
+            <div class="form-actions">
+              <button class="save-button" type="submit" [disabled]="bookingSubmitting">
+                {{ bookingSubmitting ? 'Booking Slot...' : 'Book Maintenance Slot' }}
+              </button>
+            </div>
+
+          </form>
+
+        </section>
+
+        <!-- BOOKINGS HISTORY / TRACKER -->
+        <section class="history-section">
+
+          <div class="history-heading">
+            <div>
+              <p class="eyebrow">SLOT STATUS TRACKER</p>
+              <h2>Active Bookings & Provider Updates</h2>
+            </div>
+            <span class="record-badge">{{ bookings.length }}</span>
+          </div>
+
+          @if (loadingBookings) {
+            <div class="empty-history">
+              <h3>Loading bookings...</h3>
+            </div>
+          }
+          @else if (bookings.length === 0) {
+            <div class="empty-history">
+              <div class="empty-icon">📅</div>
+              <h3>No bookings found</h3>
+              <p>Book your first maintenance slot above to get updates from service providers.</p>
+            </div>
+          }
+          @else {
+
+            <div class="history-list">
+
+              @for (b of bookings; track b.id) {
+
+                <article class="history-card">
+
+                  <div class="history-icon" [ngClass]="getUrgencyClass(b.urgency)">
+                    ⚙
+                  </div>
+
+                  <div class="history-content">
+
+                    <div class="history-top">
+
+                      <div>
+                        <span class="type">{{ getConcernLabel(b.concernType) }}</span>
+                        <h3>{{ b.title }}</h3>
+                      </div>
+
+                      <span class="booking-status-badge" [ngClass]="getStatusClass(b.status)">
+                        {{ b.status }}
+                      </span>
+
+                    </div>
+
+                    <div class="booking-symptoms">
+                      <strong>Symptoms:</strong>
+                      <p>{{ b.symptoms }}</p>
+                    </div>
+
+                    <div class="history-details">
+
+                      <div>
+                        <span>BOOKED ON</span>
+                        <strong>{{ formatDate(b.createdAt) }}</strong>
+                      </div>
+
+                      @if (b.odometerKm) {
+                        <div>
+                          <span>ODOMETER</span>
+                          <strong>{{ b.odometerKm }} KM</strong>
+                        </div>
+                      }
+
+                      <!-- PROVIDER TYPE -->
+                      <div>
+                        <span>SERVICE PROVIDER</span>
+                        <strong [ngClass]="getProviderTypeClass(b.providerType)">
+                          {{ getProviderTypeLabel(b.providerType) }}
+                        </strong>
+                      </div>
+
+                      <!-- SHOP / DEALER NAME -->
+                      @if (b.shopName) {
+                        <div>
+                          <span>
+                            @if (b.providerType === 'AUTHORIZED_DEALER') { DEALER } @else { SHOP / GARAGE }
+                          </span>
+                          <strong>{{ b.shopName }}</strong>
+                        </div>
+                      }
+
+                      <!-- ASSIGNED DRIVEMATE EXPERT (if platform-routed) -->
+                      @if (b.providerType === 'DRIVEMATE_EXPERT') {
+                        @if (b.expert) {
+                          <div>
+                            <span>ASSIGNED EXPERT</span>
+                            <strong>{{ b.expert.name }} ({{ b.expert.email }})</strong>
+                          </div>
+                        } @else {
+                          <div>
+                            <span>ASSIGNED EXPERT</span>
+                            <strong class="waiting-text">Waiting for an expert to accept...</strong>
+                          </div>
+                        }
+                      }
+
+                    </div>
+
+                    <!-- SHOW TIME UPDATES -->
+                    @if (b.acceptedAt || b.startedAt || b.completedAt) {
+                      <div class="booking-timeline">
+                        <span>LIVE TRACKING:</span>
+                        <ul>
+                          @if (b.acceptedAt) {
+                            <li>✓ Accepted on {{ formatDate(b.acceptedAt) }}</li>
+                          }
+                          @if (b.startedAt) {
+                            <li>⚙ Service started on {{ formatDate(b.startedAt) }}</li>
+                          }
+                          @if (b.completedAt) {
+                            <li>✓ Completed on {{ formatDate(b.completedAt) }}</li>
+                          }
+                        </ul>
+                      </div>
+                    }
+
+                  </div>
+
+                </article>
+
+              }
+
+            </div>
+
+          }
+
+        </section>
+
+      }
 
     }
 

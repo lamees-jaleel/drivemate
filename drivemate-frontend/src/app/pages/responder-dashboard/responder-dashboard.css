@@ -1310,3 +1310,53 @@ a {
   }
 
 }
+
+
+/* =========================================================
+   GPS SIMULATED MAP ANIMATIONS & STYLES
+   ========================================================= */
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.primary-button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  border-radius: 6px;
+  color: #ffffff;
+  background: #f53543;
+  font-size: 12px;
+  font-weight: 800;
+  transition: background 0.15s;
+}
+
+.primary-button:hover {
+  background: #ff4553;
+}
+
+.primary-button.compact {
+  min-height: 34px;
+  padding: 0 14px;
+}
+
+.nav-item {
+  cursor: pointer !important;
+}

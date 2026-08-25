@@ -81,7 +81,11 @@
       routerLink="/"
       class="back-link"
     >
-      ← Back to Home
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Back to Home</span>
     </a>
 
 
@@ -96,7 +100,7 @@
       <header class="form-heading">
 
         <h2>
-          Welcome!
+          Welcome Back
         </h2>
 
         <p>
@@ -107,7 +111,7 @@
 
 
 
-      <!-- EMAIL / PASSWORD FORM -->
+      <!-- FORM -->
 
       <form
         [formGroup]="loginForm"
@@ -276,10 +280,14 @@
 
 
         <!-- =============================================
-             FORGOT PASSWORD
+             REMEMBER + FORGOT
         ============================================== -->
 
         <div class="login-options">
+
+
+
+          <!-- FORGOT PASSWORD -->
 
           <button
             type="button"
@@ -301,92 +309,36 @@
         <button
           type="submit"
           class="signin-button"
-          [disabled]="isSubmitting"
         >
 
           <span>
-            {{
-              isSubmitting
-                ? 'Signing In...'
-                : 'Sign In'
-            }}
+            Sign In
           </span>
 
-          @if (!isSubmitting) {
-
-            <span>
-              →
-            </span>
-
-          }
+          <span>
+            →
+          </span>
 
         </button>
 
+
+
+        <!-- =============================================
+             REGISTER
+        ============================================== -->
+
+        <p class="register-text">
+
+          Don’t have an account?
+
+          <a routerLink="/register">
+            Create one
+          </a>
+
+        </p>
+
+
       </form>
-
-
-
-      <!-- =============================================
-           DIVIDER
-      ============================================== -->
-
-      <div class="auth-divider">
-
-        <span>
-          OR
-        </span>
-
-      </div>
-
-
-
-      <!-- =============================================
-           GOOGLE SIGN IN
-      ============================================== -->
-
-      <div class="google-login">
-
-        <div
-          #googleButton
-          class="google-button-host"
-        ></div>
-
-
-        @if (isGoogleSubmitting) {
-
-          <p class="google-status">
-            Signing in with Google...
-          </p>
-
-        }
-
-
-        @if (googleErrorMessage) {
-
-          <p class="google-error">
-            {{ googleErrorMessage }}
-          </p>
-
-        }
-
-      </div>
-
-
-
-      <!-- =============================================
-           REGISTER
-      ============================================== -->
-
-      <p class="register-text">
-
-        Don’t have an account?
-
-        <a routerLink="/register">
-          Create one
-        </a>
-
-      </p>
-
 
     </div>
 

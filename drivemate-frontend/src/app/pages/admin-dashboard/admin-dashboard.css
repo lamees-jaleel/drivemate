@@ -1629,3 +1629,45 @@ a {
   }
 
 }
+
+
+/* =========================================================
+   USER ROLE FILTER TABS & HELPER STYLES
+   ========================================================= */
+
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-tabs button {
+  background: #0c0d11;
+  border: 1px solid #202127;
+  color: #858893;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-tabs button:hover {
+  border-color: #f53543;
+  color: #ffffff;
+}
+
+.filter-tabs button.active {
+  background: #f53543;
+  color: #ffffff;
+  border-color: #f53543;
+}
+
+.nav-item {
+  cursor: pointer !important;
+}
+
+.review-button {
+  cursor: pointer !important;
+}

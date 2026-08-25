@@ -185,4 +185,23 @@ export class MyVehicles
 
   }
 
+
+  getVehiclePlaceholderType(
+    imagePath: string | null | undefined
+  ): string {
+
+    if (
+      !imagePath ||
+      !imagePath.startsWith('placeholder:')
+    ) {
+
+      return 'CAR';
+
+    }
+
+
+    return imagePath.split(':')[1] || 'CAR';
+
+  }
+
 }

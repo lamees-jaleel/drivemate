@@ -1,719 +1,475 @@
 <div class="expenses-page">
-
   <header class="topbar">
+    <a class="brand" routerLink="/owner-dashboard">
+      <span> Drive </span>
 
-    <a
-      class="brand"
-      routerLink="/owner-dashboard">
-
-      <span>
-        Drive
-      </span>
-
-      <strong>
-        Mate
-      </strong>
-
+      <strong> Mate </strong>
     </a>
 
-
     @if (vehicle) {
-
-      <a
-        class="back-link"
-        [routerLink]="[
-          '/owner-dashboard/vehicles',
-          vehicle.id
-        ]">
-
-        ← Vehicle Details
-
-      </a>
-
+      @if (isDirectRoute) {
+        <a class="back-link" [routerLink]="['/owner-dashboard/vehicles', vehicle.id]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Vehicle Details</span>
+        </a>
+      } @else {
+        <button class="back-link" type="button" (click)="clearSelection()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Select Vehicle</span>
+        </button>
+      }
     }
-
   </header>
 
-
   <main class="page-content">
-
-
     @if (loading) {
-
       <section class="state-card">
+        <span> LOADING </span>
 
-        <span>
-          LOADING
-        </span>
-
-        <h1>
-          Loading vehicle expenses...
-        </h1>
-
+        <h1>Loading vehicle expenses...</h1>
       </section>
-
     }
 
-
-    @if (
-      !loading &&
-      pageErrorMessage
-    ) {
-
+    @if (!loading && pageErrorMessage) {
       <section class="state-card error-state">
-
-        <span>
-          EXPENSES UNAVAILABLE
-        </span>
+        <span> EXPENSES UNAVAILABLE </span>
 
         <h1>
           {{ pageErrorMessage }}
         </h1>
 
-        <a
-          class="primary-button"
-          routerLink="/owner-dashboard/vehicles">
-
-          Back to My Vehicles
-
-        </a>
-
+        <a class="primary-button" routerLink="/owner-dashboard/vehicles"> Back to My Vehicles </a>
       </section>
-
     }
 
+    <!-- ===================================================
+         VEHICLE SELECTOR
+    ==================================================== -->
 
-    @if (
-      !loading &&
-      !pageErrorMessage &&
-      vehicle
-    ) {
+    @if (!loading && !pageErrorMessage && showVehicleSelector) {
+      <section class="vehicle-selector-centered">
+        <div class="selector-container">
+          <span class="eyebrow"> OWNERSHIP COST </span>
 
+          <h1>
+            Select a
+            <span> Vehicle. </span>
+          </h1>
 
+          <p class="selector-desc">
+            Choose a vehicle from your garage to manage its expenses, fuel logs, and ownership
+            costs.
+          </p>
+
+          <div class="vehicle-selector-grid">
+            @for (v of vehicles; track v.id) {
+              <button class="vehicle-select-card" type="button" (click)="selectVehicle(v.id)">
+                <div class="card-visual">
+                  @if (v.vehicleImagePath && !v.vehicleImagePath.startsWith('placeholder:')) {
+                    <img
+                      [src]="'http://localhost:5000/' + v.vehicleImagePath"
+                      alt="Vehicle Image"
+                    />
+                  } @else {
+                    <svg viewBox="0 0 100 50" class="vehicle-svg-icon" fill="currentColor">
+                      <circle
+                        cx="25"
+                        cy="38"
+                        r="8"
+                        fill="#474a54"
+                        stroke="#18191e"
+                        stroke-width="2"
+                      />
+                      <circle
+                        cx="75"
+                        cy="38"
+                        r="8"
+                        fill="#474a54"
+                        stroke="#18191e"
+                        stroke-width="2"
+                      />
+                      <path
+                        d="M 12 38 L 15 22 H 40 L 50 16 H 75 L 88 30 L 88 38 Z"
+                        fill="#ef3038"
+                        opacity="0.9"
+                      />
+                    </svg>
+                  }
+                </div>
+
+                <div class="card-info">
+                  <span class="reg">{{ v.registrationNumber }}</span>
+                  <h3>{{ v.make }} {{ v.model }}</h3>
+                  @if (v.variant) {
+                    <small>{{ v.variant }}</small>
+                  }
+                </div>
+              </button>
+            }
+          </div>
+
+          <div class="selector-actions">
+            <a class="back-link" routerLink="/owner-dashboard">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>Back to Dashboard</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    }
+
+    @if (!loading && !pageErrorMessage && vehicle) {
       <!-- =================================================
            HERO
       ================================================== -->
 
       <section class="hero">
-
         <div>
-
-          <p class="eyebrow">
-            OWNERSHIP COST
-          </p>
-
+          <p class="eyebrow">OWNERSHIP COST</p>
 
           <h1>
-
             {{ vehicle.make }}
 
             <span>
               {{ vehicle.model }}
             </span>
-
           </h1>
 
-
           <p class="registration">
-
             {{ vehicle.registrationNumber }}
 
             @if (vehicle.variant) {
-
               · {{ vehicle.variant }}
-
             }
-
           </p>
-
 
           <p class="hero-copy">
-
-            Track fuel, insurance, tolls,
-            parking and other costs associated
-            with owning your vehicle.
-
+            Track {{ vehicle.fuelType === 'ELECTRIC' ? 'charging' : 'fuel' }}, insurance, tolls,
+            parking and other costs associated with owning your vehicle.
           </p>
-
         </div>
 
-
         <div class="cost-card">
-
-          <span>
-            TOTAL RECORDED
-          </span>
+          <span> TOTAL RECORDED </span>
 
           <strong>
             {{ formatCurrency(totalExpense) }}
           </strong>
-
         </div>
-
       </section>
-
 
       <!-- =================================================
            SUMMARY
       ================================================== -->
 
       <section class="summary-grid">
-
         <article>
-
-          <span>
-            EXPENSE RECORDS
-          </span>
+          <span> EXPENSE RECORDS </span>
 
           <strong>
             {{ expenseCount }}
           </strong>
-
         </article>
 
-
         <article>
-
-          <span>
-            THIS MONTH
-          </span>
+          <span> THIS MONTH </span>
 
           <strong>
             {{ formatCurrency(currentMonthExpense) }}
           </strong>
-
         </article>
 
-
         <article>
-
-          <span>
-            ALL-TIME EXPENSES
-          </span>
+          <span> ALL-TIME EXPENSES </span>
 
           <strong>
             {{ formatCurrency(totalExpense) }}
           </strong>
-
         </article>
-
       </section>
-
 
       <!-- =================================================
            ADD EXPENSE
       ================================================== -->
 
       <section class="form-card">
-
         <div class="section-heading">
-
-          <span class="section-number">
-            01
-          </span>
-
+          <span class="section-number"> 01 </span>
 
           <div>
+            <p>NEW OWNERSHIP COST</p>
 
-            <p>
-              NEW OWNERSHIP COST
-            </p>
-
-            <h2>
-              Add Expense
-            </h2>
-
+            <h2>Add Expense</h2>
           </div>
-
         </div>
 
-
         @if (successMessage) {
-
-          <div class="success-message">
-
-            ✓ {{ successMessage }}
-
-          </div>
-
+          <div class="success-message">✓ {{ successMessage }}</div>
         }
-
 
         @if (formErrorMessage) {
-
           <div class="error-message">
-
             {{ formErrorMessage }}
-
           </div>
-
         }
 
-
-        <form
-          [formGroup]="expenseForm"
-          (ngSubmit)="submit()"
-          novalidate>
-
-
+        <form [formGroup]="expenseForm" (ngSubmit)="submit()" novalidate>
           <div class="form-grid">
-
-
             <div class="form-field">
-
               <label for="category">
-
                 Expense Category
                 <span>*</span>
-
               </label>
 
+              <select id="category" formControlName="category">
+                <option value="">Select expense category</option>
 
-              <select
-                id="category"
-                formControlName="category">
-
-                <option value="">
-                  Select expense category
-                </option>
-
-
-                @for (
-                  category of categories;
-                  track category.value
-                ) {
-
-                  <option
-                    [value]="category.value">
-
+                @for (category of categories; track category.value) {
+                  <option [value]="category.value">
                     {{ category.label }}
-
                   </option>
-
                 }
-
               </select>
 
-
-              @if (
-                showError(
-                  f.category
-                )
-              ) {
-
-                <small class="error">
-                  Select an expense category.
-                </small>
-
+              @if (showError(f.category)) {
+                <small class="error"> Select an expense category. </small>
               }
-
             </div>
 
-
             <div class="form-field">
-
               <label for="title">
-
                 Expense Title
                 <span>*</span>
-
               </label>
-
 
               <input
                 id="title"
                 type="text"
                 maxlength="120"
                 formControlName="title"
-                placeholder="Full tank petrol">
+                placeholder="Full tank petrol"
+              />
 
-
-              @if (
-                showError(
-                  f.title
-                )
-              ) {
-
-                <small class="error">
-                  Expense title is required.
-                </small>
-
+              @if (showError(f.title)) {
+                <small class="error"> Expense title is required. </small>
               }
-
             </div>
 
-
             <div class="form-field">
-
               <label for="amount">
-
                 Amount
                 <span>*</span>
-
               </label>
-
 
               <div class="input-prefix">
+                <span> ₹ </span>
 
-                <span>
-                  ₹
-                </span>
-
-                <input
-                  id="amount"
-                  type="number"
-                  min="0.01"
-                  step="0.01"
-                  formControlName="amount">
-
+                <input id="amount" type="number" min="0.01" step="0.01" formControlName="amount" />
               </div>
 
-
-              @if (
-                showError(
-                  f.amount
-                )
-              ) {
-
-                <small class="error">
-                  Enter an amount greater than zero.
-                </small>
-
+              @if (showError(f.amount)) {
+                <small class="error"> Enter an amount greater than zero. </small>
               }
-
             </div>
 
-
             <div class="form-field">
-
               <label for="expenseDate">
-
                 Expense Date
                 <span>*</span>
-
               </label>
 
+              <input id="expenseDate" type="date" formControlName="expenseDate" />
 
-              <input
-                id="expenseDate"
-                type="date"
-                formControlName="expenseDate">
-
-
-              @if (
-                showError(
-                  f.expenseDate
-                )
-              ) {
-
-                <small class="error">
-                  Expense date is required.
-                </small>
-
+              @if (showError(f.expenseDate)) {
+                <small class="error"> Expense date is required. </small>
               }
-
             </div>
 
-
             <div class="form-field">
-
-              <label for="odometerKm">
-
-                Odometer Reading
-
-              </label>
-
+              <label for="odometerKm"> Odometer Reading </label>
 
               <div class="input-suffix">
-
                 <input
                   id="odometerKm"
                   type="number"
                   min="0"
                   max="5000000"
-                  formControlName="odometerKm">
+                  formControlName="odometerKm"
+                />
 
-                <span>
-                  KM
-                </span>
-
+                <span> KM </span>
               </div>
-
             </div>
 
-
             <div class="form-field">
-
-              <label for="merchant">
-
-                Merchant / Provider
-
-              </label>
-
+              <label for="merchant"> Merchant / Provider </label>
 
               <input
                 id="merchant"
                 type="text"
                 maxlength="150"
                 formControlName="merchant"
-                placeholder="Indian Oil">
-
+                placeholder="Indian Oil"
+              />
             </div>
 
-
             <div class="form-field full-width">
-
-              <label for="notes">
-
-                Notes
-
-              </label>
-
+              <label for="notes"> Notes </label>
 
               <textarea
                 id="notes"
                 maxlength="1000"
                 rows="4"
                 formControlName="notes"
-                placeholder="Optional details about this expense...">
+                placeholder="Optional details about this expense..."
+              >
               </textarea>
-
             </div>
-
           </div>
-
 
           <div class="form-actions">
-
-            <button
-              class="save-button"
-              type="submit"
-              [disabled]="isSubmitting">
-
+            <button class="save-button" type="submit" [disabled]="isSubmitting">
               @if (isSubmitting) {
-
                 Saving...
-
-              }
-
-              @else {
-
+              } @else {
                 + Add Expense
-
               }
-
             </button>
-
           </div>
-
         </form>
-
       </section>
-
 
       <!-- =================================================
            HISTORY
       ================================================== -->
 
       <section class="history-section">
-
         <div class="history-heading">
-
           <div>
+            <p class="eyebrow">OWNERSHIP HISTORY</p>
 
-            <p class="eyebrow">
-              OWNERSHIP HISTORY
-            </p>
-
-            <h2>
-              Expense Records
-            </h2>
-
+            <h2>Expense Records</h2>
           </div>
-
 
           <span class="record-badge">
             {{ expenseCount }}
           </span>
-
         </div>
 
-
-        @if (
-          expenses.length === 0
-        ) {
-
+        @if (expenses.length === 0) {
           <div class="empty-history">
+            <div class="empty-icon">₹</div>
 
-            <div class="empty-icon">
-              ₹
-            </div>
-
-
-            <h3>
-              No expenses recorded yet
-            </h3>
-
+            <h3>No expenses recorded yet</h3>
 
             <p>
-
-              Fuel, insurance, parking,
-              tolls and other vehicle costs
-              will appear here.
-
+              {{ vehicle.fuelType === 'ELECTRIC' ? 'Charging' : 'Fuel' }}, insurance, parking, tolls
+              and other vehicle costs will appear here.
             </p>
-
           </div>
-
-        }
-
-
-        @else {
-
+        } @else {
           <div class="history-list">
-
-            @for (
-              expense of expenses;
-              track expense.id
-            ) {
-
+            @for (expense of expenses; track expense.id) {
               <article class="expense-card">
-
-                <div class="expense-icon">
-                  ₹
-                </div>
-
+                <div class="expense-icon">₹</div>
 
                 <div class="expense-content">
-
                   <div class="expense-top">
-
                     <div>
-
                       <span class="category">
-
-                        {{
-                          getCategoryLabel(
-                            expense.category
-                          )
-                        }}
-
+                        {{ getCategoryLabel(expense.category) }}
                       </span>
-
 
                       <h3>
                         {{ expense.title }}
                       </h3>
-
                     </div>
-
 
                     <strong class="amount">
-
-                      {{
-                        formatCurrency(
-                          expense.amount
-                        )
-                      }}
-
+                      {{ formatCurrency(expense.amount) }}
                     </strong>
-
                   </div>
-
 
                   <div class="expense-details">
-
                     <div>
-
-                      <span>
-                        DATE
-                      </span>
+                      <span> DATE </span>
 
                       <strong>
-
-                        {{
-                          formatDate(
-                            expense.expenseDate
-                          )
-                        }}
-
+                        {{ formatDate(expense.expenseDate) }}
                       </strong>
-
                     </div>
 
-
                     <div>
-
-                      <span>
-                        MERCHANT
-                      </span>
+                      <span> MERCHANT </span>
 
                       <strong>
-
-                        {{
-                          expense.merchant ||
-                          'Not specified'
-                        }}
-
+                        {{ expense.merchant || 'Not specified' }}
                       </strong>
-
                     </div>
 
-
                     <div>
-
-                      <span>
-                        ODOMETER
-                      </span>
+                      <span> ODOMETER </span>
 
                       <strong>
-
-                        @if (
-                          expense.odometerKm !==
-                          null
-                        ) {
-
+                        @if (expense.odometerKm !== null) {
                           {{ expense.odometerKm }} km
-
-                        }
-
-                        @else {
-
+                        } @else {
                           Not specified
-
                         }
-
                       </strong>
-
                     </div>
-
                   </div>
 
-
                   @if (expense.notes) {
-
                     <p class="notes">
-
                       {{ expense.notes }}
-
                     </p>
-
                   }
-
                 </div>
-
               </article>
-
             }
-
           </div>
-
         }
-
       </section>
-
     }
-
   </main>
-
 </div>

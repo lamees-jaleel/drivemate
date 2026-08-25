@@ -57,93 +57,113 @@
         routerLink="/expert-dashboard"
         (click)="closeSidebar()">
 
-        <span>Drive</span>
-        <strong>Mate</strong>
+        <span class="brand-drive">Drive</span>
+        <strong class="brand-mate">Mate</strong>
 
       </a>
 
+    </div>
 
-      <div class="role-badge">
 
-        <span class="role-dot"></span>
+    <div class="owner-mini-profile">
 
-        DIAGNOSTIC EXPERT
+      <div class="avatar">
+
+        {{
+          firstName
+            .charAt(0)
+            .toUpperCase()
+        }}
+
+      </div>
+
+
+      <div class="owner-mini-info">
+
+        <strong>
+
+          {{
+            currentUser?.fullName ||
+            'Diagnostic Expert'
+          }}
+
+        </strong>
+
+        <span>
+          EXPERT PORTAL
+        </span>
 
       </div>
 
     </div>
 
 
-    <nav class="navigation">
+    <nav class="sidebar-nav">
 
       <button
-        class="nav-item active"
-        type="button">
+        class="nav-item"
+        [class.active]="activeTab === 'dashboard'"
+        type="button"
+        (click)="setTab('dashboard')">
 
         <span class="nav-icon">
           ◫
         </span>
 
-        <span>
-          Dashboard
-        </span>
+        Dashboard
 
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="activeTab === 'requests'"
+        type="button"
+        (click)="setTab('requests')">
 
         <span class="nav-icon">
           ◉
         </span>
 
-        <span>
-          Diagnostic Requests
-        </span>
+        Available Requests
 
-        <small>
-          SOON
-        </small>
+        @if (pendingRequests > 0) {
+          <span class="nav-badge">{{ pendingRequests }}</span>
+        }
 
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="activeTab === 'active'"
+        type="button"
+        (click)="setTab('active')">
 
         <span class="nav-icon">
           ⚙
         </span>
 
-        <span>
-          Active Cases
-        </span>
+        Active Cases
 
-        <small>
-          SOON
-        </small>
+        @if (activeCases > 0) {
+          <span class="nav-badge active-badge">{{ activeCases }}</span>
+        }
 
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="activeTab === 'completed'"
+        type="button"
+        (click)="setTab('completed')">
 
         <span class="nav-icon">
           ▤
         </span>
 
-        <span>
-          Diagnostic Reports
-        </span>
-
-        <small>
-          SOON
-        </small>
+        Completed Reports
 
       </button>
 
@@ -156,11 +176,9 @@
           ◈
         </span>
 
-        <span>
-          Profile & Verification
-        </span>
+        Profile & Verification
 
-        <small>
+        <small style="margin-left: auto;">
           SOON
         </small>
 
@@ -169,51 +187,18 @@
     </nav>
 
 
-    <div class="sidebar-bottom">
-
-      <div class="sidebar-user">
-
-        <div class="avatar">
-
-          {{
-            firstName
-              .charAt(0)
-              .toUpperCase()
-          }}
-
-        </div>
-
-
-        <div class="user-details">
-
-          <strong>
-
-            {{
-              currentUser?.fullName ||
-              'Diagnostic Expert'
-            }}
-
-          </strong>
-
-          <span>
-            Automotive Diagnostic Expert
-          </span>
-
-        </div>
-
-      </div>
-
+    <div class="sidebar-nav" style="margin-top: auto; padding-bottom: 20px;">
 
       <button
-        class="logout-button"
+        class="nav-item"
         type="button"
         (click)="logout()">
 
-        <span>
+        <span class="nav-icon">
           ↪
         </span>
 
-        Logout
+        Sign Out
 
       </button>
 
@@ -257,6 +242,9 @@
       </div>
 
     </section>
+
+
+    @if (activeTab === 'dashboard') {
 
 
     <!-- ===================================================
@@ -894,6 +882,249 @@
 
     </section>
 
+    }
+
+
+    <!-- ===================================================
+         AVAILABLE REQUESTS WORKSPACE
+    ==================================================== -->
+
+    @if (activeTab === 'requests') {
+
+      <section class="workspace-section">
+
+        <div class="workspace-header">
+          <span class="eyebrow">DIAGNOSTIC QUEUE</span>
+          <h2>Available Requests</h2>
+          <p>The following vehicle diagnostic slot bookings are waiting to be accepted by an expert.</p>
+        </div>
+
+
+        @if (availableRequests.length === 0) {
+
+          <div class="empty-workspace-state">
+            <div class="empty-state-icon">◉</div>
+            <h3>No pending requests</h3>
+            <p>All maintenance booking slots have been claimed. Check back later for new requests.</p>
+          </div>
+
+        }
+
+        @else {
+
+          <div class="expert-requests-list">
+
+            @for (req of availableRequests; track req.id) {
+
+              <div class="expert-request-card">
+
+                <div class="card-left">
+                  <div class="urgency-indicator" [ngClass]="getUrgencyClass(req.urgency)">
+                    {{ req.urgency }}
+                  </div>
+                  <div class="request-meta">
+                    <span class="vehicle-tag">
+                      {{ req.vehicle?.year }} {{ req.vehicle?.make }} {{ req.vehicle?.model }} ({{ req.vehicle?.registrationNumber }})
+                    </span>
+                    <h3>{{ req.title }}</h3>
+                    <p class="symptoms-text"><strong>Symptoms:</strong> {{ req.symptoms }}</p>
+                    <p class="provider-info-text">
+                      <strong>Requested:</strong>
+                      <span [ngClass]="getProviderTypeClass(req.providerType)">{{ getProviderTypeLabel(req.providerType) }}</span>
+                      @if (req.shopName) {
+                        — <em>{{ req.shopName }}</em>
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                <div class="card-right">
+                  @if (req.odometerKm) {
+                    <span class="odo-badge">{{ req.odometerKm }} KM</span>
+                  }
+                  <button
+                    class="accept-btn"
+                    type="button"
+                    (click)="acceptRequest(req.id)">
+                    Accept Case →
+                  </button>
+                </div>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+
+    <!-- ===================================================
+         ACTIVE CASES WORKSPACE
+    ==================================================== -->
+
+    @if (activeTab === 'active') {
+
+      <section class="workspace-section">
+
+        <div class="workspace-header">
+          <span class="eyebrow">YOUR WORKSPACE</span>
+          <h2>Active Cases</h2>
+          <p>Manage accepted maintenance and diagnostic bookings assigned to your expert profile.</p>
+        </div>
+
+
+        @if (activeRequests.length === 0) {
+
+          <div class="empty-workspace-state">
+            <div class="empty-state-icon">⚙</div>
+            <h3>No active cases</h3>
+            <p>You have not accepted any requests yet. View available requests in the sidebar queue.</p>
+          </div>
+
+        }
+
+        @else {
+
+          <div class="expert-requests-list">
+
+            @for (req of activeRequests; track req.id) {
+
+              <div class="expert-request-card active-card">
+
+                <div class="card-left">
+                  <div class="status-indicator-bar" [ngClass]="getStatusClass(req.status)">
+                    {{ req.status }}
+                  </div>
+                  <div class="request-meta">
+                    <span class="vehicle-tag">
+                      {{ req.vehicle?.year }} {{ req.vehicle?.make }} {{ req.vehicle?.model }} ({{ req.vehicle?.registrationNumber }})
+                    </span>
+                    <h3>{{ req.title }}</h3>
+                    <p class="symptoms-text"><strong>Symptoms:</strong> {{ req.symptoms }}</p>
+                    <p class="provider-info-text">
+                      <strong>Requested:</strong>
+                      <span [ngClass]="getProviderTypeClass(req.providerType)">{{ getProviderTypeLabel(req.providerType) }}</span>
+                      @if (req.shopName) {
+                        — <em>{{ req.shopName }}</em>
+                      }
+                    </p>
+                    
+                    <div class="booking-times">
+                      <span>Booked: {{ formatDate(req.createdAt) }}</span>
+                      @if (req.acceptedAt) {
+                        <span>· Accepted: {{ formatDate(req.acceptedAt) }}</span>
+                      }
+                      @if (req.startedAt) {
+                        <span>· Started: {{ formatDate(req.startedAt) }}</span>
+                      }
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-right active-actions">
+                  @if (req.status === 'ACCEPTED') {
+                    <button class="start-btn" type="button" (click)="startService(req.id)">
+                      Start Service
+                    </button>
+                  }
+                  @if (req.status === 'IN_PROGRESS') {
+                    <button class="complete-btn" type="button" (click)="openReportModal(req.id)">
+                      ✓ Mark Completed
+                    </button>
+                  }
+                  <button class="cancel-btn" type="button" (click)="cancelService(req.id)">
+                    Cancel Booking
+                  </button>
+                </div>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
+
+    <!-- ===================================================
+         COMPLETED REPORTS WORKSPACE
+    ==================================================== -->
+
+    @if (activeTab === 'completed') {
+
+      <section class="workspace-section">
+
+        <div class="workspace-header">
+          <span class="eyebrow">ARCHIVE</span>
+          <h2>Completed Reports</h2>
+          <p>History of diagnostic findings and recommendations provided to DriveMate owners.</p>
+        </div>
+
+
+        @if (completedRequests.length === 0) {
+
+          <div class="empty-workspace-state">
+            <div class="empty-state-icon">▤</div>
+            <h3>No completed cases</h3>
+            <p>Once you finalize active cases, their records will be stored here in your report history.</p>
+          </div>
+
+        }
+
+        @else {
+
+          <div class="expert-requests-list">
+
+            @for (req of completedRequests; track req.id) {
+
+              <div class="expert-request-card completed-card">
+
+                <div class="card-left">
+                  <div class="status-indicator-bar status-completed">
+                    COMPLETED
+                  </div>
+                  <div class="request-meta">
+                    <span class="vehicle-tag">
+                      {{ req.vehicle?.year }} {{ req.vehicle?.make }} {{ req.vehicle?.model }} ({{ req.vehicle?.registrationNumber }})
+                    </span>
+                    <h3>{{ req.title }}</h3>
+                    <p class="symptoms-text"><strong>Symptoms:</strong> {{ req.symptoms }}</p>
+                    <p class="provider-info-text">
+                      <strong>Requested:</strong>
+                      <span [ngClass]="getProviderTypeClass(req.providerType)">{{ getProviderTypeLabel(req.providerType) }}</span>
+                      @if (req.shopName) {
+                        — <em>{{ req.shopName }}</em>
+                      }
+                    </p>
+                  </div>
+                </div>
+
+                <div class="card-right completed-meta">
+                  <span>Completed On</span>
+                  <strong>{{ formatDate(req.completedAt) }}</strong>
+                </div>
+
+              </div>
+
+            }
+
+          </div>
+
+        }
+
+      </section>
+
+    }
+
 
     <footer class="dashboard-footer">
 
@@ -906,5 +1137,80 @@
     </footer>
 
   </main>
+
+  <!-- =====================================================
+       REPORT MODAL
+  ====================================================== -->
+
+  @if (showReportModal) {
+    <div class="modal-overlay">
+      <div class="modal-container">
+        <header class="modal-header">
+          <h3>Submit Diagnostic Report</h3>
+          <button class="close-btn" type="button" (click)="showReportModal = false">×</button>
+        </header>
+
+        <div class="modal-body">
+          <form (ngSubmit)="submitReport()">
+            <div class="form-group">
+              <label>Findings *</label>
+              <textarea class="form-control" [(ngModel)]="reportFindings" name="findings" required placeholder="What did you find?"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Suspected Cause</label>
+              <input class="form-control" type="text" [(ngModel)]="reportSuspectedCause" name="suspectedCause" placeholder="What caused this?">
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="form-group">
+                <label>Severity</label>
+                <select class="form-control" [(ngModel)]="reportSeverity" name="severity">
+                  <option value="LOW">Low</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HIGH">High</option>
+                  <option value="CRITICAL">Critical</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Estimated Cost (₹)</label>
+                <input class="form-control" type="number" [(ngModel)]="reportEstimatedRepairCost" name="estimatedCost" placeholder="0.00">
+              </div>
+            </div>
+
+            <div class="form-group checkbox-group" style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="safeToDrive" [(ngModel)]="reportSafeToDrive" name="safeToDrive">
+              <label for="safeToDrive" style="margin: 0;">Vehicle is safe to drive</label>
+            </div>
+
+            <div class="form-group">
+              <label>Recommended Action *</label>
+              <textarea class="form-control" [(ngModel)]="reportRecommendedAction" name="recommendedAction" required placeholder="What should the owner do next?"></textarea>
+            </div>
+
+            <div class="form-group checkbox-group" style="margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="followUpRequired" [(ngModel)]="reportFollowUpRequired" name="followUpRequired">
+              <label for="followUpRequired" style="margin: 0;">Follow-up required</label>
+            </div>
+
+            @if (reportFollowUpRequired) {
+              <div class="form-group">
+                <label>Follow-up Notes</label>
+                <input class="form-control" type="text" [(ngModel)]="reportFollowUpNotes" name="followUpNotes" placeholder="When/why to follow up?">
+              </div>
+            }
+
+            <footer class="modal-footer" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 16px; border-top: 1px solid #202127;">
+              <button class="logout-button" style="width: auto; padding: 0 20px;" type="button" (click)="showReportModal = false">Cancel</button>
+              <button class="primary-button compact" type="submit" [disabled]="submittingReport">
+                {{ submittingReport ? 'Submitting...' : 'Submit Report' }}
+              </button>
+            </footer>
+          </form>
+        </div>
+      </div>
+    </div>
+  }
 
 </div>

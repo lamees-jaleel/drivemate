@@ -2255,3 +2255,214 @@ button {
   }
 
 }
+
+
+/* =========================================================
+   MODAL DIALOG / BACKDROP STYLES
+   ========================================================= */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-container {
+  width: 100%;
+  max-width: 600px;
+  background: #0d0e12;
+  border: 1px solid #202127;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #202127;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.modal-close-btn {
+  background: transparent;
+  color: #858893;
+  font-size: 28px;
+  line-height: 1;
+  padding: 0 4px;
+  border: 0;
+  cursor: pointer;
+}
+
+.modal-close-btn:hover {
+  color: #ffffff;
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #202127;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* =========================================================
+   FORM CONTROLS
+   ========================================================= */
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #f53543;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.form-control {
+  width: 100%;
+  background: #14151a;
+  border: 1px solid #24252c;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #f53543;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Alerts inside modals */
+.alert-error {
+  background: rgba(245, 53, 67, 0.1);
+  border: 1px solid rgba(245, 53, 67, 0.25);
+  color: #ff4553;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+.alert-success {
+  background: rgba(40, 167, 69, 0.1);
+  border: 1px solid rgba(40, 167, 69, 0.25);
+  color: #28a745;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  margin-bottom: 18px;
+}
+
+/* Profiles detail grid */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.profile-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-item span {
+  font-size: 10px;
+  color: #858893;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.profile-item strong {
+  font-size: 14px;
+  color: #ffffff;
+}
+
+/* History logs */
+.request-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.history-card {
+  padding: 14px;
+  border: 1px solid #202127;
+  border-radius: 10px;
+  background: #111216;
+  font-size: 13px;
+}
+
+.history-card-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.badge-completed {
+  color: #28a745;
+  font-weight: 800;
+}
+
+.badge-cancelled {
+  color: #858893;
+  font-weight: 800;
+}
+
+.history-card-body p {
+  margin: 4px 0;
+  color: #a0a2ad;
+}
+
+
+.uploaded-vehicle-display-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+
+.vehicle-svg-illustration {
+  width: 200px;
+  height: 100px;
+  color: #ef3038;
+}

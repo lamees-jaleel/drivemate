@@ -20,9 +20,11 @@
     <a
       class="back-link"
       routerLink="/owner-dashboard">
-
-      ← Back to Dashboard
-
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Back to Dashboard</span>
     </a>
 
   </header>
@@ -38,7 +40,7 @@
 
 
       <h1>
-        Add a
+        {{ isEditMode ? 'Edit' : 'Add a' }}
         <span>
           Vehicle.
         </span>
@@ -47,10 +49,9 @@
 
       <p>
 
-        Add your vehicle identity and
-        ownership information to begin
-        managing its complete lifecycle
-        with DriveMate.
+        {{ isEditMode
+            ? 'Update your vehicle identity and ownership information to keep your DriveMate records accurate.'
+            : 'Add your vehicle identity and ownership information to begin managing its complete lifecycle with DriveMate.' }}
 
       </p>
 
@@ -93,6 +94,163 @@
 
 
         <div class="form-grid">
+
+
+          <!-- VEHICLE TYPE -->
+
+          <div class="form-field">
+
+            <label
+              for="vehicleType">
+
+              Vehicle Type
+              <span>*</span>
+
+            </label>
+
+
+            <select
+              id="vehicleType"
+              formControlName="vehicleType">
+
+              <option value="CAR">Car</option>
+
+              <option value="BIKE">Bike / Motorcycle</option>
+
+              <option value="TRUCK">Truck</option>
+
+              <option value="VAN">Van</option>
+
+              <option value="OTHER">Other</option>
+
+            </select>
+
+          </div>
+
+
+          <!-- VEHICLE IMAGE -->
+
+          <div class="form-field full-width image-upload-field">
+
+            <label>
+
+              Vehicle Image
+              <span class="optional-badge">(Optional)</span>
+
+            </label>
+
+
+            <div class="image-upload-container">
+
+              <div class="image-preview-box">
+
+                @if (imagePreviewUrl) {
+
+                  <img [src]="imagePreviewUrl" alt="Vehicle preview" />
+
+                  <button
+                    type="button"
+                    class="remove-image-btn"
+                    (click)="removeSelectedImage()">
+
+                    Remove Image
+
+                  </button>
+
+                }
+
+                @else {
+
+                  @switch (vehicleForm.get('vehicleType')?.value) {
+                    @case ('BIKE') {
+                      <svg viewBox="0 0 100 50" class="placeholder-preview-svg" fill="currentColor">
+                        <circle cx="20" cy="38" r="10" fill="none" stroke="#474a54" stroke-width="4"/>
+                        <circle cx="80" cy="38" r="10" fill="none" stroke="#474a54" stroke-width="4"/>
+                        <circle cx="20" cy="38" r="3" fill="#a5a9b2"/>
+                        <circle cx="80" cy="38" r="3" fill="#a5a9b2"/>
+                        <path d="M 20 38 L 42 38 L 55 24 L 38 24 Z" stroke="#ef3038" stroke-width="3" fill="none" stroke-linejoin="round"/>
+                        <path d="M 42 38 L 62 20 L 80 38" stroke="#ef3038" stroke-width="3" fill="none" stroke-linejoin="round"/>
+                        <path d="M 62 20 L 58 12 H 52" stroke="#a5a9b2" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        <path d="M 38 24 H 30" stroke="#a5a9b2" stroke-width="4" fill="none" stroke-linecap="round"/>
+                        <rect x="36" y="32" width="14" height="10" rx="2" fill="#25262d"/>
+                      </svg>
+                    }
+                    @case ('TRUCK') {
+                      <svg viewBox="0 0 100 50" class="placeholder-preview-svg" fill="currentColor">
+                        <circle cx="20" cy="40" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                        <circle cx="65" cy="40" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                        <circle cx="80" cy="40" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                        <path d="M 10 40 L 10 26 H 25 L 34 32 L 34 40 Z" fill="#ef3038" opacity="0.9"/>
+                        <rect x="14" y="29" width="8" height="6" fill="#14151a" opacity="0.7"/>
+                        <rect x="36" y="18" width="54" height="22" rx="2" fill="#25262d" stroke="#41434d" stroke-width="2"/>
+                      </svg>
+                    }
+                    @case ('VAN') {
+                      <svg viewBox="0 0 100 50" class="placeholder-preview-svg" fill="currentColor">
+                        <circle cx="25" cy="40" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                        <circle cx="75" cy="40" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                        <path d="M 10 40 V 22 C 10 20 12 18 15 18 H 82 C 86 18 89 20 89 24 V 40 Z" fill="#ef3038" opacity="0.9"/>
+                        <path d="M 16 22 H 30 V 28 H 14 Z M 34 22 H 56 V 28 H 34 Z M 60 22 H 82 L 80 28 H 60 Z" fill="#14151a" opacity="0.7"/>
+                      </svg>
+                    }
+                    @case ('OTHER') {
+                      <svg viewBox="0 0 100 50" class="placeholder-preview-svg" fill="currentColor">
+                        <circle cx="25" cy="40" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                        <circle cx="75" cy="40" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                        <path d="M 12 40 L 15 24 H 40 L 50 18 H 75 L 88 32 L 88 40 Z" fill="#ef3038" opacity="0.9"/>
+                        <rect x="22" y="27" width="12" height="8" fill="#14151a" opacity="0.7"/>
+                        <path d="M 52 21 H 72 L 78 30 H 52 Z" fill="#14151a" opacity="0.7"/>
+                      </svg>
+                    }
+                    @default {
+                      <svg viewBox="0 0 100 50" class="placeholder-preview-svg" fill="currentColor">
+                        <circle cx="25" cy="40" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                        <circle cx="75" cy="40" r="8" fill="#474a54" stroke="#18191e" stroke-width="2"/>
+                        <circle cx="25" cy="40" r="3" fill="#a5a9b2"/>
+                        <circle cx="75" cy="40" r="3" fill="#a5a9b2"/>
+                        <path d="M 10 32 L 20 20 L 50 18 L 65 20 L 78 30 L 90 32 L 90 40 L 84 40 A 9 9 0 0 0 66 40 L 34 40 A 9 9 0 0 0 16 40 L 10 40 Z" fill="#ef3038" opacity="0.9"/>
+                        <path d="M 23 21 H 48 V 30 H 21 Z M 51 21 H 63 L 73 30 H 51 Z" fill="#14151a" opacity="0.7"/>
+                      </svg>
+                    }
+                  }
+
+                }
+
+              </div>
+
+
+              <div class="upload-controls">
+
+                <input
+                  type="file"
+                  id="vehicleImage"
+                  accept="image/jpeg,image/png"
+                  class="file-input-hidden"
+                  (change)="onFileSelected($event)"
+                  #fileInput />
+
+
+                <button
+                  type="button"
+                  class="upload-trigger-btn"
+                  (click)="fileInput.click()">
+
+                  Upload Image
+
+                </button>
+
+
+                <p class="upload-help-text">
+
+                  Only JPG, JPEG, and PNG files are allowed. Max size 5MB.
+
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
 
 
           <!-- REGISTRATION NUMBER -->
@@ -699,7 +857,7 @@
 
           @else {
 
-            + Add Vehicle
+            {{ isEditMode ? 'Save Changes' : '+ Add Vehicle' }}
 
           }
 

@@ -343,4 +343,27 @@ export class AdminService {
 
   }
 
+  /* =======================================================
+     USER MANAGEMENT & REPORTS
+     ======================================================= */
+
+  getUsers(role?: string): Observable<any> {
+    const url = role ? `${this.baseUrl}/users?role=${role}` : `${this.baseUrl}/users`;
+    return this.http.get<any>(url, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  updateUserStatus(userId: number, status: string): Observable<any> {
+    return this.http.patch<any>(`${this.baseUrl}/users/${userId}/status`, { status }, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
+  getSystemReports(): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/reports`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+
 }

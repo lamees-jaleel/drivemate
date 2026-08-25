@@ -112,25 +112,7 @@ select {
 }
 
 
-.back-link {
-  color:
-    #a7a9b1;
 
-  text-decoration:
-    none;
-
-  font-size:
-    12px;
-
-  font-weight:
-    700;
-}
-
-
-.back-link:hover {
-  color:
-    #ffffff;
-}
 
 
 /* =========================================================
@@ -811,4 +793,133 @@ button:disabled {
       100%;
   }
 
+}
+
+
+/* =========================================================
+   IMAGE UPLOAD
+========================================================= */
+
+.image-upload-field {
+  margin-top: 15px;
+}
+
+.optional-badge {
+  color: #858893;
+  font-size: 11px;
+  font-weight: normal;
+  margin-left: 5px;
+}
+
+.image-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  background: #14151b;
+  border: 1px dashed #303138;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 8px;
+}
+
+.image-preview-box {
+  width: 140px;
+  height: 90px;
+  background: #0d0e11;
+  border: 1px solid #202127;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.image-preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-image-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(239, 48, 56, 0.9);
+  color: white;
+  border: none;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 4px 0;
+  cursor: pointer;
+  text-align: center;
+  transition: background 0.2s;
+}
+
+.remove-image-btn:hover {
+  background: rgb(239, 48, 56);
+}
+
+.placeholder-preview-svg {
+  width: 100px;
+  height: 50px;
+  color: #ef3038;
+  opacity: 0.8;
+}
+
+.file-input-hidden {
+  display: none;
+}
+
+.upload-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.upload-trigger-btn {
+  background: #25262d;
+  color: #ffffff;
+  border: 1px solid #3d3e46;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  align-self: flex-start;
+}
+
+.upload-trigger-btn:hover {
+  background: #2f3039;
+  border-color: #50525d;
+}
+
+.upload-help-text {
+  margin: 0;
+  font-size: 11px;
+  color: #858893;
+}
+
+@media (max-width: 768px) {
+  .image-upload-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .image-preview-box {
+    align-self: center;
+  }
+
+  .upload-trigger-btn {
+    align-self: center;
+  }
+
+  .upload-help-text {
+    text-align: center;
+  }
 }

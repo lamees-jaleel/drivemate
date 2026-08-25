@@ -3,6 +3,8 @@ import type {
   Response
 } from 'express';
 
+import { relative } from 'node:path';
+
 import {
   prisma
 } from '../lib/prisma.js';
@@ -249,6 +251,18 @@ export async function createVehicle(
         : null;
 
 
+    const vehicleImagePath = req.file
+      ? relative(
+          process.cwd(),
+          req.file.path
+        )
+          .replace(
+            /\\/g,
+            '/'
+          )
+      : (req.body.vehicleImagePath || null);
+
+
     /* =====================================================
        CREATE VEHICLE
 
@@ -262,6 +276,9 @@ export async function createVehicle(
 
           ownerId:
             auth.userId,
+
+          vehicleImagePath:
+            vehicleImagePath || null,
 
           registrationNumber,
 
@@ -319,6 +336,8 @@ export async function createVehicle(
           transmission: true,
 
           color: true,
+
+          vehicleImagePath: true,
 
           vin: true,
 
@@ -472,6 +491,8 @@ export async function getMyVehicles(
           transmission: true,
 
           color: true,
+
+          vehicleImagePath: true,
 
           vin: true,
 
@@ -639,6 +660,8 @@ export async function getVehicleById(
 
           color: true,
 
+          vehicleImagePath: true,
+
           vin: true,
 
           engineNumber: true,
@@ -708,6 +731,597 @@ export async function getVehicleById(
 
       message:
         'Unable to load vehicle details. Please try again.'
+
+    });
+
+  }
+
+}
+
+
+/* =========================================================
+   UPDATE VEHICLE
+========================================================= */
+
+export async function updateVehicle(
+  req: Request,
+  res: Response
+): Promise<void> {
+
+  try {
+
+    const auth =
+      res.locals.auth as
+        AuthInfo |
+        undefined;
+
+
+    if (!auth) {
+
+      res.status(401).json({
+
+        success: false,
+
+        message:
+          'Authentication required.'
+
+      });
+
+      return;
+
+    }
+
+
+    const vehicleId =
+      Number(
+        req.params.id
+      );
+
+
+    if (
+      Number.isNaN(
+        vehicleId
+      )
+    ) {
+
+      res.status(400).json({
+
+        success: false,
+
+        message:
+          'Invalid vehicle ID.'
+
+      });
+
+      return;
+
+    }
+
+
+    const existingVehicle =
+      await prisma.vehicle.findUnique({
+
+        where: {
+          id: vehicleId
+        }
+
+      });
+
+
+    if (!existingVehicle) {
+
+      res.status(404).json({
+
+        success: false,
+
+        message:
+          'Vehicle not found.'
+
+      });
+
+      return;
+
+    }
+
+
+    if (
+      existingVehicle.ownerId !==
+      auth.userId
+    ) {
+
+      res.status(403).json({
+
+        success: false,
+
+        message:
+          'Forbidden. You do not own this vehicle.'
+
+      });
+
+      return;
+
+    }
+
+
+    const validation =
+      validateVehicle(
+        req.body
+      );
+
+
+    if (!validation.valid) {
+
+      res.status(400).json({
+
+        success: false,
+
+        message:
+          'Vehicle validation failed.',
+
+        errors:
+          validation.errors
+
+      });
+
+      return;
+
+    }
+
+
+    const registrationNumber =
+      String(
+        req.body.registrationNumber
+      )
+        .trim()
+        .toUpperCase()
+        .replace(
+          /[\s-]+/g,
+          ''
+        );
+
+
+    const registrationConflict =
+      await prisma.vehicle.findFirst({
+
+        where: {
+
+          registrationNumber,
+
+          id: {
+            not: vehicleId
+          }
+
+        }
+
+      });
+
+
+    if (registrationConflict) {
+
+      res.status(400).json({
+
+        success: false,
+
+        message:
+          'Vehicle validation failed.',
+
+        errors: {
+
+          registrationNumber:
+            'Registration number is already registered to another vehicle.'
+
+        }
+
+      });
+
+      return;
+
+    }
+
+
+    const make =
+      String(
+        req.body.make
+      ).trim();
+
+
+    const model =
+      String(
+        req.body.model
+      ).trim();
+
+
+    const variantValue =
+      String(
+        req.body.variant ??
+        ''
+      ).trim();
+
+
+    const colorValue =
+      String(
+        req.body.color ??
+        ''
+      ).trim();
+
+
+    const vinValue =
+      String(
+        req.body.vin ??
+        ''
+      )
+        .trim()
+        .toUpperCase()
+        .replace(
+          /\s+/g,
+          ''
+        );
+
+
+    const engineNumberValue =
+      String(
+        req.body.engineNumber ??
+        ''
+      )
+        .trim()
+        .toUpperCase()
+        .replace(
+          /\s+/g,
+          ''
+        );
+
+
+    const fuelType =
+      String(
+        req.body.fuelType
+      ).trim() as
+        FuelTypeValue;
+
+
+    const transmissionValue =
+      String(
+        req.body.transmission ??
+        ''
+      ).trim();
+
+
+    const transmission =
+      transmissionValue
+        ? transmissionValue as
+            TransmissionTypeValue
+        : null;
+
+
+    const ownershipType =
+      String(
+        req.body.ownershipType ??
+        'OWNED'
+      ).trim() as
+        OwnershipTypeValue;
+
+
+    const manufacturingYear =
+      Number(
+        req.body.manufacturingYear
+      );
+
+
+    const odometerKm =
+      Number(
+        req.body.odometerKm ??
+        0
+      );
+
+
+    const purchaseDateValue =
+      String(
+        req.body.purchaseDate ??
+        ''
+      ).trim();
+
+
+    const purchaseDate =
+      purchaseDateValue
+        ? new Date(
+            `${purchaseDateValue}T00:00:00.000Z`
+          )
+        : null;
+
+
+    let vehicleImagePath =
+      existingVehicle.vehicleImagePath;
+
+
+    if (req.file) {
+
+      vehicleImagePath =
+        relative(
+          process.cwd(),
+          req.file.path
+        )
+          .replace(
+            /\\/g,
+            '/'
+          );
+
+    }
+
+    else if (
+      req.body.vehicleImagePath
+    ) {
+
+      vehicleImagePath =
+        req.body.vehicleImagePath;
+
+    }
+
+
+    const updatedVehicle =
+      await prisma.vehicle.update({
+
+        where: {
+          id: vehicleId
+        },
+
+
+        data: {
+
+          registrationNumber,
+
+          make,
+
+          model,
+
+          variant:
+            variantValue ||
+            null,
+
+          manufacturingYear,
+
+          fuelType,
+
+          transmission,
+
+          color:
+            colorValue ||
+            null,
+
+          vehicleImagePath,
+
+          vin:
+            vinValue ||
+            null,
+
+          engineNumber:
+            engineNumberValue ||
+            null,
+
+          odometerKm,
+
+          purchaseDate,
+
+          ownershipType
+
+        },
+
+
+        select: {
+
+          id: true,
+
+          registrationNumber: true,
+
+          make: true,
+
+          model: true,
+
+          variant: true,
+
+          manufacturingYear: true,
+
+          fuelType: true,
+
+          transmission: true,
+
+          color: true,
+
+          vehicleImagePath: true,
+
+          vin: true,
+
+          engineNumber: true,
+
+          odometerKm: true,
+
+          purchaseDate: true,
+
+          ownershipType: true,
+
+          status: true,
+
+          createdAt: true,
+
+          updatedAt: true
+
+        }
+
+      });
+
+
+    res.status(200).json({
+
+      success: true,
+
+      message:
+        'Vehicle updated successfully.',
+
+      vehicle:
+        updatedVehicle
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      'Update vehicle error:',
+      error
+    );
+
+
+    res.status(500).json({
+
+      success: false,
+
+      message:
+        'Internal server error.'
+
+    });
+
+  }
+
+}
+
+
+/* =========================================================
+   DELETE VEHICLE
+========================================================= */
+
+export async function deleteVehicle(
+  req: Request,
+  res: Response
+): Promise<void> {
+
+  try {
+
+    const auth =
+      res.locals.auth as
+        AuthInfo |
+        undefined;
+
+
+    if (!auth) {
+
+      res.status(401).json({
+
+        success: false,
+
+        message:
+          'Authentication required.'
+
+      });
+
+      return;
+
+    }
+
+
+    const vehicleId =
+      Number(
+        req.params.id
+      );
+
+
+    if (
+      Number.isNaN(
+        vehicleId
+      )
+    ) {
+
+      res.status(400).json({
+
+        success: false,
+
+        message:
+          'Invalid vehicle ID.'
+
+      });
+
+      return;
+
+    }
+
+
+    const existingVehicle =
+      await prisma.vehicle.findUnique({
+
+        where: {
+          id: vehicleId
+        }
+
+      });
+
+
+    if (!existingVehicle) {
+
+      res.status(404).json({
+
+        success: false,
+
+        message:
+          'Vehicle not found.'
+
+      });
+
+      return;
+
+    }
+
+
+    if (
+      existingVehicle.ownerId !==
+      auth.userId
+    ) {
+
+      res.status(403).json({
+
+        success: false,
+
+        message:
+          'Forbidden. You do not own this vehicle.'
+
+      });
+
+      return;
+
+    }
+
+
+    await prisma.vehicle.delete({
+
+      where: {
+        id: vehicleId
+      }
+
+    });
+
+
+    res.status(200).json({
+
+      success: true,
+
+      message:
+        'Vehicle deleted successfully.'
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      'Delete vehicle error:',
+      error
+    );
+
+
+    res.status(500).json({
+
+      success: false,
+
+      message:
+        'Internal server error.'
 
     });
 

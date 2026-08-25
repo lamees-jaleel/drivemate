@@ -16,7 +16,7 @@
 
     <a
       class="mobile-brand"
-      routerLink="/responder-dashboard">
+      (click)="switchTab('DASHBOARD')">
 
       Drive<strong>Mate</strong>
 
@@ -46,7 +46,7 @@
 
       <a
         class="brand"
-        routerLink="/responder-dashboard">
+        (click)="switchTab('DASHBOARD')">
 
         Drive<strong>Mate</strong>
 
@@ -67,13 +67,12 @@
     <nav class="navigation">
 
       <button
-        class="nav-item active"
-        type="button">
+        class="nav-item"
+        [class.active]="currentTab === 'DASHBOARD'"
+        type="button"
+        (click)="switchTab('DASHBOARD')">
 
-        <span class="nav-icon">
-          ◫
-        </span>
-
+        <span class="nav-icon">◫</span>
         Dashboard
 
       </button>
@@ -81,85 +80,72 @@
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="currentTab === 'REQUESTS'"
+        type="button"
+        (click)="switchTab('REQUESTS')">
 
-        <span class="nav-icon">
-          ⚠
-        </span>
-
+        <span class="nav-icon">⚠</span>
         Assistance Requests
 
-        <small>
-          LATER
-        </small>
+        @if (availableRequests > 0) {
+          <small style="background: #f53543; color: white; padding: 2px 6px; border-radius: 10px; font-size: 8px;">
+            {{ availableRequests }}
+          </small>
+        }
 
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="currentTab === 'NAVIGATION'"
+        type="button"
+        (click)="switchTab('NAVIGATION')">
 
-        <span class="nav-icon">
-          ◎
-        </span>
-
+        <span class="nav-icon">◎</span>
         Live Navigation
 
-        <small>
-          GPS
-        </small>
-
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="currentTab === 'ACTIVE'"
+        type="button"
+        (click)="switchTab('ACTIVE')">
 
-        <span class="nav-icon">
-          ◉
-        </span>
-
+        <span class="nav-icon">◉</span>
         Active Assistance
 
-        <small>
-          LATER
-        </small>
+        @if (activeAssistance > 0) {
+          <small style="background: #ffbc00; color: black; padding: 2px 6px; border-radius: 10px; font-size: 8px;">
+            {{ activeAssistance }}
+          </small>
+        }
 
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="currentTab === 'COMPLETED'"
+        type="button"
+        (click)="switchTab('COMPLETED')">
 
-        <span class="nav-icon">
-          ✓
-        </span>
-
+        <span class="nav-icon">✓</span>
         Completed Requests
 
-        <small>
-          LATER
-        </small>
-
       </button>
 
 
       <button
         class="nav-item"
-        type="button">
+        [class.active]="currentTab === 'PROFILE'"
+        type="button"
+        (click)="switchTab('PROFILE')">
 
-        <span class="nav-icon">
-          ◈
-        </span>
-
+        <span class="nav-icon">◈</span>
         Responder Profile
-
-        <small>
-          LATER
-        </small>
 
       </button>
 
@@ -171,25 +157,14 @@
       <div class="sidebar-user">
 
         <div class="avatar">
-
-          {{
-            firstName
-              .charAt(0)
-              .toUpperCase()
-          }}
-
+          {{ firstName.charAt(0).toUpperCase() }}
         </div>
 
 
         <div>
 
           <strong>
-
-            {{
-              currentUser?.fullName ||
-              'Roadside Responder'
-            }}
-
+            {{ currentUser?.fullName || 'Roadside Responder' }}
           </strong>
 
           <span>
@@ -228,7 +203,12 @@
         </p>
 
         <h2>
-          Responder Dashboard
+          @if (currentTab === 'DASHBOARD') { Responder Dashboard }
+          @else if (currentTab === 'REQUESTS') { Available Assistance Requests }
+          @else if (currentTab === 'NAVIGATION') { Live GPS Navigation }
+          @else if (currentTab === 'ACTIVE') { Active Assistance Cases }
+          @else if (currentTab === 'COMPLETED') { Completed Roadside Operations }
+          @else if (currentTab === 'PROFILE') { Responder Profile }
         </h2>
 
       </div>
@@ -244,615 +224,521 @@
 
     </header>
 
-
-    <!-- HERO -->
-
-    <section class="hero">
-
-      <div class="hero-copy">
-
-        <p class="eyebrow">
-          EMERGENCY VEHICLE ASSISTANCE
-        </p>
-
-
-        <h1>
-
-          Welcome back,
-
-          <span>
-            {{ firstName }}.
-          </span>
-
-        </h1>
-
-
-        <p class="hero-description">
-
-          Your Roadside Assistance workspace
-          will manage emergency requests,
-          responder availability, navigation
-          and assistance progress.
-
-        </p>
-
-
-        <div class="hero-tags">
-
-          <span>
-            Emergency Requests
-          </span>
-
-          <span>
-            Location Assistance
-          </span>
-
-          <span>
-            Response Tracking
-          </span>
-
-        </div>
-
+    @if (successMessage) {
+      <div style="background: rgba(40, 167, 69, 0.15); color: #28a745; border: 1px solid rgba(40, 167, 69, 0.3); padding: 12px; border-radius: 8px; margin: 20px 0; font-size: 14px;">
+        ✓ {{ successMessage }}
       </div>
+    }
 
-
-      <div class="responder-visual">
-
-        <div class="pulse-ring ring-one">
-        </div>
-
-        <div class="pulse-ring ring-two">
-        </div>
-
-
-        <div class="emergency-card">
-
-          <span class="emergency-symbol">
-            ⚠
-          </span>
-
-          <small>
-            ROADSIDE SYSTEM
-          </small>
-
-          <strong>
-            STANDBY
-          </strong>
-
-          <div class="signal-line">
-          </div>
-
-          <p>
-            Emergency workflow deferred
-          </p>
-
-        </div>
-
+    @if (errorMessage) {
+      <div style="background: rgba(245, 53, 67, 0.15); color: #ff3545; border: 1px solid rgba(245, 53, 67, 0.3); padding: 12px; border-radius: 8px; margin: 20px 0; font-size: 14px;">
+        ⚠ {{ errorMessage }}
       </div>
+    }
 
-    </section>
 
+    <!-- ===================================================
+         TABS: DASHBOARD VIEW
+    ==================================================== -->
+    @if (currentTab === 'DASHBOARD') {
 
-    <!-- STATS -->
+      <!-- HERO -->
+      <section class="hero">
 
-    <section class="stats-grid">
-
-      <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span>
-            ⚠
-          </span>
-
-          <small>
-            REQUESTS
-          </small>
-
-        </div>
-
-
-        <strong>
-          {{ availableRequests }}
-        </strong>
-
-        <h3>
-          Available Requests
-        </h3>
-
-        <p>
-          Emergency requests available
-          for responder assignment.
-        </p>
-
-      </article>
-
-
-      <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span>
-            ◉
-          </span>
-
-          <small>
-            ACTIVE
-          </small>
-
-        </div>
-
-
-        <strong>
-          {{ activeAssistance }}
-        </strong>
-
-        <h3>
-          Active Assistance
-        </h3>
-
-        <p>
-          Assistance cases currently
-          being handled by you.
-        </p>
-
-      </article>
-
-
-      <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span>
-            ✓
-          </span>
-
-          <small>
-            COMPLETED
-          </small>
-
-        </div>
-
-
-        <strong>
-          {{ completedRequests }}
-        </strong>
-
-        <h3>
-          Completed Requests
-        </h3>
-
-        <p>
-          Successfully completed roadside
-          assistance operations.
-        </p>
-
-      </article>
-
-
-      <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span>
-            ◎
-          </span>
-
-          <small>
-            LOCATION
-          </small>
-
-        </div>
-
-
-        <strong class="not-connected">
-          —
-        </strong>
-
-        <h3>
-          GPS Status
-        </h3>
-
-        <p>
-          Location services will be
-          integrated during the roadside module.
-        </p>
-
-      </article>
-
-    </section>
-
-
-    <!-- WORKSPACE -->
-
-    <section class="workspace-grid">
-
-      <article class="workspace-card">
-
-        <div class="section-heading">
-
-          <span>
-            01
-          </span>
-
-
-          <div>
-
-            <p>
-              FUTURE WORKFLOW
-            </p>
-
-            <h2>
-              Emergency Response Process
-            </h2>
-
-          </div>
-
-        </div>
-
-
-        <div class="workflow">
-
-          <div class="workflow-row">
-
-            <div class="workflow-number">
-              01
-            </div>
-
-            <div>
-
-              <strong>
-                Receive Assistance Request
-              </strong>
-
-              <p>
-                Receive an emergency request
-                from a vehicle owner with
-                problem and location details.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="workflow-line">
-          </div>
-
-
-          <div class="workflow-row">
-
-            <div class="workflow-number">
-              02
-            </div>
-
-            <div>
-
-              <strong>
-                Accept Request
-              </strong>
-
-              <p>
-                Review the request and accept
-                the roadside assistance task.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="workflow-line">
-          </div>
-
-
-          <div class="workflow-row">
-
-            <div class="workflow-number">
-              03
-            </div>
-
-            <div>
-
-              <strong>
-                Navigate to Vehicle
-              </strong>
-
-              <p>
-                GPS and map integration will
-                guide the responder to the
-                stranded vehicle.
-              </p>
-
-            </div>
-
-          </div>
-
-
-          <div class="workflow-line">
-          </div>
-
-
-          <div class="workflow-row">
-
-            <div class="workflow-number">
-              04
-            </div>
-
-            <div>
-
-              <strong>
-                Complete Assistance
-              </strong>
-
-              <p>
-                Record the assistance provided
-                and complete the emergency
-                service request.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <div class="development-note">
-
-          <span>
-            ⚠
-          </span>
-
-
-          <div>
-
-            <strong>
-              Roadside module intentionally deferred
-            </strong>
-
-            <p>
-
-              Maps, GPS, live location,
-              responder assignment and emergency
-              handling will be implemented after
-              the core DriveMate modules.
-
-            </p>
-
-          </div>
-
-        </div>
-
-      </article>
-
-
-      <!-- PROFILE -->
-
-      <article class="workspace-card profile-card">
-
-        <div class="section-heading">
-
-          <span>
-            02
-          </span>
-
-
-          <div>
-
-            <p>
-              RESPONDER ACCOUNT
-            </p>
-
-            <h2>
-              Profile
-            </h2>
-
-          </div>
-
-        </div>
-
-
-        <div class="profile-avatar">
-
-          {{
-            firstName
-              .charAt(0)
-              .toUpperCase()
-          }}
-
-        </div>
-
-
-        <h3>
-
-          {{
-            currentUser?.fullName ||
-            'Roadside Responder'
-          }}
-
-        </h3>
-
-
-        <p class="profile-role">
-          Emergency Assistance Responder
-        </p>
-
-
-        <div class="profile-info">
-
-          <div>
-
-            <span>
-              ROLE
-            </span>
-
-            <strong>
-              Roadside Responder
-            </strong>
-
-          </div>
-
-
-          <div>
-
-            <span>
-              EMAIL
-            </span>
-
-            <strong>
-
-              {{
-                currentUser?.email ||
-                'Not available'
-              }}
-
-            </strong>
-
-          </div>
-
-        </div>
-
-
-        <div class="availability-card">
-
-          <span class="availability-dot">
-          </span>
-
-
-          <div>
-
-            <strong>
-              Availability System
-            </strong>
-
-            <p>
-              Online/offline responder
-              availability will be added later.
-            </p>
-
-          </div>
-
-        </div>
-
-      </article>
-
-    </section>
-
-
-    <!-- FUTURE MODULES -->
-
-    <section class="future-section">
-
-      <div class="future-heading">
-
-        <div>
+        <div class="hero-copy">
 
           <p class="eyebrow">
-            ROADSIDE CAPABILITIES
+            EMERGENCY VEHICLE ASSISTANCE
           </p>
 
-          <h2>
-            Planned emergency workspace
-          </h2>
+          <h1>
+            Welcome back,
+            <span>
+              {{ firstName }}.
+            </span>
+          </h1>
+
+          <p class="hero-description">
+            Your Roadside Assistance workspace manages emergency requests, responder availability, live client navigation, and assistance tracking.
+          </p>
+
+          <div class="hero-tags">
+            <span>Emergency Requests</span>
+            <span>Location Assistance</span>
+            <span>Response Tracking</span>
+          </div>
 
         </div>
 
-
-        <span>
-          PHASE LATER
-        </span>
-
-      </div>
-
-
-      <div class="future-grid">
-
-        <article>
-
-          <div>
-            ⚠
+        <div class="responder-visual">
+          <div class="pulse-ring ring-one"></div>
+          <div class="pulse-ring ring-two"></div>
+          <div class="emergency-card">
+            <span class="emergency-symbol">⚠</span>
+            <small>ROADSIDE SYSTEM</small>
+            <strong>STANDBY</strong>
+            <div class="signal-line"></div>
+            <small>Awaiting dispatch calls</small>
           </div>
+        </div>
 
-          <h3>
-            Emergency Requests
-          </h3>
+      </section>
 
-          <p>
-            Receive roadside assistance
-            requests from stranded owners.
-          </p>
+      <!-- STATS -->
+      <section class="stats-grid">
 
+        <article class="stat-card" style="cursor: pointer;" (click)="switchTab('REQUESTS')">
+          <div class="stat-header">
+            <span>⚠</span>
+            <small>REQUESTS</small>
+          </div>
+          <strong>{{ availableRequests }}</strong>
+          <h3>Available Requests</h3>
+          <p>Emergency requests available for responder assignment.</p>
         </article>
 
-
-        <article>
-
-          <div>
-            ◎
+        <article class="stat-card" style="cursor: pointer;" (click)="switchTab('ACTIVE')">
+          <div class="stat-header">
+            <span>◉</span>
+            <small>ACTIVE</small>
           </div>
-
-          <h3>
-            Maps & GPS
-          </h3>
-
-          <p>
-            Use location information and
-            navigation to reach the vehicle.
-          </p>
-
+          <strong>{{ activeAssistance }}</strong>
+          <h3>Active Assistance</h3>
+          <p>Assistance cases currently being handled by you.</p>
         </article>
 
-
-        <article>
-
-          <div>
-            ◉
+        <article class="stat-card" style="cursor: pointer;" (click)="switchTab('COMPLETED')">
+          <div class="stat-header">
+            <span>✓</span>
+            <small>COMPLETED</small>
           </div>
-
-          <h3>
-            Live Status
-          </h3>
-
-          <p>
-            Update owners when assistance
-            is accepted and on the way.
-          </p>
-
+          <strong>{{ completedRequests }}</strong>
+          <h3>Completed Requests</h3>
+          <p>Successfully completed roadside assistance operations.</p>
         </article>
 
-
-        <article>
-
-          <div>
-            ✓
+        <article class="stat-card" style="cursor: pointer;" (click)="switchTab('NAVIGATION')">
+          <div class="stat-header">
+            <span>◎</span>
+            <small>LOCATION</small>
           </div>
-
-          <h3>
-            Completion Records
-          </h3>
-
-          <p>
-            Record assistance details and
-            close emergency requests.
-          </p>
-
+          <strong style="color: #28a745;">ACTIVE</strong>
+          <h3>GPS Status</h3>
+          <p>Location services and client direction guides are functional.</p>
         </article>
 
-      </div>
+      </section>
 
-    </section>
+      <!-- WORKSPACE -->
+      <section class="workspace-grid">
 
+        <article class="workspace-card">
+          <div class="section-heading">
+            <span>01</span>
+            <div>
+              <p>RESPONSE WORKFLOW</p>
+              <h2>Emergency Response Process</h2>
+            </div>
+          </div>
 
-    <footer class="footer">
+          <div class="workflow">
+            <div class="workflow-row">
+              <div class="workflow-number">01</div>
+              <div>
+                <strong>Receive Assistance Request</strong>
+                <p>Receive an emergency request from a vehicle owner with problem and location details.</p>
+              </div>
+            </div>
+            <div class="workflow-line"></div>
+            <div class="workflow-row">
+              <div class="workflow-number">02</div>
+              <div>
+                <strong>Accept Request</strong>
+                <p>Review the request and accept the roadside assistance task.</p>
+              </div>
+            </div>
+            <div class="workflow-line"></div>
+            <div class="workflow-row">
+              <div class="workflow-number">03</div>
+              <div>
+                <strong>Navigate to Vehicle</strong>
+                <p>GPS and map integration will guide the responder to the stranded vehicle.</p>
+              </div>
+            </div>
+            <div class="workflow-line"></div>
+            <div class="workflow-row">
+              <div class="workflow-number">04</div>
+              <div>
+                <strong>Complete Assistance</strong>
+                <p>Record the assistance provided and complete the emergency service request.</p>
+              </div>
+            </div>
+          </div>
+        </article>
 
-      <strong>
-        DRIVEMATE
-      </strong>
+        <article class="workspace-card profile-card">
+          <div class="section-heading">
+            <span>02</span>
+            <div>
+              <p>RESPONDER ACCOUNT</p>
+              <h2>Profile</h2>
+            </div>
+          </div>
+          <div class="profile-avatar">
+            {{ firstName.charAt(0).toUpperCase() }}
+          </div>
+          <h3>{{ currentUser?.fullName }}</h3>
+          <p class="profile-role">Emergency Assistance Responder</p>
+          <div class="profile-info">
+            <div>
+              <span>ROLE</span>
+              <strong>Roadside Responder</strong>
+            </div>
+            <div>
+              <span>EMAIL</span>
+              <strong>{{ currentUser?.email }}</strong>
+            </div>
+          </div>
+          <div class="availability-card" style="margin-top: 15px;">
+            <span class="availability-dot" style="background: #28a745;"></span>
+            <div>
+              <strong>Availability System</strong>
+              <p>You are online and ready to accept emergency dispatches.</p>
+            </div>
+          </div>
+        </article>
 
-      Roadside Assistance Responder Portal
+      </section>
 
-    </footer>
+    }
+
+    <!-- ===================================================
+         TABS: ASSISTANCE REQUESTS VIEW
+    ==================================================== -->
+    @if (currentTab === 'REQUESTS') {
+      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+          <div>
+            <h3 style="color: #ffffff; margin: 0; font-size: 20px;">Emergency Dispatches</h3>
+            <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">View and claim pending emergency support dispatches.</p>
+          </div>
+          <span style="background: rgba(245, 53, 67, 0.15); color: #ff3545; padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 800;">
+            {{ requests.length }} Available
+          </span>
+        </div>
+
+        @if (loading) {
+          <p style="color: #858893; font-style: italic;">Loading dispatches...</p>
+        } @else if (requests.length === 0) {
+          <div style="text-align: center; padding: 40px 20px;">
+            <span style="font-size: 40px; color: #28a745; display: block; margin-bottom: 12px;">✓</span>
+            <h4 style="color: #ffffff; margin: 0 0 8px;">No current dispatches</h4>
+            <p style="color: #858893; margin: 0; font-size: 13px;">All platform roadside assists are currently claimed.</p>
+          </div>
+        } @else {
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 14px;">
+            @for (req of requests; track req.id) {
+              <article style="background: #0d0e12; border: 1px solid #202127; border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="flex: 1; min-width: 0; padding-right: 20px;">
+                  <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                    <span style="background: #202127; color: #ffffff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">
+                      {{ req.issueType.replace('_', ' ') }}
+                    </span>
+                    <span [style.background-color]="req.urgency === 'HIGH' ? 'rgba(245, 53, 67, 0.15)' : 'rgba(255, 188, 0, 0.1)'"
+                          [style.color]="req.urgency === 'HIGH' ? '#ff3545' : '#ffbc00'"
+                          style="font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px;">
+                      {{ req.urgency }}
+                    </span>
+                  </div>
+
+                  <p style="color: #ffffff; margin: 0 0 4px; font-size: 14px; font-weight: 700;">
+                    <strong>Location:</strong> {{ req.location }}
+                  </p>
+                  
+                  <p style="color: #a0a2ad; margin: 4px 0; font-size: 13px;">
+                    <strong>Description:</strong> {{ req.description }}
+                  </p>
+
+                  <p style="color: #858893; margin: 4px 0 0; font-size: 12px;">
+                    <strong>Vehicle:</strong> {{ req.vehicle?.make }} {{ req.vehicle?.model }} ({{ req.vehicle?.registrationNumber }}) | 
+                    <strong>Owner:</strong> {{ req.vehicle?.owner?.fullName }} |
+                    <strong>Reported:</strong> {{ req.createdAt | date:'short' }}
+                  </p>
+                </div>
+                <button class="primary-button compact" type="button" (click)="acceptRequest(req.id)">
+                  Accept Dispatch
+                </button>
+              </article>
+            }
+          </div>
+
+        }
+      </section>
+    }
+
+    <!-- ===================================================
+         TABS: LIVE NAVIGATION / MAP VIEW
+    ==================================================== -->
+    @if (currentTab === 'NAVIGATION') {
+      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+        <div style="margin-bottom: 20px;">
+          <h3 style="color: #ffffff; margin: 0; font-size: 20px;">GPS Route Guidance</h3>
+          <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">Realtime directional guides to active roadside assistance cases.</p>
+        </div>
+
+        @if (loading) {
+          <p style="color: #858893; font-style: italic;">Syncing GPS data...</p>
+        } @else if (requests.length === 0) {
+          <div style="text-align: center; padding: 40px 20px; background: #0d0e12; border: 1px dashed #202127; border-radius: 12px;">
+            <p style="color: #858893; margin: 0; font-size: 14px;">You do not have any active dispatches to navigate to.</p>
+            <button class="primary-button compact" type="button" style="margin-top: 14px;" (click)="switchTab('REQUESTS')">
+              View Available Dispatches
+            </button>
+          </div>
+        } @else {
+          
+          <div style="display: grid; grid-template-columns: 1fr 280px; gap: 20px;">
+            
+            <!-- SIMULATED NEON GPS MAP -->
+            <div style="height: 400px; background: #07080b; border: 1px solid #202127; border-radius: 12px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;">
+              
+              <!-- GRID PATTERN -->
+              <div style="position: absolute; inset: 0; background-image: radial-gradient(rgba(245, 53, 67, 0.15) 1px, transparent 1px); background-size: 24px 24px; opacity: 0.5;"></div>
+              
+              <!-- PATH WAY -->
+              <svg width="100%" height="100%" style="position: absolute; inset: 0;">
+                <path d="M 50,350 Q 200,280 250,150 T 450,50" fill="none" stroke="#202127" stroke-width="4" />
+                <path d="M 50,350 Q 200,280 250,150 T 450,50" fill="none" stroke="#ff3545" stroke-dasharray="10, 5" stroke-width="4" style="animation: dash 12s linear infinite;" />
+              </svg>
+
+              <!-- RESPONDER MARKER (START) -->
+              <div style="position: absolute; left: 42px; top: 342px; display: flex; flex-direction: column; align-items: center;">
+                <span style="background: #28a745; color: white; border-radius: 50%; width: 14px; height: 14px; display: inline-block; border: 2px solid white; box-shadow: 0 0 10px #28a745;"></span>
+                <small style="color: #28a745; font-size: 9px; font-weight: 800; margin-top: 4px;">YOUR POSITION</small>
+              </div>
+
+              <!-- STRANDED VEHICLE MARKER (END) -->
+              <div style="position: absolute; left: 442px; top: 42px; display: flex; flex-direction: column; align-items: center; animation: pulse 2s infinite;">
+                <span style="background: #ff3545; color: white; border-radius: 50%; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; border: 2px solid white; font-size: 8px; font-weight: 900; box-shadow: 0 0 15px #ff3545;">⚠</span>
+                <small style="color: #ff3545; font-size: 9px; font-weight: 800; margin-top: 4px;">CLIENT TARGET</small>
+              </div>
+
+              <!-- DIRECTIONS INFO CARD OVERLAY -->
+              <div style="position: absolute; left: 16px; top: 16px; background: rgba(13, 14, 18, 0.95); border: 1px solid #202127; border-radius: 8px; padding: 12px 14px; width: 220px; font-size: 13px;">
+                <strong style="color: #ff3545; display: block; margin-bottom: 4px;">DIRECTIONS</strong>
+                <span style="color: #ffffff;">Head Northeast on Main Highway.</span>
+                <span style="color: #858893; display: block; font-size: 11px; margin-top: 4px;">Distance: 4.8 km | ETA: 8 mins</span>
+              </div>
+
+            </div>
+
+            <!-- ACTIVE ASSISTANCE TARGET DETAIL -->
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <h4 style="color: #ffffff; margin: 0; font-size: 16px;">Target Details</h4>
+              
+              @for (active of requests; track active.id; let first = $first) {
+                @if (first) {
+                  <div style="background: #0d0e12; border: 1px solid #202127; padding: 16px; border-radius: 10px; font-size: 13px;">
+                    <span style="background: #ff3545; color: white; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 4px; text-transform: uppercase;">
+                      {{ active.issueType }}
+                    </span>
+                    
+                    <p style="margin: 12px 0 4px; color: #ffffff;">
+                      <strong>Location:</strong> {{ active.location }}
+                    </p>
+                    
+                    <p style="margin: 4px 0; color: #a0a2ad;">
+                      <strong>Phone:</strong> {{ active.contactPhone }}
+                    </p>
+
+                    <p style="margin: 4px 0; color: #a0a2ad;">
+                      <strong>Vehicle:</strong> {{ active.vehicle?.make }} {{ active.vehicle?.model }}
+                    </p>
+
+                    <p style="margin: 8px 0 0; color: #858893; font-size: 12px; border-top: 1px solid #202127; padding-top: 8px;">
+                      <strong>Remarks:</strong> {{ active.description }}
+                    </p>
+                  </div>
+                }
+              }
+            </div>
+
+          </div>
+
+        }
+      </section>
+    }
+
+    <!-- ===================================================
+         TABS: ACTIVE ASSISTANCE WORKSPACE
+    ==================================================== -->
+    @if (currentTab === 'ACTIVE') {
+      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+        <div style="margin-bottom: 20px;">
+          <h3 style="color: #ffffff; margin: 0; font-size: 20px;">Active Assistance Tasks</h3>
+          <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">Manage accepted emergency roadside dispatches.</p>
+        </div>
+
+        @if (loading) {
+          <p style="color: #858893; font-style: italic;">Loading tasks...</p>
+        } @else if (requests.length === 0) {
+          <p style="color: #858893;">You have no active claimed dispatches.</p>
+        } @else {
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 16px;">
+            @for (act of requests; track act.id) {
+              <article style="background: #0d0e12; border: 1px solid #202127; border-radius: 12px; padding: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 14px;">
+                  <div>
+                    <span style="background: #202127; color: #ffffff; font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase;">
+                      {{ act.issueType.replace('_', ' ') }}
+                    </span>
+                    <h4 style="color: #ffffff; margin: 8px 0 4px; font-size: 16px;">Client location: {{ act.location }}</h4>
+                  </div>
+                  <span style="background: rgba(255, 188, 0, 0.15); color: #ffbc00; font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 20px;">
+                    {{ act.status }}
+                  </span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; font-size: 13px; color: #a0a2ad; margin-bottom: 16px;">
+                  <div>
+                    <span>CONTACT NUMBER</span>
+                    <strong style="color: white; display: block; margin-top: 2px;">{{ act.contactPhone }}</strong>
+                  </div>
+                  <div>
+                    <span>VEHICLE</span>
+                    <strong style="color: white; display: block; margin-top: 2px;">{{ act.vehicle?.make }} {{ act.vehicle?.model }} ({{ act.vehicle?.registrationNumber }})</strong>
+                  </div>
+                  <div>
+                    <span>CLIENT NAME</span>
+                    <strong style="color: white; display: block; margin-top: 2px;">{{ act.vehicle?.owner?.fullName }}</strong>
+                  </div>
+                </div>
+
+                <p style="color: #858893; font-size: 13px; margin: 10px 0; border-top: 1px solid #202127; padding-top: 10px;">
+                  <strong>Notes:</strong> {{ act.description }}
+                </p>
+
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px; border-top: 1px dashed #202127; padding-top: 14px;">
+                  <button class="logout-button" type="button" style="width: auto; padding: 0 20px;" (click)="switchTab('NAVIGATION')">
+                    Open Map Guidance
+                  </button>
+
+                  @if (act.status === 'ACCEPTED') {
+                    <button class="primary-button compact" type="button" style="background: #ffbc00; color: black;" (click)="startAssistance(act.id)">
+                      Start Assistance Operation
+                    </button>
+                  } @else if (act.status === 'IN_PROGRESS') {
+                    <button class="primary-button compact" type="button" style="background: #28a745; color: white;" (click)="completeAssistance(act.id)">
+                      Finish & Complete Operation
+                    </button>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+
+        }
+      </section>
+    }
+
+    <!-- ===================================================
+         TABS: COMPLETED REQUESTS VIEW
+    ==================================================== -->
+    @if (currentTab === 'COMPLETED') {
+      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+        <div style="margin-bottom: 20px;">
+          <h3 style="color: #ffffff; margin: 0; font-size: 20px;">Operation Logs</h3>
+          <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">List of successfully resolved roadside dispatches claimed by you.</p>
+        </div>
+
+        @if (loading) {
+          <p style="color: #858893; font-style: italic;">Loading logs...</p>
+        } @else if (requests.length === 0) {
+          <p style="color: #858893;">No completed dispatches logged.</p>
+        } @else {
+          
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; color: #ffffff;">
+              <thead>
+                <tr style="border-bottom: 2px solid #202127; color: #858893;">
+                  <th style="padding: 12px 8px;">Vehicle</th>
+                  <th style="padding: 12px 8px;">Issue Type</th>
+                  <th style="padding: 12px 8px;">Location</th>
+                  <th style="padding: 12px 8px;">Requested At</th>
+                  <th style="padding: 12px 8px;">Completed At</th>
+                  <th style="padding: 12px 8px;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (c of requests; track c.id) {
+                  <tr style="border-bottom: 1px solid #202127;">
+                    <td style="padding: 14px 8px;">
+                      <strong>{{ c.vehicle?.registrationNumber }}</strong><br>
+                      <small style="color: #858893;">{{ c.vehicle?.make }} {{ c.vehicle?.model }}</small>
+                    </td>
+                    <td style="padding: 14px 8px; text-transform: uppercase; font-size: 12px; color: #ff3545;">
+                      {{ c.issueType.replace('_', ' ') }}
+                    </td>
+                    <td style="padding: 14px 8px;">{{ c.location }}</td>
+                    <td style="padding: 14px 8px;">{{ c.createdAt | date:'short' }}</td>
+                    <td style="padding: 14px 8px;">{{ c.completedAt | date:'short' }}</td>
+                    <td style="padding: 14px 8px;">
+                      <span style="color: #28a745; font-weight: 800;">RESOLVED</span>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+        }
+      </section>
+    }
+
+    <!-- ===================================================
+         TABS: RESPONDER PROFILE VIEW
+    ==================================================== -->
+    @if (currentTab === 'PROFILE') {
+      <section class="workspace-card" style="margin: 20px 0; padding: 24px; max-width: 600px;">
+        <h3 style="color: #ffffff; margin: 0 0 24px; font-size: 20px;">Responder Credentials</h3>
+
+        <div style="display: flex; flex-direction: column; gap: 20px; color: #ffffff;">
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="profile-avatar" style="margin: 0; width: 64px; height: 64px; font-size: 24px;">
+              {{ firstName.charAt(0).toUpperCase() }}
+            </div>
+            <div>
+              <h4 style="margin: 0; font-size: 18px;">{{ currentUser?.fullName }}</h4>
+              <p style="margin: 4px 0 0; color: #858893; font-size: 14px;">Emergency Assistance Responder</p>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid #202127; padding-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 14px;">
+            <div>
+              <span style="color: #858893; display: block; font-size: 11px;">EMAIL ADDRESS</span>
+              <strong>{{ currentUser?.email }}</strong>
+            </div>
+
+            <div>
+              <span style="color: #858893; display: block; font-size: 11px;">PHONE NUMBER</span>
+              <strong>{{ currentUser?.phone }}</strong>
+            </div>
+
+            <div>
+              <span style="color: #858893; display: block; font-size: 11px;">ACCOUNT STATUS</span>
+              <strong style="color: #28a745;">ACTIVE RESPONDER</strong>
+            </div>
+
+            <div>
+              <span style="color: #858893; display: block; font-size: 11px;">ROLE DESCRIPTION</span>
+              <strong>EMERGENCY OPERATIONS</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    }
 
   </main>
 

@@ -221,28 +221,53 @@
 
 .back-link {
   position: absolute;
+  top: 38px;
+  left: 7%;
 
-  top: 42px;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
 
-  left: 50%;
+  padding: 10px 14px 10px 10px;
 
-  transform:
-    translateX(-50%);
+  border: 1px solid #292c35;
+  border-radius: 8px;
 
-  color: #d1d3d8;
-
-  font-size: 12px;
+  color: #a7aab4;
+  background: rgba(255, 255, 255, 0.025);
 
   text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
 
   transition:
-    color 0.2s;
+    color 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
 }
 
 
 .back-link:hover {
   color: #ffffff;
+  border-color: rgba(239, 48, 56, 0.65);
+  background: rgba(239, 48, 56, 0.08);
+  transform: translateX(-2px);
 }
+
+
+.back-link svg {
+  width: 16px;
+  height: 16px;
+  color: #ef3038;
+  transition: transform 160ms ease;
+}
+
+
+.back-link:hover svg {
+  transform: translateX(-3px);
+}
+
 
 
 /* =========================================================
@@ -571,107 +596,6 @@ input.invalid:focus {
 }
 
 
-.signin-button:disabled {
-  opacity: 0.7;
-
-  cursor: wait;
-
-  transform: none;
-}
-
-
-/* =========================================================
-   AUTH DIVIDER
-========================================================= */
-
-.auth-divider {
-  position: relative;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  margin: 26px 0;
-
-  color: #747983;
-
-  font-size: 9px;
-
-  font-weight: 800;
-
-  letter-spacing: 1.5px;
-}
-
-
-.auth-divider::before,
-.auth-divider::after {
-  content: '';
-
-  flex: 1;
-
-  height: 1px;
-
-  background: #272932;
-}
-
-
-.auth-divider span {
-  padding: 0 14px;
-}
-
-
-/* =========================================================
-   GOOGLE LOGIN
-========================================================= */
-
-.google-login {
-  width: 100%;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-}
-
-
-.google-button-host {
-  width: 100%;
-
-  min-height: 44px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-}
-
-
-.google-status,
-.google-error {
-  margin: 10px 0 0;
-
-  font-size: 10px;
-
-  line-height: 1.5;
-
-  text-align: center;
-}
-
-
-.google-status {
-  color: #a5a9b2;
-}
-
-
-.google-error {
-  color: #ff555c;
-}
-
-
 /* =========================================================
    REGISTER TEXT
 ========================================================= */
@@ -774,9 +698,7 @@ input.invalid:focus {
   }
 
 
-  .back-link {
-    top: 35px;
-  }
+  
 }
 
 
@@ -800,7 +722,16 @@ input.invalid:focus {
 
 
   .login-options {
-    justify-content:
-      flex-end;
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+
+  .forgot-password {
+    align-self:
+      flex-start;
   }
 }

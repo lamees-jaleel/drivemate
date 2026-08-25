@@ -70,6 +70,8 @@ export interface AddVehiclePayload {
 
   color?: string;
 
+  vehicleImagePath?: string;
+
   vin?: string;
 
   engineNumber?: string;
@@ -112,6 +114,10 @@ export interface Vehicle {
     null;
 
   color:
+    string |
+    null;
+
+  vehicleImagePath:
     string |
     null;
 
@@ -229,7 +235,8 @@ export class VehicleService {
 
   addVehicle(
     payload:
-      AddVehiclePayload
+      AddVehiclePayload |
+      FormData
   ): Observable<AddVehicleResponse> {
 
     return this.http
@@ -238,6 +245,55 @@ export class VehicleService {
         this.apiUrl,
 
         payload,
+
+        {
+          headers:
+            this.getAuthHeaders()
+        }
+
+      );
+
+  }
+
+
+  /* =======================================================
+     UPDATE VEHICLE
+  ======================================================= */
+
+  updateVehicle(
+    id: number,
+    payload: AddVehiclePayload | FormData
+  ): Observable<AddVehicleResponse> {
+
+    return this.http
+      .put<AddVehicleResponse>(
+
+        `${this.apiUrl}/${id}`,
+
+        payload,
+
+        {
+          headers:
+            this.getAuthHeaders()
+        }
+
+      );
+
+  }
+
+
+  /* =======================================================
+     DELETE VEHICLE
+  ======================================================= */
+
+  deleteVehicle(
+    id: number
+  ): Observable<{ success: boolean; message: string }> {
+
+    return this.http
+      .delete<{ success: boolean; message: string }>(
+
+        `${this.apiUrl}/${id}`,
 
         {
           headers:

@@ -25,3 +25,70 @@ textarea,
 select {
   font: inherit;
 }
+
+
+/* =========================================================
+   STICKY NAV/TOPBAR
+========================================================= */
+
+.topbar {
+  position: sticky !important;
+
+  top: 0 !important;
+
+  z-index: 1000 !important;
+}
+
+
+.add-vehicle-page .back-link,
+.vehicles-page .back-link,
+.details-page .back-link,
+.documents-page .back-link,
+.expenses-page .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border: 0;
+  color: #9699a2;
+  background: transparent;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+
+.add-vehicle-page .back-link:hover,
+.vehicles-page .back-link:hover,
+.details-page .back-link:hover,
+.documents-page .back-link:hover,
+.expenses-page .back-link:hover {
+  color: #ffffff;
+  transform: translateX(-2px);
+}
+
+
+.add-vehicle-page .back-link svg,
+.vehicles-page .back-link svg,
+.details-page .back-link svg,
+.documents-page .back-link svg,
+.expenses-page .back-link svg {
+  width: 16px;
+  height: 16px;
+  color: #f53543;
+  transition: transform 160ms ease;
+}
+
+
+.add-vehicle-page .back-link:hover svg,
+.vehicles-page .back-link:hover svg,
+.details-page .back-link:hover svg,
+.documents-page .back-link:hover svg,
+.expenses-page .back-link:hover svg {
+  transform: translateX(-3px);
+}
+

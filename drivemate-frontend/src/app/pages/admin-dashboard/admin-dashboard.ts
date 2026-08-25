@@ -9,6 +9,10 @@ import {
 } from '@angular/forms';
 
 import {
+  CommonModule
+} from '@angular/common';
+
+import {
   HttpErrorResponse
 } from '@angular/common/http';
 
@@ -36,7 +40,8 @@ import {
 
   imports: [
     FormsModule,
-    RouterLink
+    RouterLink,
+    CommonModule
   ],
 
   templateUrl:
@@ -125,6 +130,28 @@ export class AdminDashboard
 
   mobileSidebarOpen =
     false;
+
+
+  currentTab = 'VERIFICATIONS'; // VERIFICATIONS, USER_MANAGEMENT, SYSTEM_REPORTS
+
+
+  /* =======================================================
+     USER MANAGEMENT & REPORTS STATE
+     ======================================================= */
+
+  users: any[] = [];
+
+  selectedUser: any = null;
+
+  loadingUsers = false;
+
+  userFilter = 'ALL';
+
+  updatingUserStatus = false;
+
+  reports: any = null;
+
+  loadingReports = false;
 
 
   /* =======================================================
@@ -956,6 +983,101 @@ export class AdminDashboard
     this.mobileSidebarOpen =
       false;
 
+  }
+
+
+  /* =======================================================
+     TAB WORKSPACE SWITCHER
+     ======================================================= */
+
+  switchTab(tab: string): void {
+    this.currentTab = tab;
+    this.closeDetails();
+    this.mobileSidebarOpen = false;
+
+    if (tab === 'VERIFICATIONS') {
+      this.loadProfessionals('PENDING');
+    } else if (tab === 'USER_MANAGEMENT') {
+      this.loadUsers();
+    } else if (tab === 'SYSTEM_REPORTS') {
+      this.loadReports();
+    }
+  }
+
+
+  /* =======================================================
+     USER MANAGEMENT METHODS
+     ======================================================= */
+
+  loadUsers(role?: string): void {
+    this.loadingUsers = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    if (role) {
+      this.userFilter = role;
+    }
+
+    const roleArg = this.userFilter === 'ALL' ? undefined : this.userFilter;
+
+    this.adminService.getUsers(roleArg).subscribe({
+      next: (res) => {
+        this.users = res.users || [];
+        this.loadingUsers = false;
+      },
+      error: (err) => {
+        console.error('Error loading users:', err);
+        this.errorMessage = err.error?.message || 'Unable to fetch users.';
+        this.loadingUsers = false;
+      }
+    });
+  }
+
+  toggleUserStatus(user: any): void {
+    const newStatus = user.accountStatus === 'ACTIVE' ? 'SUSPENDED' : 'ACTIVE';
+    
+    if (!confirm(`Are you sure you want to change this user's account status to ${newStatus.toLowerCase()}?`)) {
+      return;
+    }
+
+    this.updatingUserStatus = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    this.adminService.updateUserStatus(user.id, newStatus).subscribe({
+      next: (res) => {
+        this.updatingUserStatus = false;
+        this.successMessage = res.message || 'User status updated successfully!';
+        this.loadUsers();
+      },
+      error: (err) => {
+        console.error('Error updating user status:', err);
+        this.errorMessage = err.error?.message || 'Unable to update status.';
+        this.updatingUserStatus = false;
+      }
+    });
+  }
+
+
+  /* =======================================================
+     SYSTEM REPORTS METHODS
+     ======================================================= */
+
+  loadReports(): void {
+    this.loadingReports = true;
+    this.errorMessage = '';
+
+    this.adminService.getSystemReports().subscribe({
+      next: (res) => {
+        this.reports = res.summary;
+        this.loadingReports = false;
+      },
+      error: (err) => {
+        console.error('Error fetching reports:', err);
+        this.errorMessage = err.error?.message || 'Unable to fetch reports.';
+        this.loadingReports = false;
+      }
+    });
   }
 
 

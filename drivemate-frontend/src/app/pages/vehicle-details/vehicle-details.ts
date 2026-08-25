@@ -71,6 +71,10 @@ export class VehicleDetails
     '';
 
 
+  isDeleting =
+    false;
+
+
   /* =======================================================
      INITIALIZE
   ======================================================= */
@@ -333,6 +337,25 @@ export class VehicleDetails
   }
 
 
+  getVehiclePlaceholderType(
+    imagePath: string | null | undefined
+  ): string {
+
+    if (
+      !imagePath ||
+      !imagePath.startsWith('placeholder:')
+    ) {
+
+      return 'CAR';
+
+    }
+
+
+    return imagePath.split(':')[1] || 'CAR';
+
+  }
+
+
   /* =======================================================
      BACK
   ======================================================= */
@@ -345,6 +368,103 @@ export class VehicleDetails
         '/owner-dashboard/vehicles'
       ]
     );
+
+  }
+
+
+  /* =======================================================
+     EDIT / DELETE VEHICLE
+  ======================================================= */
+
+  editVehicle(): void {
+
+    if (!this.vehicle) {
+
+      return;
+
+    }
+
+
+    this.router.navigate(
+      [
+        `/owner-dashboard/vehicles/${this.vehicle.id}/edit`
+      ]
+    );
+
+  }
+
+
+  deleteVehicle(): void {
+
+    if (!this.vehicle) {
+
+      return;
+
+    }
+
+
+    if (
+      !confirm(
+        'Are you sure you want to delete this vehicle? This action cannot be undone.'
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    this.isDeleting =
+      true;
+
+
+    this.vehicleService
+      .deleteVehicle(this.vehicle.id)
+      .subscribe({
+
+        next: response => {
+
+          this.isDeleting =
+            false;
+
+
+          alert(
+            response.message ||
+            'Vehicle deleted successfully.'
+          );
+
+
+          this.router.navigate(
+            [
+              '/owner-dashboard/vehicles'
+            ]
+          );
+
+        },
+
+
+        error: (
+          err: HttpErrorResponse
+        ) => {
+
+          this.isDeleting =
+            false;
+
+
+          console.error(
+            'Delete vehicle failed:',
+            err
+          );
+
+
+          alert(
+            err.error?.message ||
+            'Unable to delete vehicle. Please try again.'
+          );
+
+        }
+
+      });
 
   }
 

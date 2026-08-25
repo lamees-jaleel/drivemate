@@ -1,763 +1,505 @@
 <div class="documents-page">
-
   <header class="topbar">
-
-    <a
-      class="brand"
-      routerLink="/owner-dashboard">
-
+    <a class="brand" routerLink="/owner-dashboard">
       <span>Drive</span>
       <strong>Mate</strong>
-
     </a>
 
-
     @if (vehicle) {
-
-      <a
-        class="back-link"
-        [routerLink]="[
-          '/owner-dashboard/vehicles',
-          vehicle.id
-        ]">
-
-        ← Vehicle Details
-
-      </a>
-
+      @if (isDirectRoute) {
+        <a class="back-link" [routerLink]="['/owner-dashboard/vehicles', vehicle.id]">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Vehicle Details</span>
+        </a>
+      } @else {
+        <button class="back-link" type="button" (click)="clearSelection()">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          <span>Back to Select Vehicle</span>
+        </button>
+      }
     }
-
   </header>
 
-
   <main class="page-content">
-
-
     @if (loading) {
-
       <section class="state-card">
+        <span> LOADING </span>
 
-        <span>
-          LOADING
-        </span>
-
-        <h1>
-          Loading vehicle documents...
-        </h1>
-
+        <h1>Loading vehicle documents...</h1>
       </section>
-
     }
 
-
-    @if (
-      !loading &&
-      pageErrorMessage
-    ) {
-
+    @if (!loading && pageErrorMessage) {
       <section class="state-card">
-
-        <span>
-          DOCUMENTS UNAVAILABLE
-        </span>
+        <span> DOCUMENTS UNAVAILABLE </span>
 
         <h1>
           {{ pageErrorMessage }}
         </h1>
-
       </section>
-
     }
 
+    <!-- ===================================================
+         VEHICLE SELECTOR
+    ==================================================== -->
 
-    @if (
-      !loading &&
-      !pageErrorMessage &&
-      vehicle
-    ) {
+    @if (!loading && !pageErrorMessage && showVehicleSelector) {
+      <section class="vehicle-selector-centered">
+        <div class="selector-container">
+          <span class="eyebrow"> DOCUMENTS & COMPLIANCE </span>
 
+          <h1>
+            Select a
+            <span> Vehicle. </span>
+          </h1>
+
+          <p class="selector-desc">
+            Choose a vehicle from your garage to manage its documents, insurance, and compliance
+            alerts.
+          </p>
+
+          <div class="vehicle-selector-grid">
+            @for (v of vehicles; track v.id) {
+              <button class="vehicle-select-card" type="button" (click)="selectVehicle(v.id)">
+                <div class="card-visual">
+                  @if (v.vehicleImagePath && !v.vehicleImagePath.startsWith('placeholder:')) {
+                    <img
+                      [src]="'http://localhost:5000/' + v.vehicleImagePath"
+                      alt="Vehicle Image"
+                    />
+                  } @else {
+                    <svg viewBox="0 0 100 50" class="vehicle-svg-icon" fill="currentColor">
+                      <circle
+                        cx="25"
+                        cy="38"
+                        r="8"
+                        fill="#474a54"
+                        stroke="#18191e"
+                        stroke-width="2"
+                      />
+                      <circle
+                        cx="75"
+                        cy="38"
+                        r="8"
+                        fill="#474a54"
+                        stroke="#18191e"
+                        stroke-width="2"
+                      />
+                      <path
+                        d="M 12 38 L 15 22 H 40 L 50 16 H 75 L 88 30 L 88 38 Z"
+                        fill="#ef3038"
+                        opacity="0.9"
+                      />
+                    </svg>
+                  }
+                </div>
+
+                <div class="card-info">
+                  <span class="reg">{{ v.registrationNumber }}</span>
+                  <h3>{{ v.make }} {{ v.model }}</h3>
+                  @if (v.variant) {
+                    <small>{{ v.variant }}</small>
+                  }
+                </div>
+              </button>
+            }
+          </div>
+
+          <div class="selector-actions">
+            <a class="back-link" routerLink="/owner-dashboard">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>Back to Dashboard</span>
+            </a>
+          </div>
+        </div>
+      </section>
+    }
+
+    @if (!loading && !pageErrorMessage && vehicle) {
       <!-- HERO -->
 
       <section class="hero">
-
         <div>
-
-          <p class="eyebrow">
-            DOCUMENTS & COMPLIANCE
-          </p>
-
+          <p class="eyebrow">DOCUMENTS & COMPLIANCE</p>
 
           <h1>
-
             {{ vehicle.make }}
 
             <span>
               {{ vehicle.model }}
             </span>
-
           </h1>
 
-
           <p class="registration">
-
             {{ vehicle.registrationNumber }}
 
             @if (vehicle.variant) {
-
               · {{ vehicle.variant }}
-
             }
-
           </p>
-
 
           <p class="hero-copy">
-
-            Store important vehicle documents
-            and automatically monitor their
-            validity and expiry dates.
-
+            Store important vehicle documents and automatically monitor their validity and expiry
+            dates.
           </p>
-
         </div>
 
-
         <div class="alert-card">
-
-          <span>
-            COMPLIANCE ALERTS
-          </span>
+          <span> COMPLIANCE ALERTS </span>
 
           <strong>
             {{ complianceAlertCount }}
           </strong>
 
-          <small>
-            items requiring attention
-          </small>
-
+          <small> items requiring attention </small>
         </div>
-
       </section>
-
 
       <!-- SUMMARY -->
 
       <section class="summary-grid">
-
         <article>
-
-          <span>
-            DOCUMENTS
-          </span>
+          <span> DOCUMENTS </span>
 
           <strong>
             {{ documentCount }}
           </strong>
-
         </article>
 
-
         <article>
-
-          <span>
-            VALID
-          </span>
+          <span> VALID </span>
 
           <strong>
             {{ validDocumentCount }}
           </strong>
-
         </article>
 
-
         <article>
-
-          <span>
-            NEED ATTENTION
-          </span>
+          <span> NEED ATTENTION </span>
 
           <strong>
             {{ complianceAlertCount }}
           </strong>
-
         </article>
-
       </section>
-
 
       <!-- ADD DOCUMENT -->
 
       <section class="form-card">
-
         <div class="section-heading">
-
-          <span class="section-number">
-            01
-          </span>
+          <span class="section-number"> 01 </span>
 
           <div>
+            <p>VEHICLE RECORD</p>
 
-            <p>
-              VEHICLE RECORD
-            </p>
-
-            <h2>
-              Add Document
-            </h2>
-
+            <h2>Add Document</h2>
           </div>
-
         </div>
 
-
         @if (successMessage) {
-
-          <div class="success-message">
-            ✓ {{ successMessage }}
-          </div>
-
+          <div class="success-message">✓ {{ successMessage }}</div>
         }
 
-
         @if (formErrorMessage) {
-
           <div class="error-message">
             {{ formErrorMessage }}
           </div>
-
         }
 
-
-        <form
-          [formGroup]="documentForm"
-          (ngSubmit)="submit()"
-          novalidate>
-
-
+        <form [formGroup]="documentForm" (ngSubmit)="submit()" novalidate>
           <div class="form-grid">
-
             <div class="form-field">
-
               <label for="documentType">
-
                 Document Type
                 <span>*</span>
-
               </label>
 
+              <select id="documentType" formControlName="documentType">
+                <option value="">Select document type</option>
 
-              <select
-                id="documentType"
-                formControlName="documentType">
-
-                <option value="">
-                  Select document type
-                </option>
-
-
-                @for (
-                  type of documentTypes;
-                  track type.value
-                ) {
-
-                  <option
-                    [value]="type.value">
-
+                @for (type of documentTypes; track type.value) {
+                  <option [value]="type.value">
                     {{ type.label }}
-
                   </option>
-
                 }
-
               </select>
 
-
-              @if (
-                showError(
-                  f.documentType
-                )
-              ) {
-
-                <small class="error">
-                  Select a document type.
-                </small>
-
+              @if (showError(f.documentType)) {
+                <small class="error"> Select a document type. </small>
               }
-
             </div>
 
-
             <div class="form-field">
-
               <label for="title">
-
                 Document Title
                 <span>*</span>
-
               </label>
-
 
               <input
                 id="title"
                 type="text"
                 maxlength="150"
                 formControlName="title"
-                placeholder="Motor Insurance Policy">
+                placeholder="Motor Insurance Policy"
+              />
 
-
-              @if (
-                showError(
-                  f.title
-                )
-              ) {
-
-                <small class="error">
-                  Document title is required.
-                </small>
-
+              @if (showError(f.title)) {
+                <small class="error"> Document title is required. </small>
               }
-
             </div>
 
-
             <div class="form-field">
-
-              <label for="documentNumber">
-                Document / Policy Number
-              </label>
-
+              <label for="documentNumber"> Document / Policy Number </label>
 
               <input
                 id="documentNumber"
                 type="text"
                 maxlength="120"
                 formControlName="documentNumber"
-                placeholder="POL123456">
-
+                placeholder="POL123456"
+              />
             </div>
 
-
             <div class="form-field">
-
-              <label for="provider">
-                Provider / Authority
-              </label>
-
+              <label for="provider"> Provider / Authority </label>
 
               <input
                 id="provider"
                 type="text"
                 maxlength="150"
                 formControlName="provider"
-                placeholder="HDFC ERGO">
-
+                placeholder="HDFC ERGO"
+              />
             </div>
-
 
             <div class="form-field">
+              <label for="issueDate"> Issue Date </label>
 
-              <label for="issueDate">
-                Issue Date
-              </label>
-
-
-              <input
-                id="issueDate"
-                type="date"
-                formControlName="issueDate">
-
+              <input id="issueDate" type="date" formControlName="issueDate" />
             </div>
-
 
             <div class="form-field">
+              <label for="expiryDate"> Expiry Date </label>
 
-              <label for="expiryDate">
-                Expiry Date
-              </label>
-
-
-              <input
-                id="expiryDate"
-                type="date"
-                formControlName="expiryDate">
-
+              <input id="expiryDate" type="date" formControlName="expiryDate" />
             </div>
-
 
             <div class="form-field full-width">
-
               <label for="documentFile">
-
                 Document File
                 <span>*</span>
-
               </label>
 
+              <label class="file-drop" for="documentFile">
+                <strong> Choose document </strong>
 
-              <label
-                class="file-drop"
-                for="documentFile">
-
-                <strong>
-                  Choose document
-                </strong>
-
-                <span>
-                  PDF, JPG, JPEG or PNG · Max 5 MB
-                </span>
-
+                <span> PDF, JPG, JPEG or PNG · Max 5 MB </span>
 
                 @if (selectedFileName) {
-
-                  <small>
-                    ✓ {{ selectedFileName }}
-                  </small>
-
+                  <small> ✓ {{ selectedFileName }} </small>
                 }
-
               </label>
-
 
               <input
                 id="documentFile"
                 class="real-file-input"
                 type="file"
                 accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
-                (change)="onFileSelected($event)">
-
+                (change)="onFileSelected($event)"
+              />
 
               @if (fileErrorMessage) {
-
                 <small class="error">
                   {{ fileErrorMessage }}
                 </small>
-
               }
-
             </div>
 
-
             <div class="form-field full-width">
-
-              <label for="notes">
-                Notes
-              </label>
-
+              <label for="notes"> Notes </label>
 
               <textarea
                 id="notes"
                 rows="4"
                 maxlength="1000"
                 formControlName="notes"
-                placeholder="Optional details about this document...">
+                placeholder="Optional details about this document..."
+              >
               </textarea>
-
             </div>
-
           </div>
-
 
           <div class="form-actions">
-
-            <button
-              class="save-button"
-              type="submit"
-              [disabled]="isSubmitting">
-
+            <button class="save-button" type="submit" [disabled]="isSubmitting">
               @if (isSubmitting) {
-
                 Uploading...
-
-              }
-
-              @else {
-
+              } @else {
                 + Add Document
-
               }
-
             </button>
-
           </div>
-
         </form>
-
       </section>
-
 
       <!-- DOCUMENT LIST -->
 
       <section class="records-section">
-
         <div class="records-heading">
-
           <div>
+            <p class="eyebrow">DIGITAL GLOVEBOX</p>
 
-            <p class="eyebrow">
-              DIGITAL GLOVEBOX
-            </p>
-
-            <h2>
-              Vehicle Documents
-            </h2>
-
+            <h2>Vehicle Documents</h2>
           </div>
-
 
           <span class="record-badge">
             {{ documentCount }}
           </span>
-
         </div>
 
-
-        @if (
-          documents.length === 0
-        ) {
-
+        @if (documents.length === 0) {
           <div class="empty-state">
+            <div class="empty-icon">▤</div>
 
-            <div class="empty-icon">
-              ▤
-            </div>
-
-            <h3>
-              No documents uploaded yet
-            </h3>
+            <h3>No documents uploaded yet</h3>
 
             <p>
-
-              Add your insurance, RC,
-              pollution certificate and other
-              important vehicle documents.
-
+              Add your insurance, RC, pollution certificate and other important vehicle documents.
             </p>
-
           </div>
-
-        }
-
-
-        @else {
-
+        } @else {
           <div class="document-list">
-
-            @for (
-              vehicleDocument of documents;
-              track vehicleDocument.id
-            ) {
-
+            @for (vehicleDocument of documents; track vehicleDocument.id) {
               <article class="document-card">
-
-                <div class="document-icon">
-                  ▤
-                </div>
-
+                <div class="document-icon">▤</div>
 
                 <div class="document-content">
-
                   <div class="document-top">
-
                     <div>
-
                       <span class="document-type">
-
-                        {{
-                          getDocumentTypeLabel(
-                            vehicleDocument.documentType
-                          )
-                        }}
-
+                        {{ getDocumentTypeLabel(vehicleDocument.documentType) }}
                       </span>
-
 
                       <h3>
                         {{ vehicleDocument.title }}
                       </h3>
-
                     </div>
-
 
                     <span
                       class="status-badge"
-                      [class]="
-                        getStatusClass(
-                          vehicleDocument.complianceStatus
-                        )
-                      ">
-
-                      {{
-                        getComplianceLabel(
-                          vehicleDocument.complianceStatus
-                        )
-                      }}
-
+                      [class]="getStatusClass(vehicleDocument.complianceStatus)"
+                    >
+                      {{ getComplianceLabel(vehicleDocument.complianceStatus) }}
                     </span>
-
                   </div>
-
 
                   <div class="document-details">
-
                     <div>
-
-                      <span>
-                        NUMBER
-                      </span>
+                      <span> NUMBER </span>
 
                       <strong>
-
-                        {{
-                          vehicleDocument.documentNumber ||
-                          'Not specified'
-                        }}
-
+                        {{ vehicleDocument.documentNumber || 'Not specified' }}
                       </strong>
-
                     </div>
-
 
                     <div>
-
-                      <span>
-                        PROVIDER
-                      </span>
+                      <span> PROVIDER </span>
 
                       <strong>
-
-                        {{
-                          vehicleDocument.provider ||
-                          'Not specified'
-                        }}
-
+                        {{ vehicleDocument.provider || 'Not specified' }}
                       </strong>
-
                     </div>
-
 
                     <div>
-
-                      <span>
-                        ISSUE DATE
-                      </span>
+                      <span> ISSUE DATE </span>
 
                       <strong>
-
-                        {{
-                          formatDate(
-                            vehicleDocument.issueDate
-                          )
-                        }}
-
+                        {{ formatDate(vehicleDocument.issueDate) }}
                       </strong>
-
                     </div>
-
 
                     <div>
-
-                      <span>
-                        EXPIRY DATE
-                      </span>
+                      <span> EXPIRY DATE </span>
 
                       <strong>
-
-                        {{
-                          formatDate(
-                            vehicleDocument.expiryDate
-                          )
-                        }}
-
+                        {{ formatDate(vehicleDocument.expiryDate) }}
                       </strong>
-
                     </div>
-
                   </div>
 
-
-                  @if (
-                    vehicleDocument.complianceStatus ===
-                    'EXPIRING_SOON'
-                  ) {
-
+                  @if (vehicleDocument.complianceStatus === 'EXPIRING_SOON') {
                     <div class="warning-box">
-
                       ⚠ Expires in
                       {{ vehicleDocument.daysUntilExpiry }}
                       day(s).
-
                     </div>
-
                   }
 
-
-                  @if (
-                    vehicleDocument.complianceStatus ===
-                    'EXPIRED'
-                  ) {
-
-                    <div class="expired-box">
-
-                      ! This document has expired.
-
-                    </div>
-
+                  @if (vehicleDocument.complianceStatus === 'EXPIRED') {
+                    <div class="expired-box">! This document has expired.</div>
                   }
-
 
                   <div class="file-info">
-
-                    <span>
-                      FILE
-                    </span>
+                    <span> FILE </span>
 
                     <strong>
-
-                      {{
-                        vehicleDocument.originalFileName ||
-                        'Document'
-                      }}
-
+                      {{ vehicleDocument.originalFileName || 'Document' }}
                     </strong>
 
                     <small>
-
-                      {{
-                        formatFileSize(
-                          vehicleDocument.fileSize
-                        )
-                      }}
-
+                      {{ formatFileSize(vehicleDocument.fileSize) }}
                     </small>
-
                   </div>
 
-
                   @if (vehicleDocument.notes) {
-
                     <p class="notes">
-
                       {{ vehicleDocument.notes }}
-
                     </p>
-
                   }
-
                 </div>
-
               </article>
-
             }
-
           </div>
-
         }
-
       </section>
-
     }
-
   </main>
-
 </div>
