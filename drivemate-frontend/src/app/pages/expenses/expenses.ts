@@ -11,6 +11,7 @@ import {
   Validators
 } from '@angular/forms';
 
+import { Location } from '@angular/common';
 import {
   HttpErrorResponse
 } from '@angular/common/http';
@@ -63,6 +64,9 @@ export class Expenses
 
   private readonly router =
     inject(Router);
+
+  private readonly location =
+    inject(Location);
 
 
   private readonly formBuilder =
@@ -511,6 +515,11 @@ export class Expenses
   ======================================================= */
 
   
+  goBack(event: Event): void {
+    event.preventDefault();
+    this.location.back();
+  }
+
   clearSelection(): void {
     this.vehicle = null;
     this.vehicleId = 0;
@@ -1025,3 +1034,5 @@ export class Expenses
   }
 
 }
+
+

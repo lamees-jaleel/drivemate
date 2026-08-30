@@ -11,6 +11,7 @@ import {
   Validators
 } from '@angular/forms';
 
+import { Location } from '@angular/common';
 import {
   HttpErrorResponse
 } from '@angular/common/http';
@@ -36,6 +37,8 @@ import {
   VehicleDocument,
   VehicleDocumentType
 } from '../../services/document.service';
+
+import { ToastService } from '../../shared/toast/toast.service';
 
 
 @Component({
@@ -64,6 +67,9 @@ export class Documents
   private readonly router =
     inject(Router);
 
+  private readonly location =
+    inject(Location);
+
 
   private readonly formBuilder =
     inject(FormBuilder);
@@ -80,6 +86,8 @@ export class Documents
   private readonly authService =
     inject(AuthService);
 
+  private readonly toast =
+    inject(ToastService);
 
   vehicle:
     Vehicle |
@@ -476,6 +484,11 @@ export class Documents
   ======================================================= */
 
   
+  goBack(event: Event): void {
+    event.preventDefault();
+    this.location.back();
+  }
+
   clearSelection(): void {
     this.vehicle = null;
     this.vehicleId = 0;
@@ -1277,4 +1290,28 @@ export class Documents
 
   }
 
+  renewDocument(document: VehicleDocument): void {
+    this.documentForm.patchValue({
+      documentType: document.documentType,
+      title: document.title,
+      provider: document.provider,
+      documentNumber: document.documentNumber
+    });
+
+    this.selectedFile = null;
+    const fileInput = window.document.getElementById('fileUpload') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+
+    this.toast.show('Form pre-filled. Please upload your new document and update the dates.', 'info');
+    
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+
 }
+
+

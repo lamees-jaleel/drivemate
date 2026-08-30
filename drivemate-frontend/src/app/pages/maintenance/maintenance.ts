@@ -5,7 +5,8 @@ import {
 } from '@angular/core';
 
 import {
-  NgClass
+  NgClass,
+  Location
 } from '@angular/common';
 
 import {
@@ -77,6 +78,9 @@ export class Maintenance
 
   private readonly router =
     inject(Router);
+
+  private readonly location =
+    inject(Location);
 
 
   private readonly formBuilder =
@@ -554,6 +558,11 @@ export class Maintenance
   ======================================================= */
 
   
+  goBack(event: Event): void {
+    event.preventDefault();
+    this.location.back();
+  }
+
   clearSelection(): void {
     this.vehicle = null;
     this.vehicleId = 0;
@@ -1307,3 +1316,4 @@ export class Maintenance
   }
 
 }
+

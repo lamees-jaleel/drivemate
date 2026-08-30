@@ -22,6 +22,8 @@ import { FormsModule } from '@angular/forms';
 
 import { CommonModule } from '@angular/common';
 
+import { ToastService } from '../../shared/toast/toast.service';
+
 @Component({
   selector: 'app-owner-dashboard',
 
@@ -35,6 +37,8 @@ import { CommonModule } from '@angular/common';
 })
 export class OwnerDashboard implements OnInit {
   private readonly router = inject(Router);
+
+  private readonly toast = inject(ToastService);
 
   private readonly authService = inject(AuthService);
 
@@ -597,7 +601,7 @@ export class OwnerDashboard implements OnInit {
       still being developed.
     */
 
-    alert(`${moduleName} will be connected in the next DriveMate module.`);
+    this.toast.show(`${moduleName} will be connected in the next DriveMate module.`, 'info');
   }
 
   /* =======================================================

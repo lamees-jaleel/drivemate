@@ -25,6 +25,8 @@ import {
   AuthService
 } from '../../services/auth.service';
 
+import { ToastService } from '../../shared/toast/toast.service';
+
 
 const EMAIL_REGEX =
   /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -76,6 +78,8 @@ export class Login {
   private readonly authService =
     inject(AuthService);
 
+  private readonly toast =
+    inject(ToastService);
 
   submitted =
     false;
@@ -476,8 +480,9 @@ export class Login {
             'Unable to sign in. Please try again.';
 
 
-          alert(
-            message
+          this.toast.show(
+            message,
+            'error'
           );
 
         }

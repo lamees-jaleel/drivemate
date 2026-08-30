@@ -288,6 +288,8 @@ model User {
 
   reviewedDocuments VehicleDocument[] @relation("ReviewedDocuments")
 
+  recoverySessions RecoverySession[]
+
   @@map("users")
 }
 
@@ -765,4 +767,30 @@ model RoadsideRequest {
   @@index([status])
   @@index([createdAt])
   @@map("roadside_requests")
+}
+/**
+ * =========================================================
+ * RECOVERY SESSION
+ * =========================================================
+ */
+
+model RecoverySession {
+  id String @id @default(uuid())
+
+  userId Int
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  email String @db.VarChar(150)
+  otpHash String @db.VarChar(255)
+  step String @default("INITIATED") @db.VarChar(50)
+  
+  attempts Int @default(0)
+  lastResendAt DateTime?
+  expiresAt DateTime
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("recovery_sessions")
 }

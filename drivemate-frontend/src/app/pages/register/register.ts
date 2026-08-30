@@ -10,6 +10,7 @@ import {
   Validators
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { ToastService } from '../../shared/toast/toast.service';
 
 
 type RegistrationRole =
@@ -258,6 +259,8 @@ export class Register {
   private readonly http =
     inject(HttpClient);
 
+  private readonly toast =
+    inject(ToastService);
 
   submitted = false;
 
@@ -2022,9 +2025,10 @@ export class Register {
         this.submitted = false;
 
 
-        alert(
+        this.toast.show(
           response.message ||
-          'Registration successful.'
+          'Registration successful.',
+          'success'
         );
       },
 
@@ -2056,10 +2060,11 @@ export class Register {
             : '';
 
 
-        alert(
+        this.toast.show(
           detailedMessage ||
           error.error?.message ||
-          'Registration failed. Please try again.'
+          'Registration failed. Please try again.',
+          'error'
         );
       }
 

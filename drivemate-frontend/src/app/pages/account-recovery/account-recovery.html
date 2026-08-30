@@ -1,0 +1,90 @@
+<div class="recovery-page">
+  <section class="form-panel">
+    <a routerLink="/login" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Back to Login</span>
+    </a>
+
+    <div class="form-container">
+      <header class="form-heading">
+        <h2 *ngIf="step === 'IDENTIFY'">Account Recovery</h2>
+        <h2 *ngIf="step === 'VERIFY'">Verify Identity</h2>
+        <h2 *ngIf="step === 'RESET'">Reset Password</h2>
+        <h2 *ngIf="step === 'SUCCESS'">Password Reset</h2>
+        
+        <p *ngIf="step === 'IDENTIFY'">Enter your email address to find your account.</p>
+        <p *ngIf="step === 'VERIFY'">An OTP has been sent to {{ maskedEmail }}.</p>
+        <p *ngIf="step === 'RESET'">Create a new, strong password.</p>
+        <p *ngIf="step === 'SUCCESS'">Your password has been changed successfully.</p>
+      </header>
+
+      <div class="error-banner" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Step 1: Identify -->
+      <form *ngIf="step === 'IDENTIFY'" [formGroup]="identifyForm" (ngSubmit)="onIdentifySubmit()">
+        <div class="form-group">
+          <label for="email">Email Address <span>*</span></label>
+          <input id="email" type="email" formControlName="email" placeholder="you@example.com" [class.invalid]="showError(fIdentify['email'])" />
+          <p class="error-message" *ngIf="showError(fIdentify['email'])">Please enter a valid email address.</p>
+        </div>
+        <button type="submit" class="primary-button" [disabled]="loading">
+          <span>{{ loading ? 'Finding Account...' : 'Continue' }}</span> <span>→</span>
+        </button>
+      </form>
+
+      <!-- Step 2: Verify -->
+      <form *ngIf="step === 'VERIFY'" [formGroup]="verifyForm" (ngSubmit)="onVerifySubmit()">
+        <div class="form-group">
+          <label for="otp">6-Digit Code <span>*</span></label>
+          <input id="otp" type="text" formControlName="otp" placeholder="Enter 6-digit code" maxlength="6" [class.invalid]="showError(fVerify['otp'])" />
+          <p class="error-message" *ngIf="showError(fVerify['otp'])">Please enter a valid 6-digit code.</p>
+        </div>
+        
+        <div class="resend-container">
+          <button type="button" class="resend-button" (click)="onResendOTP()" [disabled]="resendCooldown > 0 || loading">
+            {{ resendCooldown > 0 ? 'Resend in ' + resendCooldown + 's' : 'Resend Code' }}
+          </button>
+        </div>
+
+        <button type="submit" class="primary-button" [disabled]="loading">
+          <span>{{ loading ? 'Verifying...' : 'Verify Code' }}</span> <span>→</span>
+        </button>
+      </form>
+
+      <!-- Step 3: Reset Password -->
+      <form *ngIf="step === 'RESET'" [formGroup]="resetForm" (ngSubmit)="onResetSubmit()">
+        <!-- Hidden username field to help browser password managers -->
+        <input type="email" autocomplete="username" [value]="identifyForm.get('email')?.value" style="position: absolute; opacity: 0; pointer-events: none; height: 0; width: 0;" tabindex="-1" aria-hidden="true" />
+
+        <div class="form-group">
+          <label for="password">New Password <span>*</span></label>
+          <div class="password-field">
+            <input id="password" type="password" formControlName="password" autocomplete="new-password" placeholder="At least 8 characters" [class.invalid]="showError(fReset['password'])" />
+          </div>
+          <p class="error-message" *ngIf="showError(fReset['password'])">Password must be at least 8 characters.</p>
+        </div>
+        
+        <button type="submit" class="primary-button" [disabled]="loading">
+          {{ loading ? 'Resetting...' : 'Reset Password' }}
+        </button>
+      </form>
+
+      <!-- Step 4: Success -->
+      <div *ngIf="step === 'SUCCESS'" class="success-container">
+        <svg class="success-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+          <polyline points="22 4 12 14.01 9 11.01"></polyline>
+        </svg>
+        <button type="button" class="primary-button" (click)="goBackToLogin()">
+          <span>Back to Login</span> <span>→</span>
+        </button>
+      </div>
+
+    </div>
+  </section>
+</div>

@@ -17,6 +17,7 @@ import {
   HttpErrorResponse
 } from '@angular/common/http';
 
+import { Location } from '@angular/common';
 import {
   Router,
   RouterLink,
@@ -26,6 +27,8 @@ import {
 import {
   AuthService
 } from '../../services/auth.service';
+
+import { ToastService } from '../../shared/toast/toast.service';
 
 import {
   AddVehiclePayload,
@@ -105,10 +108,15 @@ export class AddVehicle implements OnInit {
   private readonly router =
     inject(Router);
 
+  private readonly location =
+    inject(Location);
+
 
   private readonly route =
     inject(ActivatedRoute);
 
+  private readonly toast =
+    inject(ToastService);
 
   vehicleId: number | null = null;
 
@@ -258,8 +266,9 @@ export class AddVehicle implements OnInit {
           );
 
 
-          alert(
-            'Unable to load vehicle details. Redirecting to dashboard.'
+          this.toast.show(
+            'Unable to load vehicle details. Redirecting to dashboard.',
+            'error'
           );
 
 
@@ -717,8 +726,9 @@ export class AddVehicle implements OnInit {
       )
     ) {
 
-      alert(
-        'Only JPG, JPEG, and PNG files are allowed.'
+      this.toast.show(
+        'Only JPG, JPEG, and PNG files are allowed.',
+        'error'
       );
 
       input.value = '';
@@ -733,8 +743,9 @@ export class AddVehicle implements OnInit {
       5 * 1024 * 1024
     ) {
 
-      alert(
-        'File size must not exceed 5MB.'
+      this.toast.show(
+        'File size must not exceed 5MB.',
+        'error'
       );
 
       input.value = '';
@@ -812,6 +823,11 @@ export class AddVehicle implements OnInit {
   /* =======================================================
      SUBMIT
   ======================================================= */
+
+  goBack(event: Event): void {
+    event.preventDefault();
+    this.location.back();
+  }
 
   submit(): void {
 
@@ -951,9 +967,10 @@ export class AddVehicle implements OnInit {
             false;
 
 
-          alert(
+          this.toast.show(
             response.message ||
-            (this.isEditMode ? 'Vehicle updated successfully.' : 'Vehicle added successfully.')
+            (this.isEditMode ? 'Vehicle updated successfully.' : 'Vehicle added successfully.'),
+            'success'
           );
 
 
@@ -995,9 +1012,10 @@ export class AddVehicle implements OnInit {
               .clearSession();
 
 
-            alert(
+            this.toast.show(
               error.error?.message ||
-              'Your login session has expired. Please sign in again.'
+              'Your login session has expired. Please sign in again.',
+              'error'
             );
 
 
@@ -1026,10 +1044,11 @@ export class AddVehicle implements OnInit {
               : '';
 
 
-          alert(
+          this.toast.show(
             detailedMessage ||
             error.error?.message ||
-            'Unable to add vehicle. Please try again.'
+            'Unable to add vehicle. Please try again.',
+            'error'
           );
 
         }
@@ -1039,3 +1058,4 @@ export class AddVehicle implements OnInit {
   }
 
 }
+

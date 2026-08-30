@@ -289,14 +289,15 @@
 
           <!-- FORGOT PASSWORD -->
 
-          <button
-            type="button"
+          <a
+            [routerLink]="['/account-recovery']"
+            [queryParams]="{ email: f.email.value }"
             class="forgot-password"
           >
 
             Forgot Password?
 
-          </button>
+          </a>
 
         </div>
 

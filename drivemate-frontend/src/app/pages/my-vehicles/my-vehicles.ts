@@ -4,6 +4,7 @@ import {
   inject
 } from '@angular/core';
 
+import { Location } from '@angular/common';
 import {
   HttpErrorResponse
 } from '@angular/common/http';
@@ -45,6 +46,9 @@ export class MyVehicles
     inject(VehicleService);
 
 
+  private readonly location =
+    inject(Location);
+
   private readonly authService =
     inject(AuthService);
 
@@ -68,6 +72,11 @@ export class MyVehicles
   /* =======================================================
      INITIALIZE
   ======================================================= */
+
+  goBack(event: Event): void {
+    event.preventDefault();
+    this.location.back();
+  }
 
   ngOnInit(): void {
 
@@ -205,3 +214,4 @@ export class MyVehicles
   }
 
 }
+

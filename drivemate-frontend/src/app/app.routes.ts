@@ -15,6 +15,10 @@ import {
 } from './pages/register/register';
 
 import {
+  AccountRecovery
+} from './pages/account-recovery/account-recovery';
+
+import {
   OwnerDashboard
 } from './pages/owner-dashboard/owner-dashboard';
 
@@ -79,6 +83,11 @@ export const routes:
   {
     path: 'login',
     component: Login
+  },
+
+  {
+    path: 'account-recovery',
+    component: AccountRecovery
   },
 
 

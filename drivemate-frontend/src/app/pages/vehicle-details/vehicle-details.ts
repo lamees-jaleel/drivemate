@@ -4,6 +4,8 @@ import {
   inject
 } from '@angular/core';
 
+import { Location } from '@angular/common';
+
 import {
   HttpErrorResponse
 } from '@angular/common/http';
@@ -22,6 +24,8 @@ import {
   Vehicle,
   VehicleService
 } from '../../services/vehicle.service';
+
+import { ToastService } from '../../shared/toast/toast.service';
 
 
 @Component({
@@ -42,20 +46,23 @@ import {
 export class VehicleDetails
   implements OnInit {
 
-  private readonly route =
-    inject(ActivatedRoute);
-
-
   private readonly router =
     inject(Router);
 
+  private readonly location =
+    inject(Location);
+
+  private readonly route =
+    inject(ActivatedRoute);
+
+  private readonly authService =
+    inject(AuthService);
 
   private readonly vehicleService =
     inject(VehicleService);
 
-
-  private readonly authService =
-    inject(AuthService);
+  private readonly toast =
+    inject(ToastService);
 
 
   vehicle:
@@ -73,6 +80,11 @@ export class VehicleDetails
 
   isDeleting =
     false;
+
+  goBack(event: Event): void {
+    event.preventDefault();
+    this.location.back();
+  }
 
 
   /* =======================================================
@@ -428,9 +440,10 @@ export class VehicleDetails
             false;
 
 
-          alert(
+          this.toast.show(
             response.message ||
-            'Vehicle deleted successfully.'
+            'Vehicle deleted successfully.',
+            'success'
           );
 
 
@@ -457,9 +470,10 @@ export class VehicleDetails
           );
 
 
-          alert(
+          this.toast.show(
             err.error?.message ||
-            'Unable to delete vehicle. Please try again.'
+            'Unable to delete vehicle. Please try again.',
+            'error'
           );
 
         }

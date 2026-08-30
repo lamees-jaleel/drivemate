@@ -27,6 +27,8 @@ import {
   DiagnosticRequest
 } from '../../services/diagnostic.service';
 
+import { ToastService } from '../../shared/toast/toast.service';
+
 
 @Component({
   selector: 'app-expert-dashboard',
@@ -54,6 +56,9 @@ export class ExpertDashboard
 
   private readonly authService =
     inject(AuthService);
+
+  private readonly toast =
+    inject(ToastService);
 
 
   private readonly diagnosticService =
@@ -356,7 +361,7 @@ export class ExpertDashboard
 
         error: () => {
 
-          alert('Failed to accept request. Please try again.');
+          this.toast.show('Failed to accept request. Please try again.', 'error');
 
         }
 
@@ -380,7 +385,7 @@ export class ExpertDashboard
 
         error: () => {
 
-          alert('Failed to start service.');
+          this.toast.show('Failed to start service.', 'error');
 
         }
 
@@ -405,7 +410,7 @@ export class ExpertDashboard
   submitReport(): void {
     if (!this.currentReportId) return;
     if (!this.reportFindings || !this.reportRecommendedAction) {
-      alert('Findings and recommended action are required.');
+      this.toast.show('Findings and recommended action are required.', 'error');
       return;
     }
 
@@ -430,7 +435,7 @@ export class ExpertDashboard
       },
       error: () => {
         this.submittingReport = false;
-        alert('Failed to submit report.');
+        this.toast.show('Failed to submit report.', 'error');
       }
     });
   }
@@ -452,7 +457,7 @@ export class ExpertDashboard
 
         error: () => {
 
-          alert('Failed to mark service as completed.');
+          this.toast.show('Failed to mark service as completed.', 'error');
 
         }
 
@@ -478,7 +483,7 @@ export class ExpertDashboard
 
           error: () => {
 
-            alert('Failed to cancel request.');
+            this.toast.show('Failed to cancel request.', 'error');
 
           }
 
