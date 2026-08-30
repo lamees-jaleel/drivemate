@@ -1,4 +1,4 @@
-<div class="admin-shell">
+<div class="dashboard-shell">
 
   <!-- MOBILE HEADER -->
 
@@ -42,39 +42,34 @@
     class="sidebar"
     [class.sidebar-open]="mobileSidebarOpen">
 
-    <div class="sidebar-top">
-
-      <a
-        class="brand"
-        routerLink="/admin-dashboard">
-
-        Drive<strong>Mate</strong>
-
+        <div class="sidebar-top">
+      <a class="brand" routerLink="/admin-dashboard">
+        <span class="brand-drive">Drive</span>
+        <span class="brand-mate">Mate</span>
       </a>
-
-
-      <div class="role-badge">
-
-        <span></span>
-
-        ADMINISTRATOR
-
-      </div>
-
+      <button class="sidebar-close" type="button" (click)="closeSidebar()">X</button>
     </div>
 
+    <div class="owner-mini-profile">
+      <div class="avatar">
+        {{ firstName.charAt(0).toUpperCase() }}
+      </div>
+      <div class="owner-mini-info">
+        <strong>
+          {{ currentUser?.fullName }}
+        </strong>
+        <span> SYSTEM ADMINISTRATOR </span>
+      </div>
+    </div>
 
-    <nav class="navigation">
+    <nav class="sidebar-nav">
 
       <button
         class="nav-item"
         [class.active]="currentTab === 'VERIFICATIONS'"
         type="button"
-        (click)="switchTab('VERIFICATIONS')">
-
-        <span>◈</span>
-
-        Professional Verification
+        (click)="switchTab('VERIFICATIONS')"><span class="nav-icon">◈</span>
+        <span style="white-space: nowrap; flex: 1; text-align: left; font-size: 13px; letter-spacing: -0.1px;">Professional Verification</span>
 
         @if (pendingCount > 0) {
 
@@ -91,11 +86,8 @@
         class="nav-item"
         [class.active]="currentTab === 'USER_MANAGEMENT'"
         type="button"
-        (click)="switchTab('USER_MANAGEMENT')">
-
-        <span>◎</span>
-
-        User Management
+        (click)="switchTab('USER_MANAGEMENT')"><span class="nav-icon">◎</span>
+        <span style="white-space: nowrap; flex: 1; text-align: left; font-size: 13px; letter-spacing: -0.1px;">User Management</span>
 
       </button>
 
@@ -104,61 +96,20 @@
         class="nav-item"
         [class.active]="currentTab === 'SYSTEM_REPORTS'"
         type="button"
-        (click)="switchTab('SYSTEM_REPORTS')">
-
-        <span>▤</span>
-
-        System Reports
+        (click)="switchTab('SYSTEM_REPORTS')"><span class="nav-icon">▤</span>
+        <span style="white-space: nowrap; flex: 1; text-align: left; font-size: 13px; letter-spacing: -0.1px;">System Reports</span>
 
       </button>
 
     </nav>
 
-
-    <div class="sidebar-bottom">
-
-      <div class="admin-user">
-
-        <div class="avatar">
-
-          {{
-            firstName
-              .charAt(0)
-              .toUpperCase()
-          }}
-
-        </div>
-
-
-        <div>
-
-          <strong>
-
-            {{
-              currentUser?.fullName ||
-              'Administrator'
-            }}
-
-          </strong>
-
-          <span>
-            System Administrator
-          </span>
-
-        </div>
-
-      </div>
-
-
-      <button
-        class="logout-button"
-        type="button"
-        (click)="logout()">
-
-        ↪ Sign Out
-
-      </button>
-
+    <div class="sidebar-footer">
+      <button class="logout-button" type="button" (click)="logout()">↗ Sign Out</button>
+      <p>
+        DRIVEMATE
+        <span>�</span>
+        YOUR ROAD. REIMAGINED.
+      </p>
     </div>
 
   </aside>
@@ -166,35 +117,33 @@
 
   <!-- MAIN -->
 
-  <main class="main-content">
+  <main class="main-area">
 
 
-    <header class="topbar">
-
-      <div>
-
-        <p>
-          ADMIN CONTROL CENTER
-        </p>
-
-        <h2>
-          @if (currentTab === 'VERIFICATIONS') { Professional Verifications }
-          @else if (currentTab === 'USER_MANAGEMENT') { User Management }
-          @else if (currentTab === 'SYSTEM_REPORTS') { System Reports }
-        </h2>
-
+    
+<header class="topbar">
+  <div class="topbar-left">
+    <button class="menu-button" type="button" (click)="toggleSidebar()">☰</button>
+    <div>
+      <p class="topbar-label">ADMIN PORTAL</p>
+      <h1>Dashboard</h1>
+    </div>
+  </div>
+  <div class="topbar-right">
+    
+    <div class="topbar-user">
+      <div class="topbar-avatar">
+        {{ firstName.charAt(0).toUpperCase() }}
       </div>
-
-
-      <div class="admin-status">
-
-        <span></span>
-
-        Secure Admin Portal
-
+      <div class="topbar-user-text">
+        <strong>{{ currentUser?.fullName }}</strong>
+        <span>{{ currentUser?.email }}</span>
       </div>
+    </div>
+  </div>
+</header>
+<div class="dashboard-content">
 
-    </header>
 
 
     <!-- ===================================================
@@ -204,7 +153,7 @@
 
     <!-- HERO -->
 
-    <section class="hero">
+    <section class="welcome-section">
 
       <div>
 
@@ -224,7 +173,7 @@
         </h1>
 
 
-        <p class="hero-text">
+        <p class="welcome-copy">
 
           Review professional registrations,
           manage verification decisions and
@@ -236,11 +185,7 @@
       </div>
 
 
-      <div class="admin-visual">
-
-        <span>
-          ◈
-        </span>
+      <div class="admin-visual"><span>◈</span>
 
         <small>
           ADMIN SYSTEM
@@ -257,98 +202,65 @@
 
     <!-- SUMMARY -->
 
-    <section class="summary-grid">
+    
+      <section class="stats-grid">
 
-      <button
-        class="summary-card"
-        type="button"
-        [class.selected]="currentFilter === 'PENDING'"
-        (click)="loadProfessionals('PENDING')">
+        <button
+          class="stat-card"
+          type="button"
+          [class.selected]="currentFilter === 'PENDING'"
+          (click)="loadProfessionals('PENDING')">
+          <div class="stat-card-top">
+            <span class="stat-icon">◯</span>
+            <span class="stat-label">PENDING</span>
+          </div>
+          <div class="stat-value">{{ pendingCount }}</div>
+          <p>Awaiting administrator review</p>
+        </button>
 
-        <span>
-          PENDING APPLICATIONS
-        </span>
+        <button
+          class="stat-card"
+          type="button"
+          [class.selected]="currentFilter === 'APPROVED'"
+          (click)="loadProfessionals('APPROVED')">
+          <div class="stat-card-top">
+            <span class="stat-icon">✓</span>
+            <span class="stat-label">APPROVED</span>
+          </div>
+          <div class="stat-value">{{ approvedCount }}</div>
+          <p>Verified professional accounts</p>
+        </button>
 
-        <strong>
-          {{ pendingCount }}
-        </strong>
+        <button
+          class="stat-card"
+          type="button"
+          [class.selected]="currentFilter === 'REJECTED'"
+          (click)="loadProfessionals('REJECTED')">
+          <div class="stat-card-top">
+            <span class="stat-icon">✕</span>
+            <span class="stat-label">REJECTED</span>
+          </div>
+          <div class="stat-value">{{ rejectedCount }}</div>
+          <p>Applications not approved</p>
+        </button>
 
-        <small>
-          Awaiting administrator review
-        </small>
+        <button
+          class="stat-card"
+          type="button"
+          [class.selected]="currentFilter === 'ALL'"
+          (click)="loadProfessionals('ALL')">
+          <div class="stat-card-top">
+            <span class="stat-icon">▤</span>
+            <span class="stat-label">ALL</span>
+          </div>
+          <div class="stat-value">
+            {{ pendingCount + approvedCount + rejectedCount }}
+          </div>
+          <p>Complete professional registry</p>
+        </button>
 
-      </button>
+      </section>
 
-
-      <button
-        class="summary-card"
-        type="button"
-        [class.selected]="currentFilter === 'APPROVED'"
-        (click)="loadProfessionals('APPROVED')">
-
-        <span>
-          APPROVED PROFESSIONALS
-        </span>
-
-        <strong>
-          {{ approvedCount }}
-        </strong>
-
-        <small>
-          Verified professional accounts
-        </small>
-
-      </button>
-
-
-      <button
-        class="summary-card"
-        type="button"
-        [class.selected]="currentFilter === 'REJECTED'"
-        (click)="loadProfessionals('REJECTED')">
-
-        <span>
-          REJECTED APPLICATIONS
-        </span>
-
-        <strong>
-          {{ rejectedCount }}
-        </strong>
-
-        <small>
-          Applications not approved
-        </small>
-
-      </button>
-
-
-      <button
-        class="summary-card"
-        type="button"
-        [class.selected]="currentFilter === 'ALL'"
-        (click)="loadProfessionals('ALL')">
-
-        <span>
-          ALL APPLICATIONS
-        </span>
-
-        <strong>
-
-          {{
-            pendingCount +
-            approvedCount +
-            rejectedCount
-          }}
-
-        </strong>
-
-        <small>
-          Complete professional registry
-        </small>
-
-      </button>
-
-    </section>
 
 
     <!-- MESSAGES -->
@@ -662,7 +574,7 @@
 
 
                   <button
-                    class="review-button"
+                    class="primary-button compact"
                     type="button"
                     (click)="selectProfessional(professional)">
 
@@ -764,7 +676,7 @@
                     </td>
                     <td style="padding: 14px 18px; text-align: right;">
                       @if (u.id !== currentUser?.id) {
-                        <button class="review-button" type="button" style="min-height: auto; padding: 6px 12px; font-size: 11px;" [disabled]="updatingUserStatus" (click)="toggleUserStatus(u)">
+                        <button class="primary-button compact" type="button" style="min-height: auto; padding: 6px 12px; font-size: 11px;" [disabled]="updatingUserStatus" (click)="toggleUserStatus(u)">
                           {{ u.accountStatus === 'ACTIVE' ? 'Suspend' : 'Activate' }}
                         </button>
                       } @else {
@@ -796,33 +708,46 @@
             <h3>Compiling reports...</h3>
           </div>
         } @else if (reports) {
-          <div class="summary-grid" style="margin-bottom: 24px;">
-            <div class="summary-card">
-              <span>TOTAL VEHICLES</span>
-              <strong>{{ reports.totalVehicles }}</strong>
-              <small>Vehicles registered on platform</small>
+          
+          <div class="stats-grid" style="margin-bottom: 24px;">
+            <div class="stat-card">
+              <div class="stat-card-top">
+                <span class="stat-icon">◇</span>
+                <span class="stat-label">TOTAL VEHICLES</span>
+              </div>
+              <div class="stat-value">{{ reports.totalVehicles }}</div>
+              <p>Vehicles registered on platform</p>
             </div>
-            <div class="summary-card">
-              <span>TOTAL MAINTENANCE LOGS</span>
-              <strong>{{ reports.totalMaintenance }}</strong>
-              <small>Service logs completed by owners</small>
+            <div class="stat-card">
+              <div class="stat-card-top">
+                <span class="stat-icon">⚙</span>
+                <span class="stat-label">MAINTENANCE</span>
+              </div>
+              <div class="stat-value">{{ reports.totalMaintenance }}</div>
+              <p>Service logs completed by owners</p>
             </div>
-            <div class="summary-card">
-              <span>TOTAL EXPENSES RECORDED</span>
-              <strong>{{ reports.expenses.count }}</strong>
-              <small>Expense records filed by owners</small>
+            <div class="stat-card">
+              <div class="stat-card-top">
+                <span class="stat-icon">▤</span>
+                <span class="stat-label">EXPENSES</span>
+              </div>
+              <div class="stat-value">{{ reports.expenses.count }}</div>
+              <p>Expense records filed by owners</p>
             </div>
-            <div class="summary-card">
-              <span>CUMULATIVE EXPENSES SUM</span>
-              <strong>₹{{ reports.expenses.sum | number }}</strong>
-              <small>Aggregate of owner expenditures</small>
+            <div class="stat-card">
+              <div class="stat-card-top">
+                <span class="stat-icon">₹</span>
+                <span class="stat-label">EXPENSES SUM</span>
+              </div>
+              <div class="stat-value expense">${{ reports.expenses.sum | number }}</div>
+              <p>Aggregate of owner expenditures</p>
             </div>
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <!-- USER ROLES CARD -->
-            <div style="background: #0d0e12; border: 1px solid #202127; padding: 20px; border-radius: 12px;">
-              <h3 style="color: #ffffff; margin: 0 0 16px; font-size: 16px;">Platform Users Breakdown</h3>
+            <div style="background: #0d0e12; border: 1px solid #202127; padding: 24px; border-radius: 16px;">
+              <h3 style="color: #ffffff; margin: 0 0 16px; font-size: 20px; font-weight: 850; letter-spacing: -0.5px;">Platform Users Breakdown</h3>
               <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px;">
                 <div style="display: flex; justify-content: space-between; border-bottom: 1px solid #202127; padding-bottom: 8px;">
                   <span>Vehicle Owners</span>
@@ -848,8 +773,8 @@
             </div>
 
             <!-- COMPLIANCE & ROADSIDE CARD -->
-            <div style="background: #0d0e12; border: 1px solid #202127; padding: 20px; border-radius: 12px;">
-              <h3 style="color: #ffffff; margin: 0 0 16px; font-size: 16px;">Compliance & Support Status</h3>
+            <div style="background: #0d0e12; border: 1px solid #202127; padding: 24px; border-radius: 16px;">
+              <h3 style="color: #ffffff; margin: 0 0 16px; font-size: 20px; font-weight: 850; letter-spacing: -0.5px;">Compliance & Support Status</h3>
               
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 13px;">
                 <div>
@@ -899,16 +824,9 @@
     }
 
 
-    <footer class="footer">
+    
 
-      <strong>
-        DRIVEMATE
-      </strong>
-
-      Administrator Control Center
-
-    </footer>
-
+    </div>
   </main>
 
 
@@ -1379,7 +1297,7 @@
 
 
                     <button
-                      class="approve-button"
+                      class="primary-button"
                       type="button"
                       [disabled]="reviewing"
                       (click)="approveSelected()">
@@ -1455,3 +1373,5 @@
   }
 
 </div>
+
+

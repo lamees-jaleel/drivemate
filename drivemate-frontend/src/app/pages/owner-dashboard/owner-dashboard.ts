@@ -570,7 +570,7 @@ export class OwnerDashboard implements OnInit {
       return;
     }
 
-    if (moduleName === 'Documents') {
+    if (moduleName === 'Documents' || moduleName === 'Documents & Compliance') {
       this.openDocuments();
 
       return;

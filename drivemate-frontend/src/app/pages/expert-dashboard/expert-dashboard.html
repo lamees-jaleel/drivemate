@@ -178,30 +178,19 @@
 
         Profile & Verification
 
-        <small style="margin-left: auto;">
-          SOON
-        </small>
+        <small class="badge-soon" style="margin-left: auto;">SOON</small>
 
       </button>
 
     </nav>
 
-
-    <div class="sidebar-nav" style="margin-top: auto; padding-bottom: 20px;">
-
-      <button
-        class="nav-item"
-        type="button"
-        (click)="logout()">
-
-        <span class="nav-icon">
-          ↪
-        </span>
-
-        Sign Out
-
-      </button>
-
+    <div class="sidebar-footer">
+      <button class="logout-button" type="button" (click)="logout()">↗ Sign Out</button>
+      <p>
+        DRIVEMATE
+        <span>�</span>
+        YOUR ROAD. REIMAGINED.
+      </p>
     </div>
 
   </aside>
@@ -211,37 +200,37 @@
        MAIN
   ====================================================== -->
 
-  <main class="dashboard-main">
+  <main class="main-area">
 
 
     <!-- ===================================================
          TOP BAR
     ==================================================== -->
 
-    <section class="topbar">
-
-      <div>
-
-        <p class="topbar-label">
-          DIAGNOSTIC WORKSPACE
-        </p>
-
-        <h2>
-          Expert Dashboard
-        </h2>
-
+    
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-button" type="button" (click)="toggleSidebar()">?</button>
+        <div>
+          <p class="topbar-label">EXPERT PORTAL</p>
+          <h1>Dashboard</h1>
+        </div>
       </div>
-
-
-      <div class="topbar-status">
-
-        <span class="status-dot"></span>
-
-        Expert Portal
-
+      <div class="topbar-right">
+        
+        <div class="topbar-user">
+          <div class="topbar-avatar">
+            {{ firstName.charAt(0).toUpperCase() }}
+          </div>
+          <div class="topbar-user-text">
+            <strong>{{ currentUser?.fullName }}</strong>
+            <span>{{ currentUser?.email }}</span>
+          </div>
+        </div>
       </div>
+    </header>
+    <div class="dashboard-content">
 
-    </section>
 
 
     @if (activeTab === 'dashboard') {
@@ -251,9 +240,9 @@
          HERO
     ==================================================== -->
 
-    <section class="hero">
+    <section class="welcome-section">
 
-      <div class="hero-copy">
+      <div>
 
         <p class="eyebrow">
           AUTOMOTIVE DIAGNOSTICS
@@ -271,7 +260,7 @@
         </h1>
 
 
-        <p class="hero-description">
+        <p class="welcome-copy">
 
           Review vehicle concerns, assess
           diagnostic cases and provide
@@ -300,7 +289,7 @@
       </div>
 
 
-      <div class="diagnostic-visual">
+      <div class="diagnostic-visual" style="transform: scale(0.8); transform-origin: right center;">
 
         <div class="visual-ring ring-large">
         </div>
@@ -340,140 +329,59 @@
          STATS
     ==================================================== -->
 
+        
+    <!-- ===================================================
+         STATS
+    ==================================================== -->
+
     <section class="stats-grid">
 
       <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span class="stat-icon">
-            ◉
-          </span>
-
-          <small>
-            REQUESTS
-          </small>
-
+        <div class="stat-card-top">
+          <span class="stat-icon">◉</span>
+          <span class="stat-label">REQUESTS</span>
         </div>
-
-
-        <strong>
+        <div class="stat-value">
           {{ pendingRequests }}
-        </strong>
-
-
-        <span class="stat-label">
-          Pending Requests
-        </span>
-
-
-        <p>
-          New diagnostic requests waiting
-          for expert review.
-        </p>
-
+        </div>
+        <p>New diagnostic requests waiting for expert review.</p>
       </article>
 
-
       <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span class="stat-icon">
-            ✓
-          </span>
-
-          <small>
-            ACCEPTED
-          </small>
-
+        <div class="stat-card-top">
+          <span class="stat-icon">✓</span>
+          <span class="stat-label">ACCEPTED</span>
         </div>
-
-
-        <strong>
+        <div class="stat-value">
           {{ acceptedCases }}
-        </strong>
-
-
-        <span class="stat-label">
-          Accepted Cases
-        </span>
-
-
-        <p>
-          Requests accepted and assigned
-          to your expert account.
-        </p>
-
+        </div>
+        <p>Bookings accepted and scheduled for evaluation.</p>
       </article>
 
-
       <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span class="stat-icon">
-            ⚙
-          </span>
-
-          <small>
-            ACTIVE
-          </small>
-
+        <div class="stat-card-top">
+          <span class="stat-icon">⚙</span>
+          <span class="stat-label">ACTIVE</span>
         </div>
-
-
-        <strong>
+        <div class="stat-value">
           {{ activeCases }}
-        </strong>
-
-
-        <span class="stat-label">
-          In Progress
-        </span>
-
-
-        <p>
-          Vehicles currently under
-          diagnostic assessment.
-        </p>
-
+        </div>
+        <p>Currently in progress and undergoing diagnosis.</p>
       </article>
 
-
       <article class="stat-card">
-
-        <div class="stat-header">
-
-          <span class="stat-icon">
-            ▤
-          </span>
-
-          <small>
-            REPORTS
-          </small>
-
+        <div class="stat-card-top">
+          <span class="stat-icon">▤</span>
+          <span class="stat-label">REPORTS</span>
         </div>
-
-
-        <strong>
+        <div class="stat-value">
           {{ completedReports }}
-        </strong>
-
-
-        <span class="stat-label">
-          Completed Reports
-        </span>
-
-
-        <p>
-          Finalized diagnostic findings
-          delivered to vehicle owners.
-        </p>
-
+        </div>
+        <p>Completed diagnostics with final recommendations.</p>
       </article>
 
     </section>
+
 
 
     <!-- ===================================================
@@ -1127,15 +1035,11 @@
 
 
     <footer class="dashboard-footer">
-
-      <span>
-        DRIVEMATE
-      </span>
-
-      Automotive Diagnostic Expert Portal
-
+      <p>� 2026 DriveMate. Your vehicle lifecycle, intelligently managed.</p>
+      <span>AUTOMOTIVE DIAGNOSTIC EXPERT PORTAL</span>
     </footer>
 
+    </div>
   </main>
 
   <!-- =====================================================

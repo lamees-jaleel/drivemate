@@ -465,10 +465,7 @@ export class Login {
               : '';
 
 
-          const message =
-            detailedMessage ||
-            error.error?.message ||
-            'Unable to sign in. Please try again.';
+          const message = 'Unable to sign in. Please check your email and password, or create an account.';
 
 
           this.toast.show(
@@ -483,3 +480,5 @@ export class Login {
   }
 
 }
+
+

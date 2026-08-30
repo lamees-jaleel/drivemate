@@ -20,7 +20,7 @@
         <span class="brand-mate"> Mate </span>
       </a>
 
-      <button class="sidebar-close" type="button" (click)="closeSidebar()">×</button>
+      <button class="sidebar-close" type="button" aria-label="Close Sidebar" (click)="closeSidebar()">×</button>
     </div>
 
     <div class="owner-mini-profile">
@@ -62,7 +62,7 @@
         Expenses
       </button>
 
-      <button class="nav-item" type="button" (click)="openModule('Documents')">
+      <button class="nav-item" type="button" (click)="openModule('Documents & Compliance')">
         <span class="nav-icon"> ▤ </span>
 
         Documents & Compliance
@@ -101,7 +101,7 @@
   <main class="main-area">
     <header class="topbar">
       <div class="topbar-left">
-        <button class="menu-button" type="button" (click)="toggleSidebar()">☰</button>
+        <button class="menu-button" type="button" aria-label="Toggle Navigation Menu" (click)="toggleSidebar()">☰</button>
 
         <div>
           <p class="topbar-label">VEHICLE OWNER PORTAL</p>
@@ -162,10 +162,9 @@
       ================================================== -->
 
       <section class="stats-grid">
-        <article class="stat-card">
+        <button class="stat-card" type="button" (click)="openModule('My Vehicles')">
           <div class="stat-card-top">
             <span class="stat-icon"> ◇ </span>
-
             <span class="stat-label"> MY VEHICLES </span>
           </div>
 
@@ -174,12 +173,10 @@
           </div>
 
           <p>Vehicles registered</p>
-        </article>
-
-        <article class="stat-card">
+        </button>
+<button class="stat-card" type="button" (click)="openModule('Maintenance')">
           <div class="stat-card-top">
             <span class="stat-icon"> ⚙ </span>
-
             <span class="stat-label"> UPCOMING SERVICES </span>
           </div>
 
@@ -188,24 +185,20 @@
           </div>
 
           <p>Services due</p>
-        </article>
-
-        <article class="stat-card">
+        </button>
+<button class="stat-card" type="button" (click)="openModule('Expenses')">
           <div class="stat-card-top">
             <span class="stat-icon"> ₹ </span>
-
             <span class="stat-label"> MONTHLY EXPENSES </span>
           </div>
 
           <div class="stat-value expense">₹{{ monthlyExpense }}</div>
 
           <p>Recorded this month</p>
-        </article>
-
-        <article class="stat-card">
+        </button>
+<button class="stat-card" type="button" (click)="openModule('Documents & Compliance')">
           <div class="stat-card-top">
             <span class="stat-icon"> ! </span>
-
             <span class="stat-label"> COMPLIANCE ALERTS </span>
           </div>
 
@@ -214,8 +207,8 @@
           </div>
 
           <p>Items requiring attention</p>
-        </article>
-      </section>
+        </button>
+</section>
 
       <!-- =================================================
            GARAGE
@@ -288,7 +281,7 @@
         @if (!loadingVehicles && vehicles.length > 0) {
           <div class="garage-vehicle-list">
             @for (vehicle of vehicles; track vehicle.id) {
-              <article class="garage-vehicle-card">
+              <article class="garage-vehicle-card" (click)="openVehicleDetailsForId(vehicle.id)" style="cursor: pointer;">
                 <div class="vehicle-card-visual">
                   @if (
                     vehicle.vehicleImagePath && !vehicle.vehicleImagePath.startsWith('placeholder:')
@@ -541,7 +534,7 @@
                   <button
                     class="primary-button compact"
                     type="button"
-                    (click)="openVehicleDetailsForId(vehicle.id)"
+                    (click)="openVehicleDetailsForId(vehicle.id); $event.stopPropagation()"
                   >
                     View Vehicle →
                   </button>
@@ -569,7 +562,11 @@
           <p class="feature-description">Track services, repairs and maintenance history.</p>
 
           <div class="empty-feature">
-            <span> No service records yet </span>
+            @if (upcomingServices > 0) {
+              <span style="color: #ffc107;"> {{ upcomingServices }} upcoming services due </span>
+            } @else {
+              <span style="color: #28a745;"> All services up to date </span>
+            }
           </div>
 
           <button class="secondary-button" type="button" (click)="openModule('Maintenance')">
@@ -608,28 +605,25 @@
 
           <p class="section-kicker">STAY COMPLIANT</p>
 
-          <h3>Documents</h3>
+          <h3>Documents & Compliance</h3>
 
           <p class="feature-description">
             Manage insurance, registration and important vehicle documents.
           </p>
 
           <div class="document-status-list">
-            <div>
-              <span> Insurance </span>
-
-              <span class="status-empty"> Not added </span>
-            </div>
-
-            <div>
-              <span> Registration </span>
-
-              <span class="status-empty"> Not added </span>
+            <div style="width: 100%; display: flex; justify-content: space-between;">
+              <span> Status </span>
+              @if (complianceAlerts > 0) {
+                <span class="status-empty" style="color: #ff3545; background: rgba(255,53,69,0.1)"> {{ complianceAlerts }} alerts </span>
+              } @else {
+                <span class="status-empty" style="color: #28a745; background: rgba(40,167,69,0.1)"> Compliant </span>
+              }
             </div>
           </div>
 
-          <button class="secondary-button" type="button" (click)="openModule('Documents')">
-            Manage Documents →
+          <button class="secondary-button" type="button" (click)="openModule('Documents & Compliance')">
+            Manage Documents & Compliance →
           </button>
         </article>
 
@@ -704,7 +698,7 @@
             </span>
           </button>
 
-          <button class="quick-action" type="button" (click)="openModule('Documents')">
+          <button class="quick-action" type="button" (click)="openModule('Documents & Compliance')">
             <span class="quick-icon"> ↑ </span>
 
             <span>

@@ -148,41 +148,13 @@
 
     </nav>
 
-
-    <div class="sidebar-bottom">
-
-      <div class="sidebar-user">
-
-        <div class="avatar">
-          {{ firstName.charAt(0).toUpperCase() }}
-        </div>
-
-
-        <div class="user-details">
-
-          <strong>
-            {{ currentUser?.fullName || 'Compliance Advisor' }}
-          </strong>
-
-          <span>
-            Insurance & Compliance Advisor
-          </span>
-
-        </div>
-
-      </div>
-
-
-      <button
-        class="logout-button"
-        type="button"
-        (click)="logout()">
-
-        <span>↪</span>
-        Logout
-
-      </button>
-
+    <div class="sidebar-footer">
+      <button class="logout-button" type="button" (click)="logout()">↗ Sign Out</button>
+      <p>
+        DRIVEMATE
+        <span>�</span>
+        YOUR ROAD. REIMAGINED.
+      </p>
     </div>
 
   </aside>
@@ -192,41 +164,36 @@
        MAIN
   ====================================================== -->
 
-  <main class="dashboard-main">
+  <main class="main-area">
 
     <!-- ===================================================
          TOPBAR
     ==================================================== -->
 
-    <section class="topbar">
-
-      <div>
-
-        <p class="topbar-label">
-          COMPLIANCE WORKSPACE
-        </p>
-
-        <h2>
-          @if (currentTab === 'DASHBOARD') { Advisor Dashboard }
-          @else if (currentTab === 'REVIEWS') { Compliance Reviews }
-          @else if (currentTab === 'EXPIRY') { Expiry Monitoring }
-          @else if (currentTab === 'VEHICLE_DOCUMENTS') { Vehicle Documents }
-          @else if (currentTab === 'REPORTS') { Advisory Reports }
-          @else if (currentTab === 'PROFILE') { Professional Profile }
-        </h2>
-
+    
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="menu-button" type="button" (click)="toggleSidebar()">?</button>
+        <div>
+          <p class="topbar-label">COMPLIANCE PORTAL</p>
+          <h1>Dashboard</h1>
+        </div>
       </div>
-
-
-      <div class="topbar-status">
-
-        <span class="status-dot"></span>
-
-        Advisor Portal
-
+      <div class="topbar-right">
+        
+        <div class="topbar-user">
+          <div class="topbar-avatar">
+            {{ firstName.charAt(0).toUpperCase() }}
+          </div>
+          <div class="topbar-user-text">
+            <strong>{{ currentUser?.fullName }}</strong>
+            <span>{{ currentUser?.email }}</span>
+          </div>
+        </div>
       </div>
+    </header>
+    <div class="dashboard-content">
 
-    </section>
 
     <!-- ===================================================
          TABS: DASHBOARD VIEW
@@ -234,9 +201,9 @@
     @if (currentTab === 'DASHBOARD') {
 
       <!-- HERO -->
-      <section class="hero">
+      <section class="welcome-section">
 
-        <div class="hero-copy">
+        <div>
 
           <p class="eyebrow">
             INSURANCE & COMPLIANCE
@@ -249,7 +216,7 @@
             </span>
           </h1>
 
-          <p class="hero-description">
+          <p class="welcome-copy">
             Review vehicle compliance records, monitor document validity and provide guidance to vehicle owners regarding insurance and regulatory requirements.
           </p>
 
@@ -698,6 +665,7 @@
 
     </footer>
 
+    </div>
   </main>
 
   <!-- =========================================================
