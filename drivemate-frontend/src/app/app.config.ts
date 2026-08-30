@@ -9,7 +9,8 @@ import {
 } from '@angular/common/http';
 
 import {
-  provideRouter
+  provideRouter,
+  withInMemoryScrolling
 } from '@angular/router';
 
 import {
@@ -29,7 +30,10 @@ export const appConfig:
     }),
 
     provideRouter(
-      routes
+      routes,
+      withInMemoryScrolling({
+        scrollPositionRestoration: 'top'
+      })
     ),
 
     provideHttpClient()

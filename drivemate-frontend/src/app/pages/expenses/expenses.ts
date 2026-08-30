@@ -1,3 +1,4 @@
+import { OwnerTopbar } from '../../shared/owner-topbar/owner-topbar';
 import {
   Component,
   OnInit,
@@ -12,6 +13,7 @@ import {
 } from '@angular/forms';
 
 import { Location } from '@angular/common';
+import { FormValidationService } from '../../shared/services/form-validation.service';
 import {
   HttpErrorResponse
 } from '@angular/common/http';
@@ -45,6 +47,7 @@ import {
   standalone: true,
 
   imports: [
+    OwnerTopbar,
     ReactiveFormsModule,
     RouterLink
   ],
@@ -65,8 +68,8 @@ export class Expenses
   private readonly router =
     inject(Router);
 
-  private readonly location =
-    inject(Location);
+  private readonly location = inject(Location);
+  private readonly formValidationService = inject(FormValidationService);
 
 
   private readonly formBuilder =
@@ -749,18 +752,7 @@ export class Expenses
       '';
 
 
-    this.expenseForm
-      .markAllAsTouched();
-
-
-    if (
-      this.expenseForm
-        .invalid
-    ) {
-
-      return;
-
-    }
+    if (!this.formValidationService.validateAndScroll(this.expenseForm)) { return; }
 
 
     const values =
@@ -1034,5 +1026,9 @@ export class Expenses
   }
 
 }
+
+
+
+
 
 

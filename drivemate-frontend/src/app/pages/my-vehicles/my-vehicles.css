@@ -48,51 +48,7 @@ a {
 }
 
 
-/* =========================================================
-   TOPBAR
-========================================================= */
 
-.topbar {
-  min-height: 82px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  padding:
-    0 6vw;
-
-  border-bottom:
-    1px solid #202127;
-
-  background:
-    rgba(
-      7,
-      8,
-      11,
-      0.95
-    );
-}
-
-
-.brand {
-  color: #ffffff;
-
-  text-decoration: none;
-
-  font-size: 23px;
-
-  font-weight: 900;
-
-  letter-spacing: -1px;
-}
-
-
-.brand strong {
-  color: #f53543;
-}
 
 
 
@@ -798,3 +754,4 @@ a {
   height: 100px;
   color: #ef3038;
 }
+

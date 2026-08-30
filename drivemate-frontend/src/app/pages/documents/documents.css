@@ -40,42 +40,7 @@ a {
 }
 
 
-/* =========================================================
-   TOPBAR
-========================================================= */
 
-.topbar {
-  min-height: 82px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  padding: 0 6vw;
-
-  border-bottom:
-    1px solid #202127;
-}
-
-
-.brand {
-  color: #ffffff;
-
-  text-decoration: none;
-
-  font-size: 23px;
-
-  font-weight: 900;
-
-  letter-spacing: -1px;
-}
-
-
-.brand strong {
-  color: #f53543;
-}
 
 
 
@@ -1271,3 +1236,4 @@ select option {
   display: flex;
   justify-content: center;
 }
+

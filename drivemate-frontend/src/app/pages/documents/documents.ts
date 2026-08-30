@@ -1,3 +1,4 @@
+import { OwnerTopbar } from '../../shared/owner-topbar/owner-topbar';
 import {
   Component,
   OnInit,
@@ -12,6 +13,7 @@ import {
 } from '@angular/forms';
 
 import { Location } from '@angular/common';
+import { FormValidationService } from '../../shared/services/form-validation.service';
 import {
   HttpErrorResponse
 } from '@angular/common/http';
@@ -47,6 +49,7 @@ import { ToastService } from '../../shared/toast/toast.service';
   standalone: true,
 
   imports: [
+    OwnerTopbar,
     ReactiveFormsModule,
     RouterLink
   ],
@@ -67,8 +70,8 @@ export class Documents
   private readonly router =
     inject(Router);
 
-  private readonly location =
-    inject(Location);
+  private readonly location = inject(Location);
+  private readonly formValidationService = inject(FormValidationService);
 
 
   private readonly formBuilder =
@@ -800,17 +803,7 @@ export class Documents
       '';
 
 
-    this.documentForm
-      .markAllAsTouched();
-
-
-    if (
-      this.documentForm.invalid
-    ) {
-
-      return;
-
-    }
+    if (!this.formValidationService.validateAndScroll(this.documentForm)) { return; }
 
 
     if (!this.selectedFile) {
@@ -1313,5 +1306,7 @@ export class Documents
   }
 
 }
+
+
 
 

@@ -1,13 +1,12 @@
+import { OwnerTopbar } from '../../shared/owner-topbar/owner-topbar';
 import {
   Component,
   OnInit,
   inject
 } from '@angular/core';
 
-import {
-  NgClass,
-  Location
-} from '@angular/common';
+import { NgClass, Location } from '@angular/common';
+import { FormValidationService } from '../../shared/services/form-validation.service';
 
 import {
   AbstractControl,
@@ -58,6 +57,7 @@ import {
     true,
 
   imports: [
+    OwnerTopbar,
     ReactiveFormsModule,
     RouterLink,
     NgClass
@@ -79,8 +79,8 @@ export class Maintenance
   private readonly router =
     inject(Router);
 
-  private readonly location =
-    inject(Location);
+  private readonly location = inject(Location);
+  private readonly formValidationService = inject(FormValidationService);
 
 
   private readonly formBuilder =
@@ -773,18 +773,7 @@ export class Maintenance
       '';
 
 
-    this.maintenanceForm
-      .markAllAsTouched();
-
-
-    if (
-      this.maintenanceForm
-        .invalid
-    ) {
-
-      return;
-
-    }
+    if (!this.formValidationService.validateAndScroll(this.maintenanceForm)) { return; }
 
 
     const values =
@@ -1145,13 +1134,7 @@ export class Maintenance
 
   submitBooking(): void {
 
-    if (this.bookingForm.invalid) {
-
-      this.bookingForm.markAllAsTouched();
-
-      return;
-
-    }
+    if (!this.formValidationService.validateAndScroll(this.bookingForm)) { return; }
 
 
     this.bookingSubmitting = true;
@@ -1316,4 +1299,7 @@ export class Maintenance
   }
 
 }
+
+
+
 

@@ -1,3 +1,4 @@
+import { OwnerTopbar } from '../../shared/owner-topbar/owner-topbar';
 import {
   Component,
   OnInit,
@@ -34,6 +35,7 @@ import { ToastService } from '../../shared/toast/toast.service';
   standalone: true,
 
   imports: [
+    OwnerTopbar,
     RouterLink
   ],
 

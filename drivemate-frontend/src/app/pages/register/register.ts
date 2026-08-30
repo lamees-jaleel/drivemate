@@ -10,6 +10,7 @@ import {
   Validators
 } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { FormValidationService } from '../../shared/services/form-validation.service';
 import { ToastService } from '../../shared/toast/toast.service';
 
 
@@ -259,8 +260,8 @@ export class Register {
   private readonly http =
     inject(HttpClient);
 
-  private readonly toast =
-    inject(ToastService);
+  private readonly toast = inject(ToastService);
+  private readonly formValidationService = inject(FormValidationService);
 
   submitted = false;
 
@@ -1835,16 +1836,7 @@ export class Register {
     this.configureProfessionalValidators();
 
 
-    this.registerForm
-      .markAllAsTouched();
-
-
-    if (
-      this.registerForm.invalid
-    ) {
-
-      return;
-    }
+    if (!this.formValidationService.validateAndScroll(this.registerForm)) { return; }
 
 
     const values =
@@ -2072,3 +2064,5 @@ export class Register {
   }
 
 }
+
+

@@ -25,6 +25,7 @@ import {
   AuthService
 } from '../../services/auth.service';
 
+import { FormValidationService } from '../../shared/services/form-validation.service';
 import { ToastService } from '../../shared/toast/toast.service';
 
 
@@ -78,8 +79,8 @@ export class Login {
   private readonly authService =
     inject(AuthService);
 
-  private readonly toast =
-    inject(ToastService);
+  private readonly toast = inject(ToastService);
+  private readonly formValidationService = inject(FormValidationService);
 
   submitted =
     false;
@@ -358,17 +359,7 @@ export class Login {
       true;
 
 
-    this.loginForm
-      .markAllAsTouched();
-
-
-    if (
-      this.loginForm.invalid
-    ) {
-
-      return;
-
-    }
+    if (!this.formValidationService.validateAndScroll(this.loginForm)) { return; }
 
 
     const values =

@@ -1,3 +1,4 @@
+import { OwnerTopbar } from '../../shared/owner-topbar/owner-topbar';
 import {
   Component,
   inject,
@@ -18,6 +19,7 @@ import {
 } from '@angular/common/http';
 
 import { Location } from '@angular/common';
+import { FormValidationService } from '../../shared/services/form-validation.service';
 import {
   Router,
   RouterLink,
@@ -81,6 +83,7 @@ const nonBlankValidator:
   standalone: true,
 
   imports: [
+    OwnerTopbar,
     ReactiveFormsModule,
     RouterLink
   ],
@@ -108,8 +111,8 @@ export class AddVehicle implements OnInit {
   private readonly router =
     inject(Router);
 
-  private readonly location =
-    inject(Location);
+  private readonly location = inject(Location);
+  private readonly formValidationService = inject(FormValidationService);
 
 
   private readonly route =
@@ -844,17 +847,7 @@ export class AddVehicle implements OnInit {
       true;
 
 
-    this.vehicleForm
-      .markAllAsTouched();
-
-
-    if (
-      this.vehicleForm.invalid
-    ) {
-
-      return;
-
-    }
+    if (!this.formValidationService.validateAndScroll(this.vehicleForm)) { return; }
 
 
     const values =
@@ -1058,4 +1051,6 @@ export class AddVehicle implements OnInit {
   }
 
 }
+
+
 

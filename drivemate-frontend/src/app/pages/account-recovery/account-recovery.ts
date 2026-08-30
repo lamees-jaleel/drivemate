@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { FormValidationService } from '../../shared/services/form-validation.service';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
@@ -18,6 +19,7 @@ type RecoveryStep = 'IDENTIFY' | 'VERIFY' | 'RESET' | 'SUCCESS';
   styleUrls: ['./account-recovery.css']
 })
 export class AccountRecovery implements OnInit, OnDestroy {
+  private formValidationService = inject(FormValidationService);
   step: RecoveryStep = 'IDENTIFY';
   
   identifyForm: FormGroup;
@@ -81,10 +83,7 @@ export class AccountRecovery implements OnInit, OnDestroy {
   }
 
   onIdentifySubmit() {
-    if (this.identifyForm.invalid) {
-      this.identifyForm.markAllAsTouched();
-      return;
-    }
+    if (!this.formValidationService.validateAndScroll(this.identifyForm)) { return; }
     this.loading = true;
     this.errorMessage = '';
     
@@ -105,10 +104,7 @@ export class AccountRecovery implements OnInit, OnDestroy {
   }
 
   onVerifySubmit() {
-    if (this.verifyForm.invalid) {
-      this.verifyForm.markAllAsTouched();
-      return;
-    }
+    if (!this.formValidationService.validateAndScroll(this.verifyForm)) { return; }
     this.loading = true;
     this.errorMessage = '';
 
@@ -150,10 +146,7 @@ export class AccountRecovery implements OnInit, OnDestroy {
   }
 
   onResetSubmit() {
-    if (this.resetForm.invalid) {
-      this.resetForm.markAllAsTouched();
-      return;
-    }
+    if (!this.formValidationService.validateAndScroll(this.resetForm)) { return; }
     this.loading = true;
     this.errorMessage = '';
 
@@ -179,3 +172,4 @@ export class AccountRecovery implements OnInit, OnDestroy {
     this.router.navigate(['/login']);
   }
 }
+
