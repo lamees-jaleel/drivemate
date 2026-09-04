@@ -108,6 +108,7 @@ export class OwnerDashboard implements OnInit {
   ======================================================= */
 
   upcomingServices = 0;
+  urgentServiceAlert: { title: string, text: string, vehicle: string, status: string } | null = null;
 
   monthlyExpense = 0;
 
@@ -189,6 +190,7 @@ export class OwnerDashboard implements OnInit {
         this.vehicleCount = 0;
 
         this.upcomingServices = 0;
+        this.urgentServiceAlert = null;
 
         this.monthlyExpense = 0;
 
@@ -204,6 +206,7 @@ export class OwnerDashboard implements OnInit {
   private loadDashboardVehicleData(): void {
     if (this.vehicles.length === 0) {
       this.upcomingServices = 0;
+        this.urgentServiceAlert = null;
 
       this.monthlyExpense = 0;
 
@@ -303,8 +306,19 @@ export class OwnerDashboard implements OnInit {
             ============================================== */
 
         for (const record of result.maintenanceRecords) {
-          if (this.hasUpcomingReminder(result.vehicle, record)) {
+          const statusObj = this.maintenanceService.computeMaintenanceStatus(record, result.vehicle.odometerKm, result.maintenanceRecords);
+          if (statusObj.urgent) {
             upcomingServiceCount++;
+            
+            // Just grab the first urgent one for the dashboard card
+            if (!this.urgentServiceAlert) {
+              this.urgentServiceAlert = {
+                title: record.title,
+                text: statusObj.text,
+                vehicle: `${result.vehicle.make} ${result.vehicle.model}`,
+                status: statusObj.status
+              };
+            }
           }
         }
 
@@ -362,33 +376,9 @@ export class OwnerDashboard implements OnInit {
      UPCOMING SERVICE CHECK
   ======================================================= */
 
-  private hasUpcomingReminder(vehicle: Vehicle, record: MaintenanceRecord): boolean {
-    let upcomingByDate = false;
-
-    /* -----------------------------------------------------
-       DATE REMINDER
-    ----------------------------------------------------- */
-
-    if (record.nextServiceDate) {
-      const nextDate = new Date(record.nextServiceDate);
-
-      const today = new Date();
-
-      today.setHours(0, 0, 0, 0);
-
-      if (!Number.isNaN(nextDate.getTime()) && nextDate >= today) {
-        upcomingByDate = true;
-      }
-    }
-
-    /* -----------------------------------------------------
-       ODOMETER REMINDER
-    ----------------------------------------------------- */
-
-    const upcomingByOdometer =
-      record.nextServiceOdometerKm !== null && record.nextServiceOdometerKm > vehicle.odometerKm;
-
-    return upcomingByDate || upcomingByOdometer;
+  private hasUpcomingReminder(vehicle: Vehicle, record: MaintenanceRecord, allRecords: MaintenanceRecord[]): boolean {
+    const status = this.maintenanceService.computeMaintenanceStatus(record, vehicle.odometerKm, allRecords);
+    return status.urgent;
   }
 
   /* =======================================================

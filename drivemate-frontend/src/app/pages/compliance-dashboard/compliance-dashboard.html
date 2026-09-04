@@ -50,30 +50,24 @@
     [class.sidebar-open]="mobileSidebarOpen">
 
 
-    <div class="sidebar-top">
-
-      <a
-        class="brand"
-        (click)="switchTab('DASHBOARD')">
-
-        <span>Drive</span>
-        <strong>Mate</strong>
-
+        <div class="sidebar-top">
+      <a class="brand" (click)="switchTab('DASHBOARD')">
+        <span class="brand-drive">Drive</span><span class="brand-mate">Mate</span>
       </a>
-
-
-      <div class="role-badge">
-
-        <span class="role-dot"></span>
-
-        COMPLIANCE ADVISOR
-
-      </div>
-
+      <button class="sidebar-close" type="button" aria-label="Close Sidebar" (click)="closeSidebar()">×</button>
     </div>
 
+    <div class="owner-mini-profile">
+      <div class="avatar">
+        {{ currentUser?.fullName?.charAt(0)?.toUpperCase() || 'C' }}
+      </div>
+      <div class="owner-mini-info">
+        <strong>{{ currentUser?.fullName || 'Compliance Advisor' }}</strong>
+        <span>COMPLIANCE ADVISOR</span>
+      </div>
+    </div>
 
-    <nav class="navigation">
+    <nav class="sidebar-nav">
 
       <button
         class="nav-item"
@@ -135,7 +129,9 @@
       </button>
 
 
-      <button
+      <div class="nav-divider"></div>
+
+        <button
         class="nav-item"
         [class.active]="currentTab === 'PROFILE'"
         type="button"
@@ -202,100 +198,72 @@
 
       <!-- HERO -->
       <section class="welcome-section">
-
         <div>
-
-          <p class="eyebrow">
-            INSURANCE & COMPLIANCE
-          </p>
-
-          <h1>
-            Welcome back,
-            <span>
-              {{ firstName }}.
-            </span>
-          </h1>
-
+          <p class="eyebrow">INSURANCE & COMPLIANCE</p>
+          <h2>Welcome back, <span>{{ firstName }}.</span></h2>
           <p class="welcome-copy">
             Review vehicle compliance records, monitor document validity and provide guidance to vehicle owners regarding insurance and regulatory requirements.
           </p>
-
-          <div class="hero-tags">
-            <span>Document Review</span>
-            <span>Expiry Monitoring</span>
-            <span>Compliance Guidance</span>
-          </div>
-
         </div>
-
-        <div class="compliance-visual">
-          <div class="visual-ring ring-large"></div>
-          <div class="visual-ring ring-small"></div>
-          <div class="shield-card">
-            <span class="shield-icon">◈</span>
-            <span class="shield-label">COMPLIANCE SYSTEM</span>
-            <strong>READY</strong>
-            <div class="scanner-line"></div>
-            <small>Advisor workspace active</small>
-          </div>
+        <div style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;">
+          <button class="secondary-button" type="button" (click)="switchTab('REVIEWS')">Document Review</button>
+          <button class="secondary-button" type="button" (click)="switchTab('EXPIRY')">Expiry Monitoring</button>
+          <button class="secondary-button" type="button" (click)="switchTab('REPORTS')">Compliance Guidance</button>
         </div>
-
       </section>
 
       <!-- STATS -->
       <section class="stats-grid">
-
-        <article class="stat-card" style="cursor: pointer;" (click)="switchTab('REVIEWS')">
-          <div class="stat-header">
+        <button class="stat-card" type="button" (click)="switchTab('REVIEWS')">
+          <div class="stat-card-top">
             <span class="stat-icon">◈</span>
-            <small>REVIEWS</small>
+            <span class="stat-label">REVIEWS</span>
           </div>
-          <strong>{{ pendingReviews }}</strong>
-          <span class="stat-label">Pending Reviews</span>
-          <p>Compliance cases waiting for professional review.</p>
-        </article>
+          <div class="stat-value">{{ pendingReviews }}</div>
+          <p style="margin: 0;">Pending Reviews</p>
+          <small style="display: block; margin-top: 6px; color: #666973; font-size: 11px;">Compliance cases waiting for professional review.</small>
+        </button>
 
-        <article class="stat-card" style="cursor: pointer;" (click)="switchTab('EXPIRY')">
-          <div class="stat-header">
+        <button class="stat-card" type="button" (click)="switchTab('EXPIRY')">
+          <div class="stat-card-top">
             <span class="stat-icon">⚠</span>
-            <small>EXPIRY</small>
+            <span class="stat-label">EXPIRY</span>
           </div>
-          <strong>{{ expiringDocuments }}</strong>
-          <span class="stat-label">Expiring Documents</span>
-          <p>Insurance and regulatory records approaching expiry.</p>
-        </article>
+          <div class="stat-value">{{ expiringDocuments }}</div>
+          <p style="margin: 0;">Expiring Documents</p>
+          <small style="display: block; margin-top: 6px; color: #666973; font-size: 11px;">Insurance and regulatory records approaching expiry.</small>
+        </button>
 
         <article class="stat-card">
-          <div class="stat-header">
+          <div class="stat-card-top">
             <span class="stat-icon">◉</span>
-            <small>ACTIVE</small>
+            <span class="stat-label">ACTIVE</span>
           </div>
-          <strong>{{ activeCases }}</strong>
-          <span class="stat-label">Active Cases</span>
-          <p>Vehicle compliance assessments currently observed.</p>
+          <div class="stat-value">{{ activeCases }}</div>
+          <p style="margin: 0;">Active Cases</p>
+          <small style="display: block; margin-top: 6px; color: #666973; font-size: 11px;">Vehicle compliance assessments currently observed.</small>
         </article>
 
-        <article class="stat-card" style="cursor: pointer;" (click)="switchTab('REPORTS')">
-          <div class="stat-header">
+        <button class="stat-card" type="button" (click)="switchTab('REPORTS')">
+          <div class="stat-card-top">
             <span class="stat-icon">✓</span>
-            <small>REPORTS</small>
+            <span class="stat-label">REPORTS</span>
           </div>
-          <strong>{{ completedAdvisories }}</strong>
-          <span class="stat-label">Completed Advisories</span>
-          <p>Compliance recommendations already delivered.</p>
-        </article>
-
+          <div class="stat-value">{{ completedAdvisories }}</div>
+          <p style="margin: 0;">Completed Advisories</p>
+          <small style="display: block; margin-top: 6px; color: #666973; font-size: 11px;">Compliance recommendations already delivered.</small>
+        </button>
       </section>
 
       <!-- WORKSPACE -->
       <section class="workspace-grid">
 
-        <article class="workspace-card">
+        <article class="dashboard-card">
 
-          <div class="section-title">
-            <span class="section-number">01</span>
+          <div class="section-heading">
+            
             <div>
-              <p>ADVISOR WORKFLOW</p>
+              <p class="section-kicker">ADVISOR WORKFLOW</p>
               <h3>Compliance Review Process</h3>
             </div>
           </div>
@@ -337,11 +305,11 @@
         </article>
 
         <!-- mini profile info -->
-        <article class="workspace-card profile-card">
-          <div class="section-title">
-            <span class="section-number">02</span>
+        <article class="dashboard-card">
+          <div class="section-heading">
+            
             <div>
-              <p>PROFESSIONAL ACCOUNT</p>
+              <p class="section-kicker">PROFESSIONAL ACCOUNT</p>
               <h3>Advisor Profile</h3>
             </div>
           </div>
@@ -377,7 +345,7 @@
          TABS: COMPLIANCE REVIEWS VIEW
     ==================================================== -->
     @if (currentTab === 'REVIEWS') {
-      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+      <section class="dashboard-card" style="margin: 20px 0; padding: 24px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <div>
             <h3 style="color: #ffffff; margin: 0; font-size: 20px;">Pending Document Reviews</h3>
@@ -428,7 +396,7 @@
          TABS: EXPIRY MONITORING VIEW
     ==================================================== -->
     @if (currentTab === 'EXPIRY') {
-      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+      <section class="dashboard-card" style="margin: 20px 0; padding: 24px;">
         <div>
           <h3 style="color: #ffffff; margin: 0; font-size: 20px;">Expiry Monitoring</h3>
           <p style="color: #858893; margin: 4px 0 16px; font-size: 13px;">Track expired or soon-to-expire (within 30 days) vehicle records.</p>
@@ -492,7 +460,7 @@
          TABS: VEHICLE DOCUMENTS VIEW
     ==================================================== -->
     @if (currentTab === 'VEHICLE_DOCUMENTS') {
-      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+      <section class="dashboard-card" style="margin: 20px 0; padding: 24px;">
         <div style="margin-bottom: 20px;">
           <h3 style="color: #ffffff; margin: 0; font-size: 20px;">All Platform Documents</h3>
           <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">View and track document details for all registered vehicles.</p>
@@ -554,7 +522,7 @@
          TABS: ADVISORY REPORTS VIEW
     ==================================================== -->
     @if (currentTab === 'REPORTS') {
-      <section class="workspace-card" style="margin: 20px 0; padding: 24px;">
+      <section class="dashboard-card" style="margin: 20px 0; padding: 24px;">
         <div style="margin-bottom: 20px;">
           <h3 style="color: #ffffff; margin: 0; font-size: 20px;">Advisory Reports & Decisions</h3>
           <p style="color: #858893; margin: 4px 0 0; font-size: 13px;">Review historical advisory determinations and client feedback.</p>
@@ -613,7 +581,7 @@
          TABS: PROFILE VIEW
     ==================================================== -->
     @if (currentTab === 'PROFILE') {
-      <section class="workspace-card" style="margin: 20px 0; padding: 24px; max-width: 600px;">
+      <section class="dashboard-card" style="margin: 20px 0; padding: 24px; max-width: 600px;">
         <h3 style="color: #ffffff; margin: 0 0 24px; font-size: 20px;">Advisor Professional Profile</h3>
 
         <div style="display: flex; flex-direction: column; gap: 20px; color: #ffffff;">

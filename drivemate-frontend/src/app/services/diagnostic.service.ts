@@ -86,6 +86,7 @@ export interface DiagnosticRequest {
     name: string;
     email: string;
   };
+  report?: any;
 }
 
 export interface DiagnosticRequestsResponse {

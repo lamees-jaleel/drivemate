@@ -1,258 +1,92 @@
-import {
-  inject,
-  Injectable
-} from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AuthService } from './auth.service';
 
-import {
-  HttpClient,
-  HttpHeaders
-} from '@angular/common/http';
-
-import {
-  Observable
-} from 'rxjs';
-
-import {
-  AuthService
-} from './auth.service';
-
-
-/* =========================================================
-   DOCUMENT TYPES
-========================================================= */
-
-export type VehicleDocumentType =
-  | 'REGISTRATION_CERTIFICATE'
-  | 'INSURANCE'
-  | 'POLLUTION_CERTIFICATE'
-  | 'ROAD_TAX'
-  | 'FITNESS_CERTIFICATE'
-  | 'WARRANTY'
-  | 'SERVICE_DOCUMENT'
-  | 'PURCHASE_INVOICE'
-  | 'OTHER';
-
-
-export type ComplianceStatus =
-  | 'VALID'
-  | 'EXPIRING_SOON'
-  | 'EXPIRED'
-  | 'NO_EXPIRY';
-
-
-/* =========================================================
-   VEHICLE DOCUMENT
-========================================================= */
+export type VehicleDocumentType = 'REGISTRATION_CERTIFICATE' | 'INSURANCE' | 'POLLUTION_CERTIFICATE' | 'ROAD_TAX' | 'FITNESS_CERTIFICATE' | 'WARRANTY' | 'SERVICE_DOCUMENT' | 'PURCHASE_INVOICE' | 'OTHER';
+export type ComplianceStatus = 'VALID' | 'EXPIRING_SOON' | 'EXPIRED' | 'NO_EXPIRY';
 
 export interface VehicleDocument {
-
   id: number;
-
   vehicleId: number;
-
-  documentType:
-    VehicleDocumentType;
-
+  documentType: VehicleDocumentType;
   title: string;
-
-  documentNumber:
-    string |
-    null;
-
-  provider:
-    string |
-    null;
-
-  issueDate:
-    string |
-    null;
-
-  expiryDate:
-    string |
-    null;
-
-  filePath:
-    string |
-    null;
-
-  originalFileName:
-    string |
-    null;
-
-  mimeType:
-    string |
-    null;
-
-  fileSize:
-    number |
-    null;
-
-  notes:
-    string |
-    null;
-
-  createdAt:
-    string;
-
-  updatedAt:
-    string;
-
-  complianceStatus:
-    ComplianceStatus;
-
-  daysUntilExpiry:
-    number |
-    null;
-
+  documentNumber: string | null;
+  provider: string | null;
+  issueDate: string | null;
+  expiryDate: string | null;
+  filePath: string | null;
+  originalFileName: string | null;
+  mimeType: string | null;
+  fileSize: number | null;
+  notes: string | null;
+  createdAt: string;
+  updatedAt: string;
+  complianceStatus: ComplianceStatus;
+  daysUntilExpiry: number | null;
+  renewals?: any[];
 }
-
-
-/* =========================================================
-   VEHICLE SUMMARY
-========================================================= */
 
 export interface DocumentVehicleSummary {
-
   id: number;
-
   registrationNumber: string;
-
   make: string;
-
   model: string;
-
 }
-
-
-/* =========================================================
-   API RESPONSES
-========================================================= */
 
 export interface DocumentListResponse {
-
   success: boolean;
-
-  vehicle:
-    DocumentVehicleSummary;
-
+  vehicle: DocumentVehicleSummary;
   count: number;
-
   complianceAlertCount: number;
-
-  documents:
-    VehicleDocument[];
-
+  documents: VehicleDocument[];
 }
-
 
 export interface AddDocumentResponse {
-
   success: boolean;
-
   message: string;
-
-  document:
-    VehicleDocument;
-
+  document: VehicleDocument;
 }
 
+export interface DocumentRenewalRequest {
+  id: number;
+  vehicleId: number;
+  documentId: number;
+  providerType: string;
+  preferredDate: string | null;
+  notes: string | null;
+  status: string;
+  createdAt: string;
+}
 
-/* =========================================================
-   SERVICE
-========================================================= */
+export interface CreateRenewalResponse {
+  success: boolean;
+  message: string;
+  renewal: DocumentRenewalRequest;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class DocumentService {
+  private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
+  private readonly baseUrl = 'http://localhost:5000/api/vehicles';
 
-  private readonly http =
-    inject(HttpClient);
-
-
-  private readonly authService =
-    inject(AuthService);
-
-
-  private readonly baseUrl =
-    'http://localhost:5000/api/vehicles';
-
-
-  /* =======================================================
-     AUTH
-  ======================================================= */
-
-  private getAuthHeaders():
-    HttpHeaders {
-
-    const token =
-      this.authService
-        .getToken();
-
-
-    return new HttpHeaders({
-
-      Authorization:
-        `Bearer ${token ?? ''}`
-
-    });
-
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    return new HttpHeaders({ Authorization: `Bearer ${token ?? ''}` });
   }
 
-
-  /* =======================================================
-     GET DOCUMENTS
-  ======================================================= */
-
-  getDocuments(
-    vehicleId: number
-  ): Observable<DocumentListResponse> {
-
-    return this.http
-      .get<DocumentListResponse>(
-
-        `${this.baseUrl}/${vehicleId}/documents`,
-
-        {
-          headers:
-            this.getAuthHeaders()
-        }
-
-      );
-
+  getDocuments(vehicleId: number): Observable<DocumentListResponse> {
+    return this.http.get<DocumentListResponse>(`${this.baseUrl}/${vehicleId}/documents`, { headers: this.getAuthHeaders() });
   }
 
-
-  /* =======================================================
-     ADD DOCUMENT
-  ======================================================= */
-
-  addDocument(
-    vehicleId: number,
-    formData: FormData
-  ): Observable<AddDocumentResponse> {
-
-    /*
-      Do NOT manually set Content-Type.
-
-      The browser automatically creates
-      the multipart/form-data boundary.
-    */
-
-    return this.http
-      .post<AddDocumentResponse>(
-
-        `${this.baseUrl}/${vehicleId}/documents`,
-
-        formData,
-
-        {
-          headers:
-            this.getAuthHeaders()
-        }
-
-      );
-
+  addDocument(vehicleId: number, formData: FormData): Observable<AddDocumentResponse> {
+    return this.http.post<AddDocumentResponse>(`${this.baseUrl}/${vehicleId}/documents`, formData, { headers: this.getAuthHeaders() });
   }
 
+  requestRenewal(vehicleId: number, documentId: number, payload: any): Observable<CreateRenewalResponse> {
+    return this.http.post<CreateRenewalResponse>(`${this.baseUrl}/${vehicleId}/documents/${documentId}/renewal`, payload, { headers: this.getAuthHeaders() });
+  }
 }

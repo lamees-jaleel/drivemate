@@ -1298,6 +1298,26 @@ export class Maintenance
 
   }
 
+  /* =======================================================
+     DIAGNOSTIC REPORT LOGIC
+  ======================================================= */
+  showReportModal = false;
+  selectedReport: any = null;
+  selectedBookingForReport: any = null;
+
+  viewReport(report: any, booking: any): void {
+    if (!report) return;
+    this.selectedReport = report;
+    this.selectedBookingForReport = booking;
+    this.showReportModal = true;
+  }
+  
+  closeReportModal(): void {
+    this.showReportModal = false;
+    this.selectedReport = null;
+    this.selectedBookingForReport = null;
+  }
+
 }
 
 

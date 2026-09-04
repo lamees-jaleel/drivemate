@@ -1,4 +1,8 @@
 import {
+  updateMaintenanceRecord,
+  deleteMaintenanceRecord
+} from '../controllers/maintenance.controller.js';
+import {
   Router
 } from 'express';
 
@@ -79,5 +83,17 @@ router.post(
   createMaintenanceRecord
 );
 
+
+
+
+/* =========================================================
+   UPDATE MAINTENANCE RECORD
+========================================================= */
+router.put('/:recordId', updateMaintenanceRecord);
+
+/* =========================================================
+   DELETE MAINTENANCE RECORD
+========================================================= */
+router.delete('/:recordId', deleteMaintenanceRecord);
 
 export default router;

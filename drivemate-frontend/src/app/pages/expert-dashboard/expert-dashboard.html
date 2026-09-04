@@ -233,7 +233,7 @@
 
 
 
-    @if (activeTab === 'dashboard') {
+    @if (activeTab === 'dashboard' && !renewalRequestsOpen) {
 
 
     <!-- ===================================================
@@ -797,7 +797,7 @@
          AVAILABLE REQUESTS WORKSPACE
     ==================================================== -->
 
-    @if (activeTab === 'requests') {
+    @if (activeTab === 'requests' && !renewalRequestsOpen) {
 
       <section class="workspace-section">
 
@@ -875,7 +875,7 @@
          ACTIVE CASES WORKSPACE
     ==================================================== -->
 
-    @if (activeTab === 'active') {
+    @if (activeTab === 'active' && !renewalRequestsOpen) {
 
       <section class="workspace-section">
 
@@ -967,7 +967,7 @@
          COMPLETED REPORTS WORKSPACE
     ==================================================== -->
 
-    @if (activeTab === 'completed') {
+    @if (activeTab === 'completed' && !renewalRequestsOpen) {
 
       <section class="workspace-section">
 
@@ -1115,6 +1115,125 @@
         </div>
       </div>
     </div>
+  }
+
+
+  <!-- =========================================================
+       COMPLETE RENEWAL MODAL
+       ========================================================= -->
+  @if (showCompleteRenewalModal) {
+    <div class="modal-backdrop" (click)="closeCompleteModal()">
+      <div class="modal-container" (click)="$event.stopPropagation()" style="max-width: 600px;">
+        <header class="modal-header">
+          <h3>Complete Renewal</h3>
+          <button class="modal-close-btn" type="button" (click)="closeCompleteModal()">
+            ×
+          </button>
+        </header>
+
+        <div class="modal-body">
+          <form (ngSubmit)="submitCompleteRenewal()">
+            <div class="form-field full-width">
+              <label>Upload Renewed Document <span>*</span></label>
+              <label class="file-drop" for="renewalFile" style="border: 2px dashed rgba(255,255,255,0.2); padding: 1rem; text-align: center; border-radius: 8px; cursor: pointer; display: block;">
+                <strong>Choose Document</strong>
+                <span style="display: block; font-size: 0.8rem; color: #a5a9b2; margin-top: 0.5rem;">PDF, JPG, PNG · Max 5MB</span>
+                @if (renewalFileName) {
+                  <small style="display: block; margin-top: 0.5rem; color: #ef3038;">✓ {{ renewalFileName }}</small>
+                }
+              </label>
+              <input id="renewalFile" type="file" style="display: none;" (change)="onRenewalFileSelected($event)" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" />
+            </div>
+
+            <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+              <div class="form-field">
+                <label>New Document Number</label>
+                <input type="text" [(ngModel)]="renewalDocNumber" name="renewalDocNumber" placeholder="e.g. POL987654" />
+              </div>
+
+              <div class="form-field">
+                <label>Provider / Issuer</label>
+                <input type="text" [(ngModel)]="renewalProvider" name="renewalProvider" placeholder="e.g. HDFC ERGO" />
+              </div>
+
+              <div class="form-field">
+                <label>New Issue Date</label>
+                <input type="date" [(ngModel)]="renewalIssueDate" name="renewalIssueDate" />
+              </div>
+
+              <div class="form-field">
+                <label>New Expiry Date</label>
+                <input type="date" [(ngModel)]="renewalExpiryDate" name="renewalExpiryDate" />
+              </div>
+            </div>
+
+            <div class="form-field full-width" style="margin-top: 1rem;">
+              <label>Optional Notes</label>
+              <textarea rows="3" [(ngModel)]="renewalNotes" name="renewalNotes" placeholder="Any comments regarding this renewal..."></textarea>
+            </div>
+          </form>
+        </div>
+
+        <footer class="modal-footer" style="display: flex; justify-content: flex-end; gap: 1rem; padding-top: 1rem;">
+          <button class="secondary-button" type="button" (click)="closeCompleteModal()">Cancel</button>
+          <button class="primary-button compact" type="button" [disabled]="submittingRenewalComplete" (click)="submitCompleteRenewal()">
+            {{ submittingRenewalComplete ? 'Uploading...' : 'Complete Renewal' }}
+          </button>
+        </footer>
+      </div>
+    
+    <!-- ===================================================
+         RENEWAL REQUESTS WORKSPACE
+    ==================================================== -->
+    @if (renewalRequestsOpen) {
+      <section class="workspace-section">
+        <div class="workspace-header">
+          <span class="eyebrow">DOCUMENT SERVICES</span>
+          <h2>Renewal Requests</h2>
+          <p>Manage and process document renewal requests from vehicle owners.</p>
+        </div>
+
+        @if (renewals.length === 0) {
+          <div class="empty-workspace-state">
+            <div class="empty-state-icon">📄</div>
+            <h3>No renewal requests</h3>
+            <p>You do not have any pending document renewals to process.</p>
+          </div>
+        } @else {
+          <div class="expert-requests-list">
+            @for (req of renewals; track req.id) {
+              <div class="expert-request-card" [ngClass]="{'active-card': req.status === 'ACCEPTED' || req.status === 'IN_PROGRESS', 'completed-card': req.status === 'COMPLETED'}">
+                <div class="card-left">
+                  <div class="status-indicator-bar" [ngClass]="getStatusClass(req.status)">
+                    {{ req.status }}
+                  </div>
+                  <div class="request-meta">
+                    <span class="vehicle-tag">
+                      {{ req.vehicle?.make }} {{ req.vehicle?.model }} ({{ req.vehicle?.registrationNumber }})
+                    </span>
+                    <h3>{{ getDocumentTypeLabel(req.document?.documentType) }} Renewal</h3>
+                    <p class="symptoms-text"><strong>Owner Notes:</strong> {{ req.notes || 'None provided' }}</p>
+                    <p class="provider-info-text">
+                      <strong>Current Expiry:</strong> {{ formatDate(req.document?.expiryDate) }}
+                    </p>
+                  </div>
+                </div>
+
+                <div class="card-right">
+                  @if (req.status === 'PENDING') {
+                    <button class="primary-button compact" (click)="acceptRenewal(req.id)">Accept Request</button>
+                  }
+                  @if (req.status === 'ACCEPTED' || req.status === 'IN_PROGRESS') {
+                    <button class="primary-button compact" (click)="openCompleteModal(req)">Complete Renewal</button>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+    }
+</div>
   }
 
 </div>

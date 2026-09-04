@@ -5,7 +5,8 @@ import {
 import {
   createDocument,
   getDocumentById,
-  getDocuments
+  getDocuments,
+  createRenewalRequest
 } from '../controllers/document.controller.js';
 
 import {
@@ -82,4 +83,11 @@ router.post(
 );
 
 
-export default router;
+export default router;/* =========================================================
+   CREATE RENEWAL REQUEST
+========================================================= */
+
+router.post(
+  '/:documentId/renewal',
+  createRenewalRequest
+);

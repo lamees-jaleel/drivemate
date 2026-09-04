@@ -151,7 +151,7 @@ export async function getVehicleDiagnosticRequests(
         expert: {
           select: {
             id: true,
-            name: true,
+            fullName: true,
             email: true
           }
         },
@@ -162,9 +162,18 @@ export async function getVehicleDiagnosticRequests(
       }
     });
 
+    const mappedRequests = requests.map(req => ({
+      ...req,
+      expert: req.expert ? {
+        id: req.expert.id,
+        name: req.expert.fullName,
+        email: req.expert.email
+      } : null
+    }));
+
     res.status(200).json({
       success: true,
-      requests
+      requests: mappedRequests
     });
   } catch (error) {
     console.error('Error fetching vehicle diagnostic requests:', error);
@@ -216,7 +225,7 @@ export async function getExpertRequests(
             make: true,
             model: true,
             registrationNumber: true,
-            year: true
+            manufacturingYear: true
           }
         }
       },

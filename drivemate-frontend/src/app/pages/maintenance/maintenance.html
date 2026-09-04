@@ -1245,6 +1245,18 @@
                       </div>
                     }
 
+                    @if (b.status === 'COMPLETED') {
+                      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #202127; display: flex; justify-content: flex-end;">
+                        @if (b.report) {
+                          <button class="secondary-button" type="button" (click)="viewReport(b.report, b)">
+                            View Maintenance Report
+                          </button>
+                        } @else {
+                          <span style="color: #858893; font-size: 13px;">Maintenance report not available yet.</span>
+                        }
+                      </div>
+                    }
+
                   </div>
 
                 </article>
@@ -1262,6 +1274,138 @@
     }
 
   </main>
+
+  <!-- =========================================================
+       MAINTENANCE REPORT MODAL
+       ========================================================= -->
+
+  @if (showReportModal && selectedReport && selectedBookingForReport) {
+    <div class="modal-backdrop" (click)="closeReportModal()">
+      <div class="modal-container report-modal" (click)="$event.stopPropagation()">
+        
+        <header class="modal-header report-header">
+          <div class="report-brand">
+            <span class="brand-drive">Drive</span><span class="brand-mate">Mate</span>
+          </div>
+          <h3>Maintenance Report</h3>
+          <button class="modal-close-btn" type="button" (click)="closeReportModal()">×</button>
+        </header>
+
+        <div class="modal-body report-body">
+          
+          <div class="report-section">
+            <h4>Vehicle</h4>
+            <div class="report-grid">
+              <div class="report-item">
+                <span>Vehicle</span>
+                <strong>{{ vehicle?.make }} {{ vehicle?.model }}</strong>
+              </div>
+              <div class="report-item">
+                <span>Registration</span>
+                <strong>{{ vehicle?.registrationNumber }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-section">
+            <h4>Service</h4>
+            <div class="report-grid">
+              <div class="report-item">
+                <span>Service</span>
+                <strong>{{ selectedBookingForReport.title }}</strong>
+              </div>
+              <div class="report-item">
+                <span>Symptoms / Issues</span>
+                <strong>{{ selectedBookingForReport.symptoms }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-section highlight-section">
+            <h4>Service Result</h4>
+            <div class="report-grid">
+              <div class="report-item" style="grid-column: 1 / -1">
+                <span>Findings</span>
+                <p>{{ selectedReport.findings }}</p>
+              </div>
+              @if (selectedReport.suspectedCause) {
+                <div class="report-item">
+                  <span>Suspected Cause</span>
+                  <strong>{{ selectedReport.suspectedCause }}</strong>
+                </div>
+              }
+              <div class="report-item">
+                <span>Severity</span>
+                <strong class="severity-badge" [ngClass]="'severity-' + selectedReport.severity.toLowerCase()">
+                  {{ selectedReport.severity }}
+                </strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-section">
+            <div class="report-grid">
+              <div class="report-item">
+                <span>Estimated Cost</span>
+                <strong>{{ selectedReport.estimatedRepairCost ? '₹' + selectedReport.estimatedRepairCost : 'Not estimated' }}</strong>
+              </div>
+              <div class="report-item">
+                <span>Vehicle Safe to Drive</span>
+                @if (selectedReport.safeToDrive) {
+                  <strong class="safety-safe">Yes</strong>
+                } @else {
+                  <strong class="safety-unsafe">No</strong>
+                }
+              </div>
+              <div class="report-item">
+                <span>Follow-up Required</span>
+                <strong>{{ selectedReport.followUpRequired ? 'Yes' : 'No' }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="report-section highlight-section">
+            <h4>Recommended Action</h4>
+            <p>{{ selectedReport.recommendedAction }}</p>
+          </div>
+
+          <div class="report-section expert-section">
+            <h4>Service Information</h4>
+            <div class="report-grid">
+              <div class="report-item">
+                <span>Expert</span>
+                <strong>
+                  @if (selectedBookingForReport.expert) {
+                    {{ selectedBookingForReport.expert.name }}
+                  } @else {
+                    DriveMate Authorized Expert
+                  }
+                </strong>
+              </div>
+              <div class="report-item">
+                <span>Service Provider</span>
+                <strong>{{ getProviderTypeLabel(selectedBookingForReport.providerType) }}</strong>
+              </div>
+              <div class="report-item">
+                <span>Booked</span>
+                <strong>{{ formatDate(selectedBookingForReport.createdAt) }}</strong>
+              </div>
+              <div class="report-item">
+                <span>Completed</span>
+                <strong>{{ formatDate(selectedReport.createdAt) }}</strong>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        
+        <footer class="modal-footer">
+          <button class="primary-button compact" type="button" (click)="closeReportModal()">Close</button>
+        </footer>
+
+      </div>
+    </div>
+  }
 
 </div>
 

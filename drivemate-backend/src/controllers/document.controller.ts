@@ -747,19 +747,21 @@ export async function getDocuments(
 
 
           orderBy: [
-
             {
               expiryDate:
                 'asc'
             },
-
             {
               createdAt:
                 'desc'
             }
-
-          ]
-
+          ],
+          include: {
+            renewals: {
+              orderBy: { createdAt: 'desc' },
+              take: 1
+            }
+          }
         });
 
 
@@ -1002,4 +1004,76 @@ export async function getDocumentById(
 
   }
 
+}/* =========================================================
+   CREATE RENEWAL REQUEST
+========================================================= */
+
+export async function createRenewalRequest(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const auth = getAuth(res);
+    if (!auth) {
+      res.status(401).json({ success: false, message: 'Authentication required.' });
+      return;
+    }
+
+    const vehicleId = getVehicleId(req);
+    const documentId = Number(req.params.documentId);
+
+    if (!Number.isInteger(vehicleId) || vehicleId <= 0 || !Number.isInteger(documentId) || documentId <= 0) {
+      res.status(400).json({ success: false, message: 'Invalid vehicle or document ID.' });
+      return;
+    }
+
+    const vehicle = await findOwnedVehicle(vehicleId, auth.userId);
+    if (!vehicle) {
+      res.status(404).json({ success: false, message: 'Vehicle not found.' });
+      return;
+    }
+
+    const document = await prisma.vehicleDocument.findFirst({
+      where: { id: documentId, vehicleId }
+    });
+    if (!document) {
+      res.status(404).json({ success: false, message: 'Document not found.' });
+      return;
+    }
+
+    const existingRenewal = await prisma.documentRenewalRequest.findFirst({
+      where: {
+        documentId,
+        status: { in: ['PENDING', 'ACCEPTED', 'IN_PROGRESS'] }
+      }
+    });
+
+    if (existingRenewal) {
+      res.status(400).json({ success: false, message: 'Renewal request already in progress.' });
+      return;
+    }
+
+    const { providerType, preferredDate, notes } = req.body;
+
+    let parsedPreferredDate = null;
+    if (preferredDate) {
+      parsedPreferredDate = new Date(preferredDate);
+    }
+
+    const renewal = await prisma.documentRenewalRequest.create({
+      data: {
+        ownerId: auth.userId,
+        vehicleId,
+        documentId,
+        providerType: providerType || 'DRIVEMATE_EXPERT',
+        preferredDate: parsedPreferredDate,
+        notes: notes || null
+      }
+    });
+
+    res.status(201).json({ success: true, message: 'Renewal request created successfully.', renewal });
+  } catch (error) {
+    console.error('Create renewal request error:', error);
+    res.status(500).json({ success: false, message: 'Unable to submit renewal request. Please try again.' });
+  }
 }

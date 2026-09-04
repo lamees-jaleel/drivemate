@@ -1155,7 +1155,7 @@ select option {
 .selector-desc {
   font-size: 16px;
   color: #a0a2ad;
-  max-width: 600px;
+  width: min(700px, calc(100vw - 40px));
   margin: 0 auto 40px;
   line-height: 1.6;
 }
@@ -1237,3 +1237,132 @@ select option {
   justify-content: center;
 }
 
+
+
+/* MODAL DIALOG / BACKDROP STYLES
+   ========================================================= */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-container {
+  width: 100%;
+  max-width: 600px;
+  background: #0d0e12;
+  border: 1px solid #202127;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 40px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #202127;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.modal-close-btn {
+  background: transparent;
+  color: #858893;
+  font-size: 28px;
+  line-height: 1;
+  padding: 0 4px;
+  border: 0;
+  cursor: pointer;
+}
+
+.modal-close-btn:hover {
+  color: #ffffff;
+}
+
+.modal-body {
+  padding: 16px 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 12px 24px;
+  border-top: 1px solid #202127;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* =========================================================
+   FORM CONTROLS
+   ========================================================= */
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #f53543;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.form-control {
+  width: 100%;
+  background: #14151a;
+  border: 1px solid #24252c;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #f53543;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+
+
+.cancel-button {
+  min-height: 48px;
+  padding: 0 24px;
+  border: 1px solid #202127;
+  border-radius: 8px;
+  background: transparent;
+  color: #ffffff;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancel-button:hover {
+  background: rgba(255, 255, 255, 0.05);
+}

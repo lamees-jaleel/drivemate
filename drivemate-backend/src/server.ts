@@ -36,6 +36,7 @@ import diagnosticRoutes, {
   expertDiagnosticRouter
 } from './routes/diagnostic.routes.js';
 
+import expertRenewalRoutes from './routes/expert-renewal.routes.js';
 
 dotenv.config();
 
@@ -247,6 +248,11 @@ app.use(
 app.use(
   '/api/diagnostics',
   expertDiagnosticRouter
+);
+
+app.use(
+  '/api/expert/renewals',
+  expertRenewalRoutes
 );
 
 
